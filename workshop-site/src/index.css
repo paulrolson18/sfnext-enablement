@@ -1,0 +1,77 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: #020617;
+  color: #e2e8f0;
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+/* Syntax highlight overrides */
+.code-block pre {
+  margin: 0 !important;
+  border-radius: 0.5rem !important;
+  font-family: 'Fira Code', monospace !important;
+  font-size: 0.85rem !important;
+  line-height: 1.6 !important;
+}
+
+/* Smooth transitions */
+.nav-item {
+  transition: all 0.15s ease;
+}
+
+/* Gradient text utility */
+.gradient-text {
+  background: linear-gradient(135deg, #38bdf8, #818cf8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-violet {
+  background: linear-gradient(135deg, #a78bfa, #f472b6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Step connector line */
+.step-connector::after {
+  content: '';
+  position: absolute;
+  left: 1.125rem;
+  top: 2.5rem;
+  bottom: -1rem;
+  width: 2px;
+  background: linear-gradient(to bottom, #334155, transparent);
+}
