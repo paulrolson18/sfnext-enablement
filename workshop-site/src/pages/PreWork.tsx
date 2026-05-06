@@ -12,7 +12,7 @@ const prereqs = [
     title: 'Node.js 24+',
     desc: 'Storefront Next requires Node.js 24 or higher.',
     verify: 'node --version',
-    install: 'Download from nodejs.org or use nvm: nvm install 24 && nvm use 24',
+    install: 'First install nvm: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash && source ~/.bashrc — then run: nvm install 24 && nvm use 24. Or download directly from nodejs.org.',
   },
   {
     icon: Package,
