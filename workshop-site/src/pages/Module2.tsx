@@ -354,6 +354,46 @@ export default function Module2() {
         </div>
       </section>
 
+      {/* Page Designer */}
+      <section>
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-8 h-8 rounded-full bg-violet-500/15 border border-violet-500/30 flex items-center justify-center">
+            <Layout size={15} className="text-violet-400" />
+          </div>
+          <h2 className="text-xl font-bold text-slate-100">Page Designer Integration</h2>
+          <span className="text-slate-500 text-sm">Awareness</span>
+        </div>
+        <p className="text-slate-400 text-sm mb-4 leading-relaxed">
+          The template includes a Page Designer integration that enables merchandisers to manage content through the familiar Business Manager interface. Developers define page types and regions using TypeScript decorators — the build process generates metadata that Business Manager reads.
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          {[
+            { title: 'Decorator-based', detail: 'Routes are annotated with @PageType and @RegionDefinition metadata' },
+            { title: 'Auto-generated config', detail: 'Build process creates JSON metadata for Business Manager' },
+            { title: 'Live preview', detail: 'BM renders preview iframes using the storefront\'s actual routes' },
+          ].map(({ title, detail }) => (
+            <div key={title} className="p-3 rounded-lg bg-violet-950/20 border border-violet-500/20">
+              <div className="text-violet-300 font-semibold text-sm mb-1">{title}</div>
+              <div className="text-slate-400 text-xs">{detail}</div>
+            </div>
+          ))}
+        </div>
+        <div className="mt-4">
+          <Callout type="info" title="For customer conversations">
+            If a merchandiser asks "can I change the page without a developer?" — the answer is yes. Page Designer lets them configure pages, arrange components, and manage content regions through Business Manager, while the storefront renders those components as React.
+          </Callout>
+        </div>
+      </section>
+
+      <Callout type="tip" title="SE Talking Points">
+        <ul className="space-y-1 text-sm">
+          <li>• "A brand refresh takes hours, not weeks. Change one config file and the entire storefront updates."</li>
+          <li>• "Components are reusable — the same hero banner works on the homepage, category page, and campaign landing pages with different content."</li>
+          <li>• "Every visual element can be inspected and changed without leaving the component file — no hunting through CSS files."</li>
+          <li>• "The template ships with Storybook for component-driven development — designers and developers share a common vocabulary."</li>
+        </ul>
+      </Callout>
+
       {/* Hands-on steps */}
       <section>
         <h2 className="text-xl font-bold text-slate-100 mb-6">Hands-On Exercises</h2>

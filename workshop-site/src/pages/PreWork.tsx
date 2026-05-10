@@ -113,7 +113,8 @@ b2c --help
 # Add Claude Code skills (do this after Claude Code is installed)
 claude plugin marketplace add SalesforceCommerceCloud/b2c-developer-tooling
 claude plugin install b2c-cli
-claude plugin install b2c`
+claude plugin install b2c
+claude plugin install storefront-next`
 
 const vsCodeExtensions = [
   'Tailwind CSS IntelliSense (bradlc.vscode-tailwindcss)',
@@ -240,7 +241,7 @@ export default function PreWork() {
         <CodeBlock code={b2cToolingCode} language="bash" filename="Terminal" />
         <div className="mt-4">
           <Callout type="ai" title="Claude Code Skills">
-            Once installed, Claude Code gains deep B2C Commerce knowledge: cartridge deployment, sandbox management, SCAPI operations, and Storefront Next patterns. You can ask it things like "deploy my code to my ODS" or "show me how to add a custom SCAPI endpoint."
+            Once installed, Claude Code gains deep B2C Commerce knowledge: cartridge deployment, sandbox management, SCAPI operations, and Storefront Next-specific patterns including routing, data fetching, auth, i18n, and MRT deployment. You can ask it things like "deploy my code to my ODS" or "show me how to add a custom SCAPI endpoint."
           </Callout>
         </div>
       </section>

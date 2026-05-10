@@ -64,24 +64,21 @@ function PromptCard({
   )
 }
 
-const mcpSetupCode = `# 1. Install the B2C MCP Server
-npm install -g @salesforce/b2c-dx-mcp
+const mcpSetupCode = `# 1. Add the B2C MCP Server to Claude Code (no global install needed)
+claude mcp add --transport stdio --scope project b2c-dx-mcp -- npx -y @salesforce/b2c-dx-mcp@latest --allow-non-ga-tools
 
-# 2. In Claude Code, add the MCP server
-# Open Claude Code settings or run:
-claude mcp add b2c-dx -- npx @salesforce/b2c-dx-mcp
-
-# 3. Install B2C-specific agent skills
+# 2. Install B2C-specific agent skills
 claude plugin marketplace add SalesforceCommerceCloud/b2c-developer-tooling
 claude plugin install b2c-cli
 claude plugin install b2c
+claude plugin install storefront-next
 
-# 4. Configure your instance connection
+# 3. Configure your instance connection
 b2c config set --instance YOUR_SANDBOX.demandware.net
 b2c config set --client-id YOUR_CLIENT_ID
 
-# 5. Verify Claude Code sees the skills
-# In Claude Code, ask: "What B2C skills do you have available?"`
+# 4. Verify Claude Code sees the MCP tools
+# In Claude Code, ask: "What Storefront Next tools do you have?"`
 
 const claudeMdExample = `# Storefront Next Project
 # CLAUDE.md — project context for Claude Code
@@ -137,9 +134,21 @@ export default function Module4() {
           <span className="text-slate-500 text-sm">5 min</span>
         </div>
         <p className="text-slate-400 text-sm mb-5 leading-relaxed">
-          The B2C MCP (Model Context Protocol) server gives Claude Code direct access to your B2C instance — it can read logs, deploy code, manage sandboxes, and browse SCAPI documentation without you copying anything.
+          The B2C MCP server gives Claude Code direct access to your B2C instance. It auto-detects your project type (Storefront Next, SFRA, or PWA Kit) and loads the right tools automatically — no manual configuration needed.
         </p>
         <CodeBlock code={mcpSetupCode} language="bash" filename="Terminal" />
+        <div className="mt-4">
+          <Callout type="tip" title="Using Cursor or VS Code instead?">
+            The MCP server works with any AI coding assistant. For Cursor, create{' '}
+            <code className="bg-slate-800 px-1.5 py-0.5 rounded text-violet-400 font-mono text-xs">.cursor/mcp.json</code>{' '}
+            with: <code className="bg-slate-800 px-1 py-0.5 rounded text-violet-400 font-mono text-xs">
+            {`{"mcpServers":{"b2c-dx-mcp":{"command":"npx","args":["-y","@salesforce/b2c-dx-mcp@latest","--allow-non-ga-tools"]}}}`}
+            </code>.
+            For VS Code + Copilot, create{' '}
+            <code className="bg-slate-800 px-1.5 py-0.5 rounded text-violet-400 font-mono text-xs">.vscode/mcp.json</code>{' '}
+            with the same content under <code className="bg-slate-800 px-1 py-0.5 rounded text-violet-400 font-mono text-xs">"servers"</code> (not <code className="bg-slate-800 px-1 py-0.5 rounded text-violet-400 font-mono text-xs">"mcpServers"</code>).
+          </Callout>
+        </div>
 
         <div className="mt-6">
           <h3 className="font-semibold text-slate-200 mb-3 flex items-center gap-2">
@@ -150,6 +159,31 @@ export default function Module4() {
             CLAUDE.md is a project-level context file that Claude Code reads automatically. Use it to describe your brand, conventions, and what you're building. This dramatically improves output quality.
           </p>
           <CodeBlock code={claudeMdExample} language="markdown" filename="CLAUDE.md" />
+        </div>
+
+        <div className="mt-6">
+          <h3 className="font-semibold text-slate-200 mb-3 flex items-center gap-2">
+            <Cpu size={15} className="text-violet-400" />
+            What the MCP Server gives you
+          </h3>
+          <p className="text-slate-400 text-sm mb-3">
+            The MCP server isn't just "installed" — it provides Storefront Next-specific tools that your AI assistant can call. Try asking: <strong className="text-slate-200">"What Storefront Next tools do you have?"</strong>
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {[
+              { tool: 'sfnext_get_guidelines', desc: 'Returns Storefront Next development rules — the AI writes better code with these loaded' },
+              { tool: 'sfnext_configure_theme', desc: 'Configures your Tailwind theme via AI prompts — fastest path to brand customization' },
+              { tool: 'sfnext_analyze_component', desc: 'Analyzes a component\'s structure — useful for understanding existing code' },
+              { tool: 'sfnext_match_tokens_to_theme', desc: 'Maps design tokens from a spec to your Tailwind theme' },
+              { tool: 'sfnext_start_figma_workflow', desc: 'Initiates a Figma-to-component conversion workflow' },
+              { tool: 'sfnext_add_page_designer_decorator', desc: 'Adds Page Designer metadata decorators to a route' },
+            ].map(({ tool, desc }) => (
+              <div key={tool} className="p-3 rounded-lg bg-violet-950/20 border border-violet-500/20">
+                <code className="text-violet-300 font-mono text-xs">{tool}</code>
+                <p className="text-slate-400 text-xs mt-1">{desc}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -358,6 +392,15 @@ Create:
         </div>
       </section>
 
+      <Callout type="tip" title="SE Talking Points">
+        <ul className="space-y-1 text-sm">
+          <li>• "Storefront Next is the only commerce platform with a first-party MCP server — the AI assistant understands SCAPI, SLAS, Managed Runtime, and Page Designer natively."</li>
+          <li>• "A detailed prompt generates production-quality components in under a minute — faster than copying from documentation."</li>
+          <li>• "The MCP server works across AI assistants — Claude Code, Cursor, VS Code + Copilot. No vendor lock-in."</li>
+          <li>• "CLAUDE.md gives every developer on the team consistent AI output — brand guidelines, conventions, and context travel with the codebase."</li>
+        </ul>
+      </Callout>
+
       {/* Hands-on */}
       <section>
         <h2 className="text-xl font-bold text-slate-100 mb-6">Hands-On Exercises</h2>
@@ -400,6 +443,7 @@ Create:
                 'Modifying loaders and actions for server-side data and mutations',
                 'Writing precise Claude Code prompts that generate production-quality Storefront Next code',
                 'Using the B2C MCP server to work with your live sandbox from within Claude Code',
+                'Understanding the migration path from SFRA via the hybrid proxy pattern',
               ].map(item => (
                 <li key={item} className="flex items-start gap-2">
                   <CheckCircle2 size={14} className="text-emerald-400 mt-0.5 flex-shrink-0" />
@@ -423,6 +467,10 @@ Create:
           </div>
         </div>
       </div>
+
+      <Callout type="info" title="For SFRA migration conversations">
+        Storefront Next supports a hybrid proxy pattern that lets customers migrate page-by-page from SFRA without a full rewrite. Specific routes can be served by Storefront Next while the rest continue through SFRA — enabling incremental migration on the customer's timeline.
+      </Callout>
     </div>
   )
 }

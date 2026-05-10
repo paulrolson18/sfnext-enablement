@@ -34,9 +34,9 @@
 | 0:25 | 25 min | Module 1 — Architecture |
 | 0:50 | 45 min | Module 2 — Frontend Modifications |
 | 1:35 | 10 min | Break |
-| 1:45 | 35 min | Module 3 — Backend Logic |
-| 2:20 | 25 min | Module 4 — AI Development |
-| 2:45 | 15 min | Q&A & Wrap-up |
+| 1:45 | 40 min | Module 3 — Backend + Deployment |
+| 2:25 | 25 min | Module 4 — AI Development |
+| 2:50 | 10 min | Q&A & Wrap-up |
 
 **Hard rule:** Keep the break at 1:35 regardless of where you are. Energy drops fast in hour two.
 
@@ -214,14 +214,24 @@ Walk the six steps. Do it slowly — this is the moment where it clicks for most
 5. React renders the page with data, HTML streams to browser
 6. Browser hydrates — React takes over for click handlers, state, etc.
 
+### Commerce Apps (2 min awareness)
+
+After the request lifecycle, briefly mention the Commerce Apps section. Don't spend much time — it's awareness-only.
+
+> "Commerce Apps are how ISVs and partners ship extensions for Storefront Next. The key insight: when a Commerce App includes UI components, `b2c cap install` creates a pull request with those changes. Git-based, reviewable, no cartridge overlay surprises."
+
+### SE Talking Points
+
+Draw attention to the amber callout. Give participants 30 seconds to read the four talking points silently, then ask: "Which of these resonates most with your current deals?"
+
 ### Hands-on exercises (7 min)
 
-Direct everyone to the five step cards. These are self-guided exploration exercises — not code writing yet. Walk around and make sure people are actually doing them, not just reading them.
+Direct everyone to the five step cards. Walk around and make sure people are actually doing them, not just reading them.
 
 - **Step 1:** Open project in VS Code — just getting oriented
-- **Step 2:** Find `loader()` in `_index.tsx` — identify the SCAPI calls
+- **Step 2 (updated):** Trace a request through the code — participants open `_index.tsx`, find the `loader()`, and ask Claude Code to explain what it does. They verify the answer against the request lifecycle diagram. This is more active than just "find the file."
 - **Step 3:** Inspect Tailwind classes in browser DevTools — the "aha" moment is usually seeing `rounded-2xl` and finding it in the source file immediately
-- **Step 4:** See SSR in Network tab — look for the first HTML document, confirm product HTML is already in the response
+- **Step 4 (updated):** Prove SSR is working — participants search the raw HTML response for a product name. If they find it, SSR is confirmed. They then explain to their neighbor why this matters for SEO. The peer-teaching element reinforces understanding.
 - **Step 5:** Open `config.server.ts` and `tailwind.config.js` — understand these are the two master controls
 
 ### Common questions
@@ -314,6 +324,18 @@ Show the category route structure. The entire layout — sidebar, grid, product 
 **Hands-on (7 min):**  
 > "In your category route, change the grid from 3 columns to 4 on large screens. Add a product count above the grid — something like '553 Products'. Check Odyssey for reference on how it looks."
 
+### Page Designer Integration (awareness only)
+
+After Part 4 (PLP Layout), there's a new Page Designer awareness section. Don't go deep — it's there for customer conversation prep.
+
+> "When a merchandiser asks 'can I change the page without a developer?' — yes. Page Designer works with Storefront Next. Developers add TypeScript decorators to routes, the build process generates metadata for Business Manager, and merchandisers manage content through the familiar BM interface."
+
+If anyone asks for more detail, point them to the MCP server tool `sfnext_add_page_designer_decorator` covered in Module 4.
+
+### SE Talking Points
+
+Same pattern as Module 1: draw attention to the amber callout, give participants 30 seconds to read, ask which resonates.
+
 ### Challenge exercise (if time allows)
 
 For participants who finish early:
@@ -333,8 +355,8 @@ While participants are on break:
 
 ---
 
-## Module 3 — Backend Logic & Data Flow
-**Page:** `/#/module/3` · **Time:** 35 minutes
+## Module 3 — Backend Logic, Data Flow & Deployment
+**Page:** `/#/module/3` · **Time:** 40 minutes
 
 ### Goal
 Participants understand how data gets into the page (loaders), how mutations happen (actions), and how SCAPI calls are structured. They write or modify at least one loader and understand where to put a new API call.
@@ -419,8 +441,34 @@ Walk the error boundary example. Two points:
 
 > "In SFRA, a pipeline error usually showed a generic error page or crashed ungracefully. Here you have surgical control — a 404 on the cart shows 'basket expired, start a new one.' A 500 shows a generic error. Same file."
 
-**Hands-on (2 min):**  
+**Hands-on (2 min):**
 > "Add an `ErrorBoundary` export to your cart route. Handle a 404 with a helpful message. The 404 case is: the basket expired."
+
+### Part 6 — Deployment to Managed Runtime (5 min)
+
+**Explain (2 min):**
+Walk the deployment commands. Three commands to know:
+
+- `pnpm sfnext push` — deploy the storefront to MRT
+- `b2c mrt env var push` — sync your local `.env` to the remote environment (only applies differences — safe to run)
+- `b2c mrt tail-logs` — live log stream from the deployed storefront, with filtering by level and search patterns
+
+> "This is the deployment story for customers. One command to deploy. One command to push env vars. One command to debug in real time. No SSH, no server access, no DevOps pipeline to build."
+
+**Hands-on (3 min):**
+> "Deploy your storefront with `pnpm sfnext push`. Once it's live, open the URL and check that your brand changes are visible. If something looks off, run `b2c mrt tail-logs` and filter by errors."
+
+If participants don't have MRT project access, this exercise becomes a demo-only walkthrough. Show the commands and output on the projector.
+
+### Authentication Architecture (awareness only)
+
+Don't spend time on this section — it's conceptual and included for customer conversation prep. If anyone asks during the module, point to the three-card grid on the page:
+
+> "SLAS with split cookies. Access and refresh tokens in separate cookies, server-side refresh. Guest-to-registered is an atomic swap. The template handles all of this — you don't implement it."
+
+### SE Talking Points
+
+Draw attention to the amber "SE Talking Points" callout before the exercises. Ask participants to read through it and identify which point is most relevant to their current deals.
 
 ---
 
@@ -432,10 +480,19 @@ Participants leave knowing how to use Claude Code effectively for Storefront Nex
 
 ### Setup context (5 min)
 
-**MCP server:**  
-Walk the setup code. Emphasize what the MCP server adds:
+**MCP server:**
+Walk the setup code. The install pattern has changed — it's now a single `npx` command, no global install needed:
 
-> "Without the MCP server, Claude Code is a smart general programmer. With it, it has live access to your B2C instance — it can read logs, check sandbox status, look up SCAPI endpoint documentation, and deploy code. You don't copy anything. You just describe what you want."
+> "One command: `claude mcp add ... npx -y @salesforce/b2c-dx-mcp@latest`. No global npm install. It auto-detects your project type — Storefront Next, SFRA, or PWA Kit — and loads the right tools automatically."
+
+Point out the multi-IDE callout: the MCP server works with Cursor and VS Code + Copilot too. For non-Claude-Code users, show the `.cursor/mcp.json` and `.vscode/mcp.json` patterns.
+
+**MCP tools tour:**
+After the setup, walk the six MCP tools in the grid. Ask participants to try this prompt in Claude Code:
+
+> "What Storefront Next tools do you have?"
+
+The tools they should see: `sfnext_get_guidelines`, `sfnext_configure_theme`, `sfnext_analyze_component`, `sfnext_match_tokens_to_theme`, `sfnext_start_figma_workflow`, `sfnext_add_page_designer_decorator`. Walk through what each does — the most relevant for demos are `sfnext_configure_theme` (instant brand customization) and `sfnext_get_guidelines` (ensures the AI follows Storefront Next conventions).
 
 **CLAUDE.md:**  
 This is the highest-leverage thing participants can do. Show the template.
@@ -494,6 +551,14 @@ Have participants ask Claude Code to read their category route and add sorting t
 **Exercise 5 (Challenge) — Describe the Odyssey homepage**  
 For fast finishers: pick one element from the Odyssey storefront, describe it in detail to Claude Code, have it build a matching component.
 
+### SE Talking Points & Migration
+
+Draw attention to the SE Talking Points callout before the exercises. The MCP server cross-IDE point is especially powerful in competitive conversations.
+
+After the wrap-up card, there's a migration callout:
+
+> "Storefront Next supports a hybrid proxy pattern — customers can migrate page-by-page from SFRA. Specific routes go through Storefront Next while the rest stay on SFRA. This is a critical talking point for existing SFRA customers who are nervous about a full rewrite."
+
 ### The iterative pattern (closing thought)
 
 End Module 4 with this:
@@ -503,7 +568,7 @@ End Module 4 with this:
 ---
 
 ## Q&A & Wrap-up
-**Time:** 15 minutes
+**Time:** 10 minutes
 
 ### Review what was covered
 
@@ -587,6 +652,6 @@ Ask for feedback before anyone leaves — one thing that landed well, one thing 
 
 - [ ] Update this guide with anything that didn't go as planned — common questions, timing that was off, exercises that needed more or less time
 - [ ] Update `WORKSHOP_NOTES.md` with friction points observed
-- [ ] Note any content gaps participants asked about that aren't covered (Page Designer, deployment, migration tool, SLAS deep dive)
+- [ ] Note any content gaps participants asked about that aren't covered (advanced migration tooling, advanced SLAS implementation, Commerce Apps deep dive)
 - [ ] Send a follow-up Slack message with the workshop site URL and the key resource links
 - [ ] Ask one or two participants for a 15-minute debrief call the following week — their feedback after trying things on their own is the most useful signal for improving the next run
