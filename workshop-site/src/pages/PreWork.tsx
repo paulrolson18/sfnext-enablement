@@ -125,10 +125,21 @@ export default function PreWork() {
 
       {/* Prerequisites */}
       <section>
-        <h2 className="text-xl font-bold text-slate-100 mb-6 flex items-center gap-2">
+        <h2 className="text-xl font-bold text-slate-100 mb-4 flex items-center gap-2">
           <span className="w-6 h-6 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center text-xs font-bold">1</span>
           Install Prerequisites
         </h2>
+
+        <div className="rounded-xl border border-emerald-500/30 bg-emerald-950/20 p-5 mb-6">
+          <p className="text-emerald-300 font-semibold text-sm mb-1">Fast path — run this script</p>
+          <p className="text-slate-400 text-xs mb-3">This installs most required tools automatically. Run it first, then use the manual steps below for anything it misses.</p>
+          <CodeBlock
+            language="bash"
+            code={`bash <(curl -fsSL https://raw.githubusercontent.com/lukejohnson-sf/fast-setup/main/setup.sh)`}
+          />
+        </div>
+
+        <p className="text-slate-500 text-xs mb-4">Or install each tool manually:</p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {prereqs.map(({ icon: Icon, color, bg, title, desc, verify, install }) => (
             <div key={title} className={`rounded-xl border p-4 ${bg}`}>
