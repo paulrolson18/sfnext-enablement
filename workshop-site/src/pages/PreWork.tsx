@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { ArrowRight, Terminal, GitBranch, Package, Code2, Cpu, Globe } from 'lucide-react'
 import SectionHeader from '../components/SectionHeader'
 import CodeBlock from '../components/CodeBlock'
+import InlineCode from '../components/InlineCode'
 import Callout from '../components/Callout'
 
 const prereqs = [
@@ -12,7 +13,9 @@ const prereqs = [
     title: 'Node.js 24+',
     desc: 'Storefront Next requires Node.js 24 or higher.',
     verify: 'node --version',
-    install: 'First install nvm: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash — then reload your shell (source ~/.zshrc on Mac, source ~/.bashrc on Linux) — then run: nvm install 24 && nvm use 24. Or download directly from nodejs.org.',
+    installCmd: null,
+    installText: 'First install nvm: run the command below, then reload your shell (source ~/.zshrc on Mac, source ~/.bashrc on Linux), then run:',
+    installCmds: ['curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash', 'nvm install 24 && nvm use 24'],
   },
   {
     icon: Package,
@@ -21,7 +24,9 @@ const prereqs = [
     title: 'pnpm',
     desc: 'The preferred package manager for Storefront Next.',
     verify: 'pnpm --version',
-    install: 'npm install -g pnpm',
+    installCmd: 'npm install -g pnpm',
+    installText: null,
+    installCmds: null,
   },
   {
     icon: GitBranch,
@@ -30,7 +35,9 @@ const prereqs = [
     title: 'Git + GitHub Account',
     desc: 'For cloning the template and deploying via GitHub Actions.',
     verify: 'git --version',
-    install: 'Download from git-scm.com and create a GitHub account at github.com',
+    installCmd: null,
+    installText: 'Download from git-scm.com and create a GitHub account at github.com',
+    installCmds: null,
   },
   {
     icon: Code2,
@@ -39,7 +46,9 @@ const prereqs = [
     title: 'VS Code',
     desc: 'Recommended IDE. Install the Tailwind IntelliSense and ESLint extensions.',
     verify: 'code --version',
-    install: 'Download from code.visualstudio.com',
+    installCmd: null,
+    installText: 'Download from code.visualstudio.com',
+    installCmds: null,
   },
   {
     icon: Cpu,
@@ -48,7 +57,10 @@ const prereqs = [
     title: 'Claude Code',
     desc: 'AI coding assistant — the primary tool for accelerating your workflow in this workshop.',
     verify: 'claude --version',
-    install: 'npm install -g @anthropic-ai/claude-code',
+    installCmd: null,
+    installText: 'Follow the Salesforce installation guide:',
+    installLink: { label: 'sfdc.co/ClaudeCodeforSolutions', url: 'https://www.sfdc.co/ClaudeCodeforSolutions' },
+    installCmds: null,
   },
   {
     icon: Globe,
@@ -56,8 +68,10 @@ const prereqs = [
     bg: 'bg-sky-500/10 border-sky-500/20',
     title: 'B2C Sandbox Access',
     desc: 'You\'ll need access to a B2C Commerce sandbox with SCAPI credentials.',
-    verify: 'Contact your team lead for sandbox credentials',
-    install: 'Create an Account Manager account at account.demandware.com',
+    verify: null,
+    installCmd: null,
+    installText: 'Contact your team lead for sandbox credentials. Create an Account Manager account at account.demandware.com',
+    installCmds: null,
   },
 ]
 
@@ -141,7 +155,7 @@ export default function PreWork() {
 
         <p className="text-slate-500 text-xs mb-4">Or install each tool manually:</p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {prereqs.map(({ icon: Icon, color, bg, title, desc, verify, install }) => (
+          {prereqs.map(({ icon: Icon, color, bg, title, desc, verify, installCmd, installText, installCmds, installLink }: any) => (
             <div key={title} className={`rounded-xl border p-4 ${bg}`}>
               <div className="flex items-start gap-3 mb-3">
                 <Icon size={18} className={`${color} mt-0.5 flex-shrink-0`} />
@@ -150,14 +164,34 @@ export default function PreWork() {
                   <p className="text-slate-400 text-xs mt-0.5">{desc}</p>
                 </div>
               </div>
-              <div className="space-y-1.5 text-xs">
-                <div>
-                  <span className="text-slate-500">Verify: </span>
-                  <code className="bg-slate-900/60 px-1.5 py-0.5 rounded text-slate-300 font-mono">{verify}</code>
-                </div>
+              <div className="space-y-2 text-xs">
+                {verify && (
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-slate-500">Verify:</span>
+                    <InlineCode code={verify} />
+                  </div>
+                )}
                 <div>
                   <span className="text-slate-500">Install: </span>
-                  <span className="text-slate-400">{install}</span>
+                  {installCmd && <InlineCode code={installCmd} />}
+                  {installText && <span className="text-slate-400">{installText} </span>}
+                  {installLink && (
+                    <a
+                      href={installLink.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sky-400 hover:underline"
+                    >
+                      {installLink.label}
+                    </a>
+                  )}
+                  {installCmds && (
+                    <div className="flex flex-col gap-1.5 mt-1.5">
+                      {installCmds.map((cmd: string) => (
+                        <InlineCode key={cmd} code={cmd} />
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -184,12 +218,12 @@ export default function PreWork() {
           Configure Your Environment
         </h2>
         <p className="text-slate-400 text-sm mb-4">
-          Your <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">.env</code> file connects the storefront to your B2C Commerce sandbox. You'll get the values from your sandbox's Account Manager.
+          Your <InlineCode code=".env" color="sky" /> file connects the storefront to your B2C Commerce sandbox. You'll get the values from your sandbox's Account Manager.
         </p>
         <CodeBlock code={envConfig} language="bash" filename=".env" />
         <div className="mt-4">
           <Callout type="warning" title="Never commit .env">
-            The <code>.env</code> file contains API credentials. It's in <code>.gitignore</code> by default — keep it that way. Never push credentials to GitHub.
+            The <code className="bg-slate-800 px-1 py-0.5 rounded font-mono text-xs">.env</code> file contains API credentials. It's in <code className="bg-slate-800 px-1 py-0.5 rounded font-mono text-xs">.gitignore</code> by default — keep it that way. Never push credentials to GitHub.
           </Callout>
         </div>
       </section>
@@ -228,8 +262,9 @@ export default function PreWork() {
             </div>
           ))}
         </div>
-        <div className="mt-3 text-slate-500 text-sm">
-          Install via Extensions panel in VS Code or run: <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">code --install-extension bradlc.vscode-tailwindcss</code>
+        <div className="mt-3 flex items-center gap-2 text-slate-500 text-sm flex-wrap">
+          <span>Install via Extensions panel in VS Code or run:</span>
+          <InlineCode code="code --install-extension bradlc.vscode-tailwindcss" />
         </div>
       </section>
 

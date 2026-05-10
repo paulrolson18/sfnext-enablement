@@ -2,6 +2,7 @@ import { CheckCircle2, Circle } from 'lucide-react'
 import { useProgress } from '../context/ProgressContext'
 import SectionHeader from '../components/SectionHeader'
 import CodeBlock from '../components/CodeBlock'
+import InlineCode from '../components/InlineCode'
 import Callout from '../components/Callout'
 import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
@@ -139,15 +140,11 @@ export default function EnvCheck() {
                   <div className="flex items-center gap-3 mb-3 flex-wrap">
                     <div className="flex items-center gap-2">
                       <span className="text-slate-500 text-xs">Run:</span>
-                      <code className="bg-slate-900 border border-slate-700 px-2.5 py-1 rounded-lg text-sky-400 font-mono text-xs">
-                        {check.command}
-                      </code>
+                      <InlineCode code={check.command} color="sky" />
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="text-slate-500 text-xs">Expect:</span>
-                      <code className="bg-slate-900 border border-slate-700 px-2.5 py-1 rounded-lg text-emerald-400 font-mono text-xs">
-                        {check.expected}
-                      </code>
+                      <InlineCode code={check.expected} color="emerald" />
                     </div>
                   </div>
 
