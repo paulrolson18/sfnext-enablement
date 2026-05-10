@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { ArrowRight, Layers, Server, Globe, ArrowDown, FileCode2 } from 'lucide-react'
+import { ArrowRight, Layers, Server, Globe, ArrowDown, FileCode2, Package } from 'lucide-react'
 import SectionHeader from '../components/SectionHeader'
 import CodeBlock from '../components/CodeBlock'
 import Callout from '../components/Callout'
@@ -225,6 +225,44 @@ export default function Module1() {
         </div>
       </section>
 
+      {/* Commerce Apps */}
+      <section>
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-8 h-8 rounded-full bg-sky-500/15 border border-sky-500/30 flex items-center justify-center">
+            <Package size={15} className="text-sky-400" />
+          </div>
+          <h2 className="text-xl font-bold text-slate-100">Commerce Apps (CAPs)</h2>
+          <span className="text-slate-500 text-sm">Awareness</span>
+        </div>
+        <p className="text-slate-400 text-sm mb-4 leading-relaxed">
+          Commerce Apps bundle cartridges, IMPEX data, and Storefront Next UI extensions into installable packages. When a Commerce App includes Storefront Next components, the install command{' '}
+          <strong className="text-slate-200">automatically creates a pull request</strong>{' '}
+          with the UI changes — reflecting the modern, git-based development workflow.
+        </p>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          {[
+            { cmd: 'b2c cap validate', desc: 'Check package structure' },
+            { cmd: 'b2c cap package', desc: 'Create distributable zip' },
+            { cmd: 'b2c cap install', desc: 'Install app to sandbox' },
+            { cmd: 'b2c cap uninstall', desc: 'Remove installed app' },
+          ].map(({ cmd, desc }) => (
+            <div key={cmd} className="p-3 rounded-lg bg-slate-900/60 border border-slate-700/50 text-center">
+              <code className="text-sky-400 text-xs font-mono">{cmd}</code>
+              <div className="text-slate-500 text-xs mt-1">{desc}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <Callout type="tip" title="SE Talking Points">
+        <ul className="space-y-1 text-sm">
+          <li>• "Storefront Next uses the same mental model as SFRA — routes, data loading, templates — but with modern tooling that developers already know."</li>
+          <li>• "Every page is server-rendered for SEO and performance. Product data is in the HTML before the browser runs JavaScript."</li>
+          <li>• "Managed Runtime scales elastically — flash sales just work, no capacity planning."</li>
+          <li>• "Commerce Apps extend the storefront via git-based pull requests, not cartridge overlays."</li>
+        </ul>
+      </Callout>
+
       {/* Hands-on steps */}
       <section>
         <h2 className="text-xl font-bold text-slate-100 mb-6">Hands-On: Explore Your Project</h2>
@@ -232,14 +270,14 @@ export default function Module1() {
           <StepCard stepKey="m1-react" number={1} title="Open the project in VS Code">
             <p className="text-sm">Run <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">code .</code> from your project directory. Expand the <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">src/</code> folder in the file tree.</p>
           </StepCard>
-          <StepCard stepKey="m1-rr7" number={2} title="Find the homepage route">
-            <p className="text-sm">Open <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">src/routes/_index.tsx</code>. Find the <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">loader()</code> function and the default export component. Which SCAPI calls does it make?</p>
+          <StepCard stepKey="m1-rr7" number={2} title="Trace a request through the code">
+            <p className="text-sm">Open <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">src/routes/_index.tsx</code>. Find the <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">loader()</code> function. Ask Claude Code: <em>"Explain what this loader does and what SCAPI calls it makes."</em> Verify the answer against the request lifecycle diagram above.</p>
           </StepCard>
           <StepCard stepKey="m1-tailwind" number={3} title="Inspect Tailwind classes in the browser">
             <p className="text-sm">In your browser's DevTools, inspect the homepage hero banner. Notice the class names like <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">relative overflow-hidden rounded-2xl</code>. Find where they're defined in the source.</p>
           </StepCard>
-          <StepCard stepKey="m1-ssr" number={4} title="See SSR in action">
-            <p className="text-sm">In DevTools → Network tab, reload the page. Click on the first HTML document request and look at the Response. You'll see the full HTML already rendered — that's server-side rendering from MRT Lambda.</p>
+          <StepCard stepKey="m1-ssr" number={4} title="Prove SSR is working">
+            <p className="text-sm">In DevTools → Network tab, reload the page. Click the first HTML document. In the Response, search for a product name that's visible on the page. If you find it in the raw HTML (before JavaScript runs), SSR is working. <strong className="text-slate-100">Explain to your neighbor why this matters for SEO.</strong></p>
           </StepCard>
           <StepCard stepKey="m1-mrt" number={5} title="Explore the config" isLast>
             <p className="text-sm">Open <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">config.server.ts</code> and <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">tailwind.config.js</code>. These are your two key configuration files — one controls B2C connections, the other controls visual design tokens.</p>

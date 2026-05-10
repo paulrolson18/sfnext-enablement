@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { ArrowRight, ServerCog, Database, Zap, ArrowLeftRight, AlertTriangle } from 'lucide-react'
+import { ArrowRight, ServerCog, Database, Zap, ArrowLeftRight, AlertTriangle, Rocket, Shield } from 'lucide-react'
 import SectionHeader from '../components/SectionHeader'
 import CodeBlock from '../components/CodeBlock'
 import Callout from '../components/Callout'
@@ -223,11 +223,26 @@ export function ErrorBoundary() {
   )
 }`
 
+const deploymentExample = `# Deploy your storefront to Managed Runtime
+pnpm sfnext push --project-slug <PROJECT> --target <ENVIRONMENT>
+
+# Push your local .env to the remote environment
+b2c mrt env var push -p <PROJECT> -e <ENVIRONMENT>
+
+# Tail logs to debug issues on the deployed storefront
+b2c mrt tail-logs -p <PROJECT> -e <ENVIRONMENT>
+
+# Filter to errors only
+b2c mrt tail-logs -p <PROJECT> -e <ENVIRONMENT> --level ERROR
+
+# Search for specific patterns
+b2c mrt tail-logs -p <PROJECT> -e <ENVIRONMENT> --search "timeout|500"`
+
 export default function Module3() {
   return (
     <div className="space-y-12">
       <SectionHeader
-        badge="Module 3 · 35 min"
+        badge="Module 3 · 40 min"
         title="Backend Logic & Data Flow"
         subtitle="How loaders, actions, and SCAPI calls work together. This is where SFRA veterans will feel the biggest shift — and appreciate the biggest gains in clarity and testability."
         gradient="amber"
@@ -312,6 +327,32 @@ export default function Module3() {
         </div>
       </section>
 
+      {/* Auth Architecture */}
+      <section>
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-8 h-8 rounded-full bg-amber-500/15 border border-amber-500/30 flex items-center justify-center">
+            <Shield size={15} className="text-amber-400" />
+          </div>
+          <h2 className="text-xl font-bold text-slate-100">Authentication Architecture</h2>
+          <span className="text-slate-500 text-sm">Conceptual</span>
+        </div>
+        <p className="text-slate-400 text-sm mb-4 leading-relaxed">
+          Storefront Next uses SLAS (Shopper Login and API Access Service) with a split-cookie architecture. You don't need to implement this — it's built into the template — but understanding the pattern helps when customers ask security questions.
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          {[
+            { title: 'Split cookies', detail: 'Access token and refresh token are stored in separate cookies — never both in one' },
+            { title: 'Server-side tokens', detail: 'Token refresh happens in middleware — credentials never reach the browser' },
+            { title: 'Guest → registered', detail: 'When a guest logs in, the server swaps cookie types atomically — no identity gap' },
+          ].map(({ title, detail }) => (
+            <div key={title} className="p-3 rounded-lg bg-amber-950/20 border border-amber-500/20">
+              <div className="text-amber-300 font-semibold text-sm mb-1">{title}</div>
+              <div className="text-slate-400 text-xs">{detail}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* Custom Hooks */}
       <section>
         <div className="flex items-center gap-3 mb-4">
@@ -342,6 +383,36 @@ export default function Module3() {
         <CodeBlock code={errorBoundary} language="typescript" filename="src/routes/product.$productId.tsx" />
       </section>
 
+      {/* Deployment */}
+      <section>
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-8 h-8 rounded-full bg-amber-500/15 border border-amber-500/30 flex items-center justify-center">
+            <Rocket size={15} className="text-amber-400" />
+          </div>
+          <h2 className="text-xl font-bold text-slate-100">Part 6 — Deploying to Managed Runtime</h2>
+          <span className="text-slate-500 text-sm">5 min</span>
+        </div>
+        <p className="text-slate-400 text-sm mb-5 leading-relaxed">
+          You've been developing locally. Now let's get your changes live. Storefront Next deploys to Managed Runtime with a single command — and the B2C CLI gives you tools to manage environment variables and tail logs in real time.
+        </p>
+        <CodeBlock code={deploymentExample} language="bash" filename="Terminal" />
+        <div className="mt-4">
+          <Callout type="tip" title="Environment variables">
+            <code className="bg-slate-800 px-1.5 py-0.5 rounded text-amber-400 font-mono text-xs">b2c mrt env var push</code>{' '}
+            compares your local <code className="bg-slate-800 px-1.5 py-0.5 rounded text-amber-400 font-mono text-xs">.env</code> file against the remote environment and only applies the differences — no risk of overwriting.
+          </Callout>
+        </div>
+      </section>
+
+      <Callout type="tip" title="SE Talking Points">
+        <ul className="space-y-1 text-sm">
+          <li>• "All data fetching happens server-side — API keys and tokens never reach the browser. Security is built into the architecture."</li>
+          <li>• "Parallel data fetching with Promise.all() is a one-line change that cuts page load time in half compared to sequential pipeline calls."</li>
+          <li>• "Deploying changes is one command: pnpm sfnext push. Managed Runtime handles CDN, SSL, and global routing automatically."</li>
+          <li>• "Real-time log tailing with b2c mrt tail-logs makes debugging deployed storefronts as fast as local development."</li>
+        </ul>
+      </Callout>
+
       {/* Hands-on */}
       <section>
         <h2 className="text-xl font-bold text-slate-100 mb-6">Hands-On Exercises</h2>
@@ -364,8 +435,21 @@ export default function Module3() {
           <StepCard stepKey="m3-custom-hook" number={4} title="Build a useRecentlyViewed hook">
             <p className="text-sm">Create <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">src/hooks/useRecentlyViewed.ts</code>. When a product page loads, it should store the product ID in localStorage. The hook should return the last 5 viewed product IDs.</p>
           </StepCard>
-          <StepCard stepKey="m3-error" number={5} title="Add an ErrorBoundary to the cart route" isLast>
+          <StepCard stepKey="m3-error" number={5} title="Add an ErrorBoundary to the cart route">
             <p className="text-sm">Add an <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">ErrorBoundary</code> export to your cart route. Handle the case where the basket API returns a 404 (basket expired) with a helpful message and a "Start a new cart" button.</p>
+          </StepCard>
+          <StepCard stepKey="m3-deploy" number={6} title="Deploy and verify your changes" isLast>
+            <p className="text-sm">
+              Build and deploy your storefront using{' '}
+              <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">pnpm sfnext push</code>.
+              Open the live URL and verify your brand changes from Module 2 are visible.
+              If something looks wrong, use{' '}
+              <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">b2c mrt tail-logs</code>{' '}
+              to diagnose.
+            </p>
+            <Callout type="ai" title="Ask Claude Code">
+              "Deploy my storefront to Managed Runtime and tail the logs so I can see if there are any errors."
+            </Callout>
           </StepCard>
         </div>
       </section>

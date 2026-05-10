@@ -10,9 +10,9 @@ const agenda = [
   { time: '0:25', duration: '25 min', label: 'Module 1 — Architecture', color: 'sky', path: '/module/1' },
   { time: '0:50', duration: '45 min', label: 'Module 2 — Frontend', color: 'violet', path: '/module/2' },
   { time: '1:35', duration: '10 min', label: 'Break', color: 'slate', path: null },
-  { time: '1:45', duration: '35 min', label: 'Module 3 — Backend', color: 'amber', path: '/module/3' },
-  { time: '2:20', duration: '25 min', label: 'Module 4 — AI with Claude Code', color: 'violet', path: '/module/4' },
-  { time: '2:45', duration: '15 min', label: 'Q&A & Wrap-up', color: 'slate', path: null },
+  { time: '1:45', duration: '40 min', label: 'Module 3 — Backend + Deployment', color: 'amber', path: '/module/3' },
+  { time: '2:25', duration: '25 min', label: 'Module 4 — AI with Claude Code', color: 'violet', path: '/module/4' },
+  { time: '2:50', duration: '10 min', label: 'Q&A & Wrap-up', color: 'slate', path: null },
 ]
 
 const colorMap: Record<string, string> = {
