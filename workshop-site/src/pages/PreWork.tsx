@@ -31,10 +31,10 @@ const toolPrereqs = [
     color: 'text-sky-400',
     bg: 'bg-sky-500/10 border-sky-500/20',
     title: 'B2C Sandbox Access',
-    desc: 'You\'ll need access to a B2C Commerce sandbox with SCAPI credentials.',
+    desc: 'It is recommended that you start with a newly created, empty sandbox.',
     verify: null,
-    action: 'Contact your team lead for sandbox credentials. Create an Account Manager account at',
-    actionLink: { label: 'account.demandware.com', url: 'https://account.demandware.com' },
+    action: '',
+    actionLink: { label: 'Create One', url: 'https://www.solutionswork.space/demos/requestdemo/910c0406-8172-647c-a8ef-272adbb37a02' },
   },
   {
     icon: Download,
