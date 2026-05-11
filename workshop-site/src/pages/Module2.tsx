@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { ArrowRight, Palette, Layout, Image, Star } from 'lucide-react'
+import { ArrowRight, Palette, Layout, Image, Star, Smartphone } from 'lucide-react'
 import SectionHeader from '../components/SectionHeader'
 import CodeBlock from '../components/CodeBlock'
 import Callout from '../components/Callout'
@@ -59,6 +59,66 @@ export function HeroBanner({
     </div>
   )
 }`
+
+const pageDesignerHero = `// src/components/HeroBanner.tsx — Enhanced for Page Designer
+interface HeroBannerProps {
+  title: string
+  subtitle: string
+  ctaText: string
+  ctaHref: string
+  imageSrc: string
+  theme?: 'light' | 'dark'
+  // ↓ New props for Page Designer control
+  titleColor?: string        // e.g. '#c9a84c', 'white', 'var(--brand-primary)'
+  titleAlignment?: 'left' | 'center' | 'right'
+}
+
+export function HeroBanner({
+  title, subtitle, ctaText, ctaHref, imageSrc, theme = 'dark',
+  titleColor,
+  titleAlignment = 'left',
+}: HeroBannerProps) {
+  // Map alignment to Tailwind classes
+  const alignmentClasses = {
+    left: 'text-left items-start',
+    center: 'text-center items-center',
+    right: 'text-right items-end',
+  }
+
+  return (
+    <div className="relative overflow-hidden rounded-2xl min-h-[500px] flex items-end">
+      <img src={imageSrc} alt="" className="absolute inset-0 w-full h-full object-cover" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+
+      <div className={\`relative z-10 p-8 md:p-12 flex flex-col w-full \${alignmentClasses[titleAlignment]}\`}>
+        <h1
+          className="text-4xl md:text-5xl font-bold mb-3 leading-tight"
+          style={titleColor ? { color: titleColor } : undefined}
+        >
+          {title}
+        </h1>
+        <p className={\`text-slate-200 text-lg mb-6 \${titleAlignment === 'center' ? 'max-w-lg mx-auto' : 'max-w-md'}\`}>
+          {subtitle}
+        </p>
+        <a href={ctaHref}
+          className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-slate-900 font-semibold hover:bg-slate-100 transition-colors shadow-lg">
+          {ctaText} →
+        </a>
+      </div>
+    </div>
+  )
+}
+
+// Page Designer metadata — this tells BM what the merchandiser can configure
+// The MCP tool sfnext_add_page_designer_decorator generates this automatically
+@PageType({ id: 'hero-banner', label: 'Hero Banner' })
+@RegionDefinition({
+  attributes: [
+    { id: 'titleColor', type: 'color', label: 'Title Color', default: '#ffffff' },
+    { id: 'titleAlignment', type: 'enum', label: 'Title Alignment',
+      values: ['left', 'center', 'right'], default: 'left' },
+  ]
+})`
 
 const themeTokens = `// tailwind.config.js — Brand Customization
 /** @type {import('tailwindcss').Config} */
@@ -347,10 +407,34 @@ export default function Module2() {
           The Product Listing Page (category page) layout is controlled in a single route file. Changing from 3 columns to 4, adding a sidebar, or moving filters all happens here.
         </p>
         <CodeBlock code={plpLayout} language="typescript" filename="src/routes/category.$categoryId.tsx" />
-        <div className="mt-4">
+        <div className="mt-4 space-y-3">
           <Callout type="tip" title="Responsive grid in one line">
             <code className="bg-slate-800 px-1.5 py-0.5 rounded text-violet-300 font-mono text-xs">grid-cols-2 lg:grid-cols-3 xl:grid-cols-4</code> — this single Tailwind class gives you 2 columns on mobile, 3 on desktop, 4 on large screens. No media query files to manage.
           </Callout>
+        </div>
+
+        {/* Mobile-First Design */}
+        <div className="mt-6 p-4 rounded-xl bg-violet-950/15 border border-violet-500/20">
+          <div className="flex items-center gap-2 mb-2">
+            <Smartphone size={15} className="text-violet-400" />
+            <h4 className="text-slate-200 font-semibold text-sm">Mobile-First by Default</h4>
+          </div>
+          <p className="text-slate-400 text-xs leading-relaxed mb-3">
+            Over 70% of commerce traffic is mobile. Tailwind is inherently mobile-first — all styles apply to mobile by default, and breakpoint prefixes (<code className="bg-slate-800 px-1 py-0.5 rounded text-violet-300 font-mono text-xs">md:</code>, <code className="bg-slate-800 px-1 py-0.5 rounded text-violet-300 font-mono text-xs">lg:</code>) add desktop enhancements. This means the mobile experience is always the baseline, never an afterthought.
+          </p>
+          <div className="grid grid-cols-3 gap-2">
+            {[
+              { bp: 'Default', width: '< 768px', desc: 'Mobile — base styles apply' },
+              { bp: 'md:', width: '≥ 768px', desc: 'Tablet — add columns, padding' },
+              { bp: 'lg:', width: '≥ 1024px', desc: 'Desktop — full layout, sidebar' },
+            ].map(({ bp, width, desc }) => (
+              <div key={bp} className="p-2 rounded-lg bg-slate-800/30 border border-slate-700/30 text-center">
+                <code className="text-violet-400 font-mono text-xs font-bold">{bp}</code>
+                <div className="text-slate-500 text-xs">{width}</div>
+                <div className="text-slate-400 text-xs mt-0.5">{desc}</div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -379,9 +463,15 @@ export default function Module2() {
           ))}
         </div>
         <div className="mt-4">
-          <Callout type="info" title="For customer conversations">
-            If a merchandiser asks "can I change the page without a developer?" — the answer is yes. Page Designer lets them configure pages, arrange components, and manage content regions through Business Manager, while the storefront renders those components as React.
-          </Callout>
+          <p className="text-slate-400 text-sm mb-4 leading-relaxed">
+            In practice, this means adding props to your components that a merchandiser can control — like title color, text alignment, or layout variants. The component code stays clean; the metadata decorators tell Business Manager what's configurable.
+          </p>
+          <CodeBlock code={pageDesignerHero} language="typescript" filename="src/components/HeroBanner.tsx — Page Designer Enhanced" />
+          <div className="mt-4">
+            <Callout type="info" title="For customer conversations">
+              If a merchandiser asks "can I change the page without a developer?" — the answer is yes. Page Designer lets them configure pages, arrange components, and manage content regions through Business Manager, while the storefront renders those components as React. The hero banner above is a concrete example — a merchandiser can change the title color and alignment without touching code.
+            </Callout>
+          </div>
         </div>
       </section>
 
@@ -407,16 +497,51 @@ export default function Module2() {
           <StepCard stepKey="m2-hero" number={2} title="Modify the homepage hero">
             <p className="text-sm">Find the hero banner in your homepage route (<code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">src/routes/_index.tsx</code>). Update the gradient overlay color and CTA button style to match your new brand colors.</p>
           </StepCard>
-          <StepCard stepKey="m2-product-card" number={3} title="Add Quick Add to product cards">
+          <StepCard stepKey="m2-page-designer-hero" number={3} title="Enhance HeroBanner for Page Designer">
+            <p className="text-sm">
+              Open <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">src/components/HeroBanner.tsx</code>.
+              Add two new props to <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">HeroBannerProps</code>:{' '}
+              <code className="bg-slate-800 px-1.5 py-0.5 rounded text-violet-400 font-mono text-xs">titleColor</code> (an optional string for any CSS color) and{' '}
+              <code className="bg-slate-800 px-1.5 py-0.5 rounded text-violet-400 font-mono text-xs">titleAlignment</code> (left, center, or right).
+              Update the component to apply these props — use an inline <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">style</code> for the color
+              and map the alignment to Tailwind classes. Test by passing different values from the homepage route.
+            </p>
+            <Callout type="ai" title="Ask Claude Code">
+              "In my HeroBanner component, add a titleColor prop (optional string) and a titleAlignment prop ('left' | 'center' | 'right'). Apply the color as an inline style on the h1 and map alignment to Tailwind text-left/center/right classes. Update the content wrapper to align child elements accordingly."
+            </Callout>
+            <Callout type="tip" title="Why this matters for Page Designer">
+              These are exactly the kind of props a merchandiser controls through Business Manager. When you add the Page Designer decorators later, each prop becomes a configurable field in the BM editing interface — no code changes needed for content updates.
+            </Callout>
+          </StepCard>
+          <StepCard stepKey="m2-product-card" number={4} title="Add Quick Add to product cards">
             <p className="text-sm">Find <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">src/components/ProductCard.tsx</code>. Add a slide-up Quick Add button that appears on hover using the pattern shown above.</p>
             <Callout type="ai" title="Ask Claude Code">
               "In my ProductCard component, add a Quick Add button that slides up from the bottom on hover. Use Tailwind group-hover and translate-y transitions."
             </Callout>
           </StepCard>
-          <StepCard stepKey="m2-plp" number={4} title="Change the PLP grid layout">
+          <StepCard stepKey="m2-plp" number={5} title="Change the PLP grid layout">
             <p className="text-sm">Find the product grid in your category route. Change it from 3 columns to 4 columns on large screens. Add a visible count ("553 products") above the grid.</p>
           </StepCard>
-          <StepCard stepKey="m2-pdp" number={5} title="Challenge: Add a badge system" isLast>
+          <StepCard stepKey="m2-deploy" number={6} title="Deploy & verify your changes">
+            <p className="text-sm">
+              Let's push your frontend changes to Managed Runtime so you can see them live before the break.
+              Run the deployment command from your project root, then open the storefront URL to verify your brand colors, hero updates, and Page Designer enhancements are live.
+            </p>
+            <div className="mt-3 space-y-2">
+              <div className="p-3 rounded-lg bg-slate-900/60 border border-slate-700/50">
+                <code className="text-emerald-400 font-mono text-xs">pnpm sfnext push</code>
+                <span className="text-slate-500 text-xs ml-2">— deploys to your Managed Runtime environment</span>
+              </div>
+              <div className="p-3 rounded-lg bg-slate-900/60 border border-slate-700/50">
+                <code className="text-emerald-400 font-mono text-xs">b2c mrt tail-logs</code>
+                <span className="text-slate-500 text-xs ml-2">— watch deployment progress and catch errors</span>
+              </div>
+            </div>
+            <Callout type="tip" title="What to verify">
+              Open your storefront URL and check: (1) brand colors updated globally, (2) hero banner reflects your changes, (3) product cards have the hover interactions you added. This is the same deploy workflow you'd demo to a customer.
+            </Callout>
+          </StepCard>
+          <StepCard stepKey="m2-pdp" number={7} title="Challenge: Add a badge system" isLast>
             <p className="text-sm">Add "NEW" and "SALE" badges to product cards. A product should show "NEW" if <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">product.isNew</code> is true, and show a discount percentage badge if the sale price differs from list price.</p>
             <Callout type="ai" title="Ask Claude Code">
               "Add badge overlays to my ProductCard component — a 'NEW' badge for new arrivals and a discount percentage badge when salePrice exists. Position them in the top-left corner of the image."

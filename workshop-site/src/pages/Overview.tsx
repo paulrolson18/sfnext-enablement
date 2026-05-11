@@ -213,6 +213,34 @@ export default function Overview() {
         </div>
       </section>
 
+      {/* Post-Workshop Resources */}
+      <section>
+        <h2 className="text-2xl font-bold text-slate-100 mb-2">Post-Workshop Resources</h2>
+        <p className="text-slate-400 mb-4 text-sm">Scripted demo flows and a quick reference card to use after the workshop.</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+          <Link
+            to="/demo-playbook"
+            className="flex items-start gap-3 p-4 rounded-xl bg-sky-500/5 border border-sky-500/20 hover:bg-sky-500/10 transition-all group"
+          >
+            <span className="text-xl mt-0.5">🎬</span>
+            <div>
+              <div className="text-sky-300 font-semibold text-sm group-hover:text-sky-200 transition-colors">Demo Playbook</div>
+              <div className="text-slate-500 text-xs mt-0.5">4 scripted demo flows for different audiences and selling scenarios</div>
+            </div>
+          </Link>
+          <Link
+            to="/cheat-sheet"
+            className="flex items-start gap-3 p-4 rounded-xl bg-emerald-500/5 border border-emerald-500/20 hover:bg-emerald-500/10 transition-all group"
+          >
+            <span className="text-xl mt-0.5">📋</span>
+            <div>
+              <div className="text-emerald-300 font-semibold text-sm group-hover:text-emerald-200 transition-colors">Quick Reference Card</div>
+              <div className="text-slate-500 text-xs mt-0.5">Key commands, talking points, architecture cheat sheet, and demo URLs</div>
+            </div>
+          </Link>
+        </div>
+      </section>
+
       {/* Resources */}
       <section>
         <h2 className="text-2xl font-bold text-slate-100 mb-6">Key Resources</h2>

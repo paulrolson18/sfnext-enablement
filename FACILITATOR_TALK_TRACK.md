@@ -12,7 +12,7 @@
 | 0:00 | 10 min | Welcome & Overview | Instructor-led |
 | 0:10 | 15 min | Environment Validation | Live walkthrough |
 | 0:25 | 25 min | Module 1 — Architecture | 18 min instruction + 7 min exercises |
-| 0:50 | 45 min | Module 2 — Frontend | 25 min instruction + 20 min exercises |
+| 0:50 | 45 min | Module 2 — Frontend | 22 min instruction + 23 min exercises |
 | 1:35 | 10 min | Break | — |
 | 1:45 | 40 min | Module 3 — Backend + Deployment | 22 min instruction + 18 min exercises |
 | 2:25 | 25 min | Module 4 — AI Development | 13 min instruction + 12 min exercises |
@@ -102,8 +102,8 @@ Run each check projected. Participants run simultaneously. The six checks:
 | 0:26–0:35 | Tech stack walkthrough (4 layers) | 9 |
 | 0:35–0:38 | Project structure + interactive Q&A | 3 |
 | 0:38–0:41 | Request lifecycle | 3 |
-| 0:41–0:43 | Commerce Apps awareness + SE Talking Points | 2 |
-| 0:43–0:50 | Hands-on exercises (5 exercises) | 7 |
+| 0:41–0:43 | Commerce Apps + i18n + CWV awareness + SE Talking Points | 2 |
+| 0:43–0:50 | Hands-on exercises (6 exercises) | 7 |
 
 ### 0:25–0:26 — Framing (1 min)
 
@@ -154,23 +154,27 @@ Walk the six steps slowly. This is where it clicks for most people.
 5. "React renders the page with data. HTML streams to the browser."
 6. "Browser hydrates — React takes over for interactions."
 
-### 0:41–0:43 — Commerce Apps + SE Talking Points (2 min)
+### 0:41–0:43 — Commerce Apps + i18n + CWV + SE Talking Points (2 min)
 
-**Commerce Apps (1 min):**
+**Commerce Apps (30 sec):**
 > "Commerce Apps are how ISVs ship extensions. The key insight: when a Commerce App includes UI components, `b2c cap install` creates a pull request. Git-based, reviewable."
 
+**i18n + CWV (30 sec — point to the cards, don't deep-dive):**
+> "Two more awareness sections on the page: i18n — path-based locale routing, one codebase for all regions. And Core Web Vitals — Streaming SSR gives you structural performance advantages. You'll measure these in exercise 6."
+
 **SE Talking Points (1 min):**
-> "Read the four amber talking points. Which resonates most with your current deals?"
+> "Read the five amber talking points. Which resonates most with your current deals?"
 
 ### 0:43–0:50 — Hands-on exercises (7 min)
 
 | Exercise | What they do | Time |
 |----------|-------------|------|
 | 1. Open project in VS Code | `code .` from project dir | 0.5 min |
-| 2. Trace a request through the code | Open `_index.tsx`, find `loader()`, ask Claude Code to explain it, verify against diagram | 2.5 min |
-| 3. Inspect Tailwind classes in DevTools | Inspect hero banner, find class names in source | 1.5 min |
-| 4. Prove SSR is working | Network tab → HTML response → search for product name → explain to neighbor why it matters for SEO | 1.5 min |
-| 5. Explore config files | Open `config.server.ts` and `tailwind.config.js` | 1 min |
+| 2. Trace a request through the code | Open `_index.tsx`, find `loader()`, ask Claude Code to explain it, verify against diagram | 2 min |
+| 3. Inspect Tailwind classes in DevTools | Inspect hero banner, find class names in source | 1 min |
+| 4. Prove SSR is working | Network tab → HTML response → search for product name → explain to neighbor why it matters for SEO | 1 min |
+| 5. Explore config files | Open `config.server.ts` and `tailwind.config.js` | 0.5 min |
+| 6. Measure Core Web Vitals | DevTools → Lighthouse → run Mobile audit → note LCP, CLS, INP | 2 min |
 
 **Facilitator cue:** Walk the room during exercises. If someone finishes early, ask them to help their neighbor.
 
@@ -184,12 +188,14 @@ Walk the six steps slowly. This is where it clicks for most people.
 
 | Time | Section | Minutes |
 |------|---------|---------|
-| 1:50–0:53 | Intro + Odyssey reference | 3 |
+| 0:50–0:53 | Intro + Odyssey reference | 3 |
 | 0:53–1:03 | Part 1 — Brand Tokens (explain 3 + hands-on 7) | 10 |
-| 1:03–1:13 | Part 2 — Hero Banner (explain 4 + hands-on 6) | 10 |
-| 1:13–1:28 | Part 3 — Product Card (explain 5 + hands-on 10) | 15 |
-| 1:28–1:33 | Part 4 — PLP Layout + Page Designer + SE Points | 5 |
-| 1:33–1:35 | Challenge exercise (optional) | 2 |
+| 1:03–1:11 | Part 2 — Hero Banner (explain 3 + hands-on 5) | 8 |
+| 1:11–1:14 | Part 2b — Page Designer HeroBanner exercise | 3 |
+| 1:14–1:24 | Part 3 — Product Card (explain 5 + hands-on 5) | 10 |
+| 1:24–1:28 | Part 4 — PLP Layout + Page Designer + SE Points | 4 |
+| 1:28–1:31 | Deploy & verify changes live | 3 |
+| 1:31–1:35 | Challenge exercise (optional) + buffer | 4 |
 
 ### 0:50–0:53 — Intro (3 min)
 
@@ -214,20 +220,30 @@ Walk `tailwind.config.js` — the three key tokens:
 
 If someone is stuck: "Ask Claude Code — 'Update my tailwind.config.js to reflect a [brand type] aesthetic.'"
 
-### 1:03–1:13 — Part 2: Hero Banner (10 min)
+### 1:03–1:11 — Part 2: Hero Banner (8 min)
 
-**Explain (4 min):**
+**Explain (3 min):**
 Show the ISML vs React comparison side-by-side on projector.
 
 **Key point:**
 > "Because the hero is a component with typed props, you can reuse it on the homepage, category pages, and campaign landing pages — same component, different content. In SFRA you'd copy-paste the ISML block."
 
-**Exercise (6 min):**
+**Exercise 2 (5 min):**
 > "Find your hero banner in `src/routes/_index.tsx`. Update the gradient overlay color and CTA button style to match your new brand palette."
 
 The Tailwind class to find: `bg-gradient-to-t from-black/70`. They change it to their brand color.
 
-### 1:13–1:28 — Part 3: Product Card Enhancement (15 min)
+### 1:11–1:14 — Part 2b: Page Designer HeroBanner Exercise (3 min)
+
+**Exercise 3 — Enhance HeroBanner for Page Designer (3 min):**
+> "Now let's make the hero configurable by merchandisers. Open `src/components/HeroBanner.tsx`. Add two new props: `titleColor` (optional string) and `titleAlignment` ('left' | 'center' | 'right'). Apply color as an inline style on the h1, and map alignment to Tailwind classes."
+
+**Say:**
+> "This is the bridge between developer and merchandiser. You add props, Page Designer exposes them as config fields in Business Manager. Ask Claude Code to help — give it the exact prop names and types."
+
+**Facilitator cue:** Walk the room. Most people should be able to add both props and the alignment class map in 3 min. If someone is stuck, point them to the Page Designer code example in the module.
+
+### 1:14–1:24 — Part 3: Product Card Enhancement (10 min)
 
 **Explain (5 min):**
 
@@ -245,19 +261,19 @@ Walk these patterns in the code:
 - `translate-y-full group-hover:translate-y-0` = slide-up animation, zero JS
 - `isHovered` state for image swap = one `useState`
 
-**Exercise (10 min):**
+**Exercise 4 (5 min):**
 > "Find `src/components/ProductCard.tsx`. Add a slide-up Quick Add button on hover. Use the pattern from the module or ask Claude Code."
 
 Claude Code prompt: *"In my ProductCard component, add a Quick Add button that slides up from the bottom on hover. Use Tailwind group-hover and translate-y transitions."*
 
 Walk the room. Redirect anyone adding `style={}` to Tailwind classes.
 
-### 1:28–1:33 — Part 4: PLP Layout + Page Designer + SE Points (5 min)
+### 1:24–1:28 — Part 4: PLP Layout + Page Designer + SE Points (4 min)
 
 **PLP Layout (2 min):**
 > "The entire category page layout is in one file. Changing column count is one class name."
 
-Quick exercise:
+**Exercise 5:**
 > "Change your grid from 3 columns to 4 on large screens. Add a product count above the grid."
 
 **Page Designer (1 min — awareness only):**
@@ -266,8 +282,28 @@ Quick exercise:
 **SE Talking Points (1 min):**
 > "Read the amber callout. Which point resonates?"
 
-**Challenge Exercise (1 min):**
+### 1:28–1:31 — Deploy & Verify (3 min)
+
+**Exercise 6 — Deploy changes to Managed Runtime:**
+> "Let's see your work live before the break. Run `pnpm sfnext push` to deploy. Open your storefront URL and verify: brand colors, hero changes, product card enhancements."
+
+**Say:**
+> "This is the same workflow you'd demo to a customer. One command → live site. Watch `b2c mrt tail-logs` if anything looks off."
+
+| Exercise detail | Time |
+|-----------------|------|
+| Run deploy command | 1 min |
+| Open live URL, verify visuals | 1 min |
+| Troubleshoot with `tail-logs` (if needed) | 1 min |
+
+**Note:** If participants don't have MRT project access, demo this on projector.
+
+### 1:31–1:35 — Challenge + Buffer (4 min)
+
+**Exercise 7 (optional):**
 > "If you finished early: add NEW and SALE badges to your product cards."
+
+Use remaining time for stragglers to catch up on deploy or any earlier exercise.
 
 ### 1:35 — Break
 
@@ -284,11 +320,13 @@ Quick exercise:
 | 1:45–1:46 | Framing | 1 |
 | 1:46–1:56 | Part 1 — Loaders (explain 5 + exercise 5) | 10 |
 | 1:56–2:04 | Part 2 — Actions (explain 4 + exercise 4) | 8 |
-| 2:04–2:12 | Part 3 — SCAPI (explain 4 + exercise 4) | 8 |
+| 2:04–2:05 | Checkout Architecture awareness | 1 |
+| 2:05–2:12 | Part 3 — SCAPI + Search & Discovery (explain 4 + exercise 4) | 7 |
 | 2:12–2:14 | Auth Architecture awareness | 2 |
 | 2:14–2:17 | Part 4 — Custom Hooks (explain 2 + exercise 1) | 3 |
 | 2:17–2:19 | Part 5 — Error Handling (explain 1 + exercise 1) | 2 |
-| 2:19–2:24 | Part 6 — Deployment (explain 2 + exercise 3) | 5 |
+| 2:19–2:20 | Testing Patterns awareness | 1 |
+| 2:20–2:24 | Part 6 — Deployment (explain 2 + exercise 2) | 4 |
 | 2:24–2:25 | SE Talking Points | 1 |
 
 ### 1:45–1:46 — Framing (1 min)
@@ -340,7 +378,14 @@ Show `AddToCartButton`: no `onSubmit` handler, React Router handles the POST.
 | Read formData, console.log | 1 min |
 | Add form with hidden input | 1 min |
 
-### 2:04–2:12 — Part 3: SCAPI Integration (8 min)
+### 2:04–2:05 — Checkout Architecture (1 min — awareness only)
+
+**Say:**
+> "Before we get into SCAPI, look at the Checkout Architecture section on the page. Cart → Shipping → Payment → Confirmation — each is a route with its own loader/action. Same pattern you just learned. The key customer talking point: '1-click checkout from day one.'"
+
+Point to the four checkout steps. No exercise — the pattern reinforces what they just learned about loaders and actions.
+
+### 2:05–2:12 — Part 3: SCAPI Integration + Search & Discovery (7 min)
 
 **Explain (4 min):**
 Walk `src/lib/scapi/products.ts`:
@@ -359,6 +404,9 @@ Walk `src/lib/scapi/products.ts`:
 | Create function signature | 1 min |
 | Define return type interface | 1.5 min |
 | Add fetch URL pattern (or ask Claude Code) | 1.5 min |
+
+**Search & Discovery (30 sec — point to subsection):**
+> "Below the SCAPI grid, you'll see Search & Discovery. Keyword search, faceted filtering, typeahead suggestions — all via Shopper Search API. This is frequently asked about in demos."
 
 ### 2:12–2:14 — Auth Architecture (2 min — awareness only)
 
@@ -389,7 +437,14 @@ Two points:
 **Exercise (1 min):**
 > "Add an `ErrorBoundary` to your cart route. Handle 404 with a helpful message."
 
-### 2:19–2:24 — Part 6: Deployment (5 min)
+### 2:19–2:20 — Testing Patterns (1 min — awareness only)
+
+**Say:**
+> "Look at the Testing section on the page. Vitest for unit tests, React Testing Library for components, Playwright for E2E. When a customer asks about test strategy, point to this three-layer approach — it mirrors what enterprise teams already use."
+
+No exercise. This addresses a common customer objection about production readiness.
+
+### 2:20–2:24 — Part 6: Deployment (4 min)
 
 **Explain (2 min):**
 Three commands:
@@ -400,14 +455,14 @@ Three commands:
 **Say:**
 > "One command to deploy. One command for env vars. One command to debug in real time. No SSH, no server access, no DevOps pipeline."
 
-**Exercise (3 min):**
+**Exercise (2 min):**
 > "Deploy with `pnpm sfnext push`. Open the live URL, verify your brand changes. If something's off, run `b2c mrt tail-logs`."
 
 | Exercise detail | Time |
 |-----------------|------|
-| Run deploy command | 1 min (command itself, build takes background time) |
+| Run deploy command | 0.5 min (command itself, build takes background time) |
 | Open live URL, verify visuals | 1 min |
-| Try `tail-logs` with `--level ERROR` | 1 min |
+| Try `tail-logs` with `--level ERROR` | 0.5 min |
 
 **Note:** If participants don't have MRT project access, demo this on projector instead.
 
@@ -555,9 +610,10 @@ Let questions flow. Common ones and answers:
 ### 2:59–3:00 — Close (1 min)
 
 **Say:**
-> "Bookmark the workshop site — it stays available and will be updated as Storefront Next evolves."
+> "Bookmark the workshop site — it stays available and will be updated as Storefront Next evolves. Two pages to check out after today: the **Demo Playbook** has four scripted demo flows for different customer scenarios, and the **Quick Reference Card** is your cheat sheet — key commands, talking points, and architecture mappings all on one page."
 
 Share:
+- Workshop site: Demo Playbook & Quick Reference Card pages
 - Slack: `#cc-sfnext-internal-se`
 - Template repo
 - B2C Developer Tooling docs
@@ -570,29 +626,32 @@ Share:
 
 ## Exercise Time Budget Summary
 
-### Module 1 — 7 min total (5 exercises)
+### Module 1 — 7 min total (6 exercises)
 
 | # | Exercise | Minutes |
 |---|----------|---------|
 | 1 | Open project in VS Code | 0.5 |
-| 2 | Trace a request (find loader, ask Claude Code, verify diagram) | 2.5 |
-| 3 | Inspect Tailwind classes in DevTools | 1.5 |
-| 4 | Prove SSR (search HTML response, explain to neighbor) | 1.5 |
-| 5 | Explore config files | 1.0 |
+| 2 | Trace a request (find loader, ask Claude Code, verify diagram) | 2 |
+| 3 | Inspect Tailwind classes in DevTools | 1 |
+| 4 | Prove SSR (search HTML response, explain to neighbor) | 1 |
+| 5 | Explore config files | 0.5 |
+| 6 | Measure Core Web Vitals (Lighthouse audit) | 2 |
 
-### Module 2 — 20 min total (5 exercises, integrated with instruction)
+### Module 2 — 23 min total (7 exercises, integrated with instruction)
 
 | # | Exercise | Minutes |
 |---|----------|---------|
 | 1 | Update brand colors in `tailwind.config.js` | 7 |
-| 2 | Modify homepage hero gradient + CTA | 6 |
-| 3 | Add Quick Add button to product cards | 10 |
-| 4 | Change PLP grid to 4 columns + add count | — (folded into Part 4 instruction) |
-| 5 | Challenge: Add badge system | 2 (or skip) |
+| 2 | Modify homepage hero gradient + CTA | 5 |
+| 3 | Enhance HeroBanner for Page Designer (titleColor + titleAlignment) | 3 |
+| 4 | Add Quick Add button to product cards | 5 |
+| 5 | Change PLP grid to 4 columns + add count | — (folded into Part 4 instruction) |
+| 6 | Deploy & verify changes on Managed Runtime | 2 |
+| 7 | Challenge: Add badge system | 1 (or skip) |
 
 *Note: Module 2 exercises are woven into each Part, not a separate block.*
 
-### Module 3 — 18 min total (6 exercises, integrated)
+### Module 3 — 17 min total (6 exercises, integrated)
 
 | # | Exercise | Minutes |
 |---|----------|---------|
@@ -601,7 +660,7 @@ Share:
 | 3 | Add `getProductsByCategory` SCAPI function | 4 |
 | 4 | Create `useRecentlyViewed` hook signature | 1 |
 | 5 | Add ErrorBoundary to cart route | 1 |
-| 6 | Deploy and verify with `tail-logs` | 3 |
+| 6 | Deploy and verify with `tail-logs` | 2 |
 
 ### Module 4 — 12 min total (5 exercises)
 
@@ -621,10 +680,13 @@ If you're running behind, these are safe cuts:
 
 | Priority | What to cut | Saves |
 |----------|-------------|-------|
-| 1 | Module 2 Exercise 5 (badge system) | 2 min |
+| 1 | Module 2 Exercise 7 (badge system challenge) | 1 min |
 | 2 | Module 4 Exercise 5 (Odyssey challenge) | 1 min |
 | 3 | Module 3 Exercise 4 (useRecentlyViewed hook) | 1 min |
-| 4 | Module 4 Part 2 — walk only 1 PromptCard instead of 2 | 1.5 min |
-| 5 | Module 1 — skip Managed Runtime walkthrough, just reference it | 2 min |
+| 4 | Module 2 — fold deploy into Module 3 instead (skip Exercise 6) | 3 min |
+| 5 | Module 4 Part 2 — walk only 1 PromptCard instead of 2 | 1.5 min |
+| 6 | Module 1 — skip Managed Runtime walkthrough, just reference it | 2 min |
 
-**Maximum recovery: ~7.5 min** — enough to absorb one module running long.
+| 7 | Module 3 — skip Checkout/Search/Testing awareness sections | 3 min |
+
+**Maximum recovery: ~12.5 min** — enough to absorb one module running long.

@@ -8,6 +8,8 @@ import Module1 from './pages/Module1'
 import Module2 from './pages/Module2'
 import Module3 from './pages/Module3'
 import Module4 from './pages/Module4'
+import DemoPlaybook from './pages/DemoPlaybook'
+import CheatSheet from './pages/CheatSheet'
 
 export default function App() {
   return (
@@ -22,6 +24,8 @@ export default function App() {
             <Route path="module/2" element={<Module2 />} />
             <Route path="module/3" element={<Module3 />} />
             <Route path="module/4" element={<Module4 />} />
+            <Route path="demo-playbook" element={<DemoPlaybook />} />
+            <Route path="cheat-sheet" element={<CheatSheet />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>
         </Routes>
