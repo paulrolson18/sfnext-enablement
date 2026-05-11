@@ -156,6 +156,42 @@ export default function Setup() {
         </div>
       </section>
 
+      {/* Part 3: Connect Claude Code */}
+      <section>
+        <h2 className="text-xl font-bold text-slate-100 mb-6">Part 3 — Connect Claude Code to Your Repo</h2>
+        <div className="space-y-0">
+          <StepCard stepKey="setup-claude-repo" number={13} title="Tell Claude Code about your repo">
+            <p className="text-sm">
+              Open Claude Code in your terminal and paste the following:
+            </p>
+            <div className="mt-2">
+              <CodeBlock
+                language="text"
+                code={`I would like to work on this repo: <paste your GitHub URL from Business Manager>`}
+              />
+            </div>
+            <p className="text-sm mt-2">
+              Copy the GitHub repo URL from Business Manager (from step 12) and paste it in place of the placeholder. Wait for Claude Code to acknowledge before continuing.
+            </p>
+          </StepCard>
+
+          <StepCard stepKey="setup-claude-env" number={14} title="Set up your environment file" isLast>
+            <p className="text-sm">
+              Once Claude Code has cloned and acknowledged the repo, paste:
+            </p>
+            <div className="mt-2">
+              <CodeBlock
+                language="text"
+                code={`I need to setup my .env file`}
+              />
+            </div>
+            <p className="text-sm mt-2">
+              Claude Code will guide you through configuring the <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">.env</code> file with your B2C sandbox credentials — connecting your local development environment to your Commerce Cloud sandbox.
+            </p>
+          </StepCard>
+        </div>
+      </section>
+
       <div className="flex justify-end">
         <Link
           to="/module/1"
