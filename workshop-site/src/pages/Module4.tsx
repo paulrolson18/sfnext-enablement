@@ -210,6 +210,12 @@ export default function Module4() {
           <div className="mt-3">
             <CodeBlock code={claudeMdCustomize} language="markdown" filename="Add to your CLAUDE.md" />
           </div>
+
+          <div className="mt-4">
+            <Callout type="info" title="AGENTS.md — works with every AI tool, not just one">
+              The template actually ships with <code className="bg-slate-800 px-1.5 py-0.5 rounded text-violet-400 font-mono text-xs">AGENTS.md</code> as the source file, and <code className="bg-slate-800 px-1.5 py-0.5 rounded text-violet-400 font-mono text-xs">CLAUDE.md</code> is a symlink to it. <strong className="text-slate-200">AGENTS.md is the emerging industry standard</strong> that AI coding tools are converging on — Codex, Cursor, Copilot, and others all read it. This means the same 22 rules, conventions, and architecture docs work across every AI coding assistant automatically. No vendor lock-in, no duplicate config files, one source of truth for all agents.
+            </Callout>
+          </div>
         </div>
 
         <div className="mt-6">
