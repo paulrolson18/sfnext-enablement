@@ -1,11 +1,54 @@
 import { Link } from 'react-router-dom'
-import { ArrowRight, Terminal, GitBranch, Package, Code2, Cpu, Globe } from 'lucide-react'
+import { ArrowRight, Terminal, GitBranch, Package, Code2, Cpu, Globe, Download, Wrench } from 'lucide-react'
 import SectionHeader from '../components/SectionHeader'
 import CodeBlock from '../components/CodeBlock'
 import InlineCode from '../components/InlineCode'
 import Callout from '../components/Callout'
 
-const prereqs = [
+const toolPrereqs = [
+  {
+    icon: Cpu,
+    color: 'text-violet-400',
+    bg: 'bg-violet-500/10 border-violet-500/20',
+    title: 'Claude Code',
+    desc: 'AI coding assistant — the primary tool for accelerating your workflow in this workshop.',
+    verify: 'claude --version',
+    action: 'Follow the Salesforce installation guide:',
+    actionLink: { label: 'sfdc.co/ClaudeCodeforSolutions', url: 'https://www.sfdc.co/ClaudeCodeforSolutions' },
+  },
+  {
+    icon: Code2,
+    color: 'text-amber-400',
+    bg: 'bg-amber-500/10 border-amber-500/20',
+    title: 'VS Code',
+    desc: 'Recommended IDE. Install the Tailwind IntelliSense and ESLint extensions.',
+    verify: 'code --version',
+    action: 'Download from',
+    actionLink: { label: 'code.visualstudio.com', url: 'https://code.visualstudio.com' },
+  },
+  {
+    icon: Globe,
+    color: 'text-sky-400',
+    bg: 'bg-sky-500/10 border-sky-500/20',
+    title: 'B2C Sandbox Access',
+    desc: 'You\'ll need access to a B2C Commerce sandbox with SCAPI credentials.',
+    verify: null,
+    action: 'Contact your team lead for sandbox credentials. Create an Account Manager account at',
+    actionLink: { label: 'account.demandware.com', url: 'https://account.demandware.com' },
+  },
+  {
+    icon: Download,
+    color: 'text-emerald-400',
+    bg: 'bg-emerald-500/10 border-emerald-500/20',
+    title: 'Market Street Storefront Export',
+    desc: 'Download the Market Street storefront site export zip — you\'ll import this into your sandbox during the workshop.',
+    verify: null,
+    action: 'Download the zip file from',
+    actionLink: { label: 'Google Drive', url: 'https://drive.google.com/file/d/136YSJ9ylbphcsGT6B_29-Z530c_wjL2b/view?usp=sharing' },
+  },
+]
+
+const devPrereqs = [
   {
     icon: Terminal,
     color: 'text-sky-400',
@@ -37,40 +80,6 @@ const prereqs = [
     verify: 'git --version',
     installCmd: null,
     installText: 'Download from git-scm.com and create a GitHub account at github.com',
-    installCmds: null,
-  },
-  {
-    icon: Code2,
-    color: 'text-amber-400',
-    bg: 'bg-amber-500/10 border-amber-500/20',
-    title: 'VS Code',
-    desc: 'Recommended IDE. Install the Tailwind IntelliSense and ESLint extensions.',
-    verify: 'code --version',
-    installCmd: null,
-    installText: 'Download from code.visualstudio.com',
-    installCmds: null,
-  },
-  {
-    icon: Cpu,
-    color: 'text-violet-400',
-    bg: 'bg-violet-500/10 border-violet-500/20',
-    title: 'Claude Code',
-    desc: 'AI coding assistant — the primary tool for accelerating your workflow in this workshop.',
-    verify: 'claude --version',
-    installCmd: null,
-    installText: 'Follow the Salesforce installation guide:',
-    installLink: { label: 'sfdc.co/ClaudeCodeforSolutions', url: 'https://www.sfdc.co/ClaudeCodeforSolutions' },
-    installCmds: null,
-  },
-  {
-    icon: Globe,
-    color: 'text-sky-400',
-    bg: 'bg-sky-500/10 border-sky-500/20',
-    title: 'B2C Sandbox Access',
-    desc: 'You\'ll need access to a B2C Commerce sandbox with SCAPI credentials.',
-    verify: null,
-    installCmd: null,
-    installText: 'Contact your team lead for sandbox credentials. Create an Account Manager account at account.demandware.com',
     installCmds: null,
   },
 ]
@@ -117,11 +126,11 @@ claude plugin install b2c
 claude plugin install storefront-next`
 
 const vsCodeExtensions = [
-  'Tailwind CSS IntelliSense (bradlc.vscode-tailwindcss)',
-  'ESLint (dbaeumer.vscode-eslint)',
-  'Prettier (esbenp.prettier-vscode)',
-  'TypeScript Error Lens (usernamehw.errorlens)',
-  'GitLens (eamodio.gitlens)',
+  { name: 'Tailwind CSS IntelliSense', id: 'bradlc.vscode-tailwindcss' },
+  { name: 'ESLint', id: 'dbaeumer.vscode-eslint' },
+  { name: 'Prettier', id: 'esbenp.prettier-vscode' },
+  { name: 'TypeScript Error Lens', id: 'usernamehw.errorlens' },
+  { name: 'GitLens', id: 'eamodio.gitlens' },
 ]
 
 export default function PreWork() {
@@ -138,25 +147,96 @@ export default function PreWork() {
         The first 15 minutes of the workshop are reserved for environment validation, not setup. If you haven't completed this pre-work, you'll fall behind during the hands-on exercises.
       </Callout>
 
-      {/* Prerequisites */}
+      {/* Tools — get these first */}
       <section>
-        <h2 className="text-xl font-bold text-slate-100 mb-4 flex items-center gap-2">
+        <h2 className="text-xl font-bold text-slate-100 mb-2 flex items-center gap-2">
           <span className="w-6 h-6 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center text-xs font-bold">1</span>
-          Install Prerequisites
+          Get Your Tools Ready
         </h2>
+        <p className="text-slate-400 text-sm mb-4">
+          These require manual setup — get them installed and downloaded first.
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {toolPrereqs.map(({ icon: Icon, color, bg, title, desc, verify, action, actionLink }) => (
+            <div key={title} className={`rounded-xl border p-4 ${bg}`}>
+              <div className="flex items-center gap-3 mb-3">
+                <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${bg}`}>
+                  <Icon size={20} className={color} />
+                </div>
+                <h3 className="font-semibold text-slate-100 text-sm">{title}</h3>
+              </div>
+              <p className="text-slate-400 text-xs mb-3">{desc}</p>
+              <div className="space-y-2 text-xs">
+                {verify && (
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-slate-500">Verify:</span>
+                    <InlineCode code={verify} />
+                  </div>
+                )}
+                <div>
+                  <span className="text-slate-400">{action} </span>
+                  {actionLink && (
+                    <a
+                      href={actionLink.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sky-400 hover:underline"
+                    >
+                      {actionLink.label}
+                    </a>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Dev environment prereqs */}
+      <section>
+        <h2 className="text-xl font-bold text-slate-100 mb-2 flex items-center gap-2">
+          <span className="w-6 h-6 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center text-xs font-bold">2</span>
+          Install Dev Environment
+        </h2>
+        <p className="text-slate-400 text-sm mb-4">
+          Node.js, pnpm, and Git are needed to build and run the storefront locally.
+        </p>
 
         <div className="rounded-xl border border-emerald-500/30 bg-emerald-950/20 p-5 mb-6">
           <p className="text-emerald-300 font-semibold text-sm mb-1">Fast path — run this script</p>
-          <p className="text-slate-400 text-xs mb-3">This installs most required tools automatically. Run it first, then use the manual steps below for anything it misses.</p>
+          <p className="text-slate-400 text-xs mb-3">This installs Node.js, pnpm, and Git automatically. Run it first, then use the manual steps below for anything it misses.</p>
           <CodeBlock
             language="bash"
             code={`bash <(curl -fsSL https://raw.githubusercontent.com/lukejohnson-sf/fast-setup/main/setup.sh)`}
           />
         </div>
 
+        <div className="rounded-xl border p-4 bg-amber-500/10 border-amber-500/20 mb-6">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-9 h-9 rounded-lg flex items-center justify-center bg-amber-500/10 border-amber-500/20">
+              <Wrench size={20} className="text-amber-400" />
+            </div>
+            <h3 className="font-semibold text-slate-100 text-sm">B2C Developer Toolkit CLI</h3>
+          </div>
+          <p className="text-slate-400 text-xs mb-3">
+            The B2C CLI powers sandbox management, code deployment, and MRT operations. Install it globally with npm.
+          </p>
+          <div className="space-y-2 text-xs">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-slate-500">Install:</span>
+              <InlineCode code="npm install -g @salesforce/b2c-cli" />
+            </div>
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-slate-500">Verify:</span>
+              <InlineCode code="b2c --version" />
+            </div>
+          </div>
+        </div>
+
         <p className="text-slate-500 text-xs mb-4">Or install each tool manually:</p>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {prereqs.map(({ icon: Icon, color, bg, title, desc, verify, installCmd, installText, installCmds, installLink }: any) => (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {devPrereqs.map(({ icon: Icon, color, bg, title, desc, verify, installCmd, installText, installCmds }: any) => (
             <div key={title} className={`rounded-xl border p-4 ${bg}`}>
               <div className="flex items-start gap-3 mb-3">
                 <Icon size={18} className={`${color} mt-0.5 flex-shrink-0`} />
@@ -176,16 +256,6 @@ export default function PreWork() {
                   <span className="text-slate-500">Install: </span>
                   {installCmd && <InlineCode code={installCmd} />}
                   {installText && <span className="text-slate-400">{installText} </span>}
-                  {installLink && (
-                    <a
-                      href={installLink.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sky-400 hover:underline"
-                    >
-                      {installLink.label}
-                    </a>
-                  )}
                   {installCmds && (
                     <div className="flex flex-col gap-1.5 mt-1.5">
                       {installCmds.map((cmd: string) => (
@@ -203,7 +273,7 @@ export default function PreWork() {
       {/* Template Setup */}
       <section>
         <h2 className="text-xl font-bold text-slate-100 mb-3 flex items-center gap-2">
-          <span className="w-6 h-6 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center text-xs font-bold">2</span>
+          <span className="w-6 h-6 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center text-xs font-bold">3</span>
           Set Up Your Storefront Next Project
         </h2>
         <p className="text-slate-400 text-sm mb-4">
@@ -215,7 +285,7 @@ export default function PreWork() {
       {/* Env Config */}
       <section>
         <h2 className="text-xl font-bold text-slate-100 mb-3 flex items-center gap-2">
-          <span className="w-6 h-6 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center text-xs font-bold">3</span>
+          <span className="w-6 h-6 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center text-xs font-bold">4</span>
           Configure Your Environment
         </h2>
         <p className="text-slate-400 text-sm mb-4">
@@ -232,7 +302,7 @@ export default function PreWork() {
       {/* B2C Tooling */}
       <section>
         <h2 className="text-xl font-bold text-slate-100 mb-3 flex items-center gap-2">
-          <span className="w-6 h-6 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center text-xs font-bold">4</span>
+          <span className="w-6 h-6 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center text-xs font-bold">5</span>
           Install B2C Developer Tooling
         </h2>
         <p className="text-slate-400 text-sm mb-4">
@@ -249,23 +319,24 @@ export default function PreWork() {
       {/* VS Code Extensions */}
       <section>
         <h2 className="text-xl font-bold text-slate-100 mb-3 flex items-center gap-2">
-          <span className="w-6 h-6 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center text-xs font-bold">5</span>
+          <span className="w-6 h-6 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center text-xs font-bold">6</span>
           Install VS Code Extensions
         </h2>
         <p className="text-slate-400 text-sm mb-4">
           These extensions make the Storefront Next development experience significantly better — especially Tailwind IntelliSense which gives you autocomplete for every CSS utility.
         </p>
+        <p className="text-slate-500 text-xs mb-3">Install via the Extensions panel in VS Code, or run each command below:</p>
         <div className="space-y-2">
-          {vsCodeExtensions.map(ext => (
-            <div key={ext} className="flex items-center gap-3 p-3 rounded-lg bg-slate-900/60 border border-slate-700/50">
+          {vsCodeExtensions.map(({ name, id }) => (
+            <div key={id} className="flex items-center gap-3 p-3 rounded-lg bg-slate-900/60 border border-slate-700/50">
               <Code2 size={14} className="text-slate-500 flex-shrink-0" />
-              <code className="text-slate-300 text-xs font-mono">{ext}</code>
+              <span className="text-slate-300 text-xs font-medium flex-shrink-0">{name}</span>
+              <span className="text-slate-600 text-xs hidden md:inline">—</span>
+              <div className="flex-1 min-w-0">
+                <InlineCode code={`code --install-extension ${id}`} />
+              </div>
             </div>
           ))}
-        </div>
-        <div className="mt-3 flex items-center gap-2 text-slate-500 text-sm flex-wrap">
-          <span>Install via Extensions panel in VS Code or run:</span>
-          <InlineCode code="code --install-extension bradlc.vscode-tailwindcss" />
         </div>
       </section>
 
