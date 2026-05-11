@@ -126,11 +126,11 @@ claude plugin install b2c
 claude plugin install storefront-next`
 
 const vsCodeExtensions = [
-  'Tailwind CSS IntelliSense (bradlc.vscode-tailwindcss)',
-  'ESLint (dbaeumer.vscode-eslint)',
-  'Prettier (esbenp.prettier-vscode)',
-  'TypeScript Error Lens (usernamehw.errorlens)',
-  'GitLens (eamodio.gitlens)',
+  { name: 'Tailwind CSS IntelliSense', id: 'bradlc.vscode-tailwindcss' },
+  { name: 'ESLint', id: 'dbaeumer.vscode-eslint' },
+  { name: 'Prettier', id: 'esbenp.prettier-vscode' },
+  { name: 'TypeScript Error Lens', id: 'usernamehw.errorlens' },
+  { name: 'GitLens', id: 'eamodio.gitlens' },
 ]
 
 export default function PreWork() {
@@ -325,17 +325,18 @@ export default function PreWork() {
         <p className="text-slate-400 text-sm mb-4">
           These extensions make the Storefront Next development experience significantly better — especially Tailwind IntelliSense which gives you autocomplete for every CSS utility.
         </p>
+        <p className="text-slate-500 text-xs mb-3">Install via the Extensions panel in VS Code, or run each command below:</p>
         <div className="space-y-2">
-          {vsCodeExtensions.map(ext => (
-            <div key={ext} className="flex items-center gap-3 p-3 rounded-lg bg-slate-900/60 border border-slate-700/50">
+          {vsCodeExtensions.map(({ name, id }) => (
+            <div key={id} className="flex items-center gap-3 p-3 rounded-lg bg-slate-900/60 border border-slate-700/50">
               <Code2 size={14} className="text-slate-500 flex-shrink-0" />
-              <code className="text-slate-300 text-xs font-mono">{ext}</code>
+              <span className="text-slate-300 text-xs font-medium flex-shrink-0">{name}</span>
+              <span className="text-slate-600 text-xs hidden md:inline">—</span>
+              <div className="flex-1 min-w-0">
+                <InlineCode code={`code --install-extension ${id}`} />
+              </div>
             </div>
           ))}
-        </div>
-        <div className="mt-3 flex items-center gap-2 text-slate-500 text-sm flex-wrap">
-          <span>Install via Extensions panel in VS Code or run:</span>
-          <InlineCode code="code --install-extension bradlc.vscode-tailwindcss" />
         </div>
       </section>
 
