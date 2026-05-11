@@ -498,7 +498,26 @@ export default function Module2() {
           <StepCard stepKey="m2-plp" number={5} title="Change the PLP grid layout">
             <p className="text-sm">Find the product grid in your category route. Change it from 3 columns to 4 columns on large screens. Add a visible count ("553 products") above the grid.</p>
           </StepCard>
-          <StepCard stepKey="m2-pdp" number={6} title="Challenge: Add a badge system" isLast>
+          <StepCard stepKey="m2-deploy" number={6} title="Deploy & verify your changes">
+            <p className="text-sm">
+              Let's push your frontend changes to Managed Runtime so you can see them live before the break.
+              Run the deployment command from your project root, then open the storefront URL to verify your brand colors, hero updates, and Page Designer enhancements are live.
+            </p>
+            <div className="mt-3 space-y-2">
+              <div className="p-3 rounded-lg bg-slate-900/60 border border-slate-700/50">
+                <code className="text-emerald-400 font-mono text-xs">pnpm sfnext push</code>
+                <span className="text-slate-500 text-xs ml-2">— deploys to your Managed Runtime environment</span>
+              </div>
+              <div className="p-3 rounded-lg bg-slate-900/60 border border-slate-700/50">
+                <code className="text-emerald-400 font-mono text-xs">b2c mrt tail-logs</code>
+                <span className="text-slate-500 text-xs ml-2">— watch deployment progress and catch errors</span>
+              </div>
+            </div>
+            <Callout type="tip" title="What to verify">
+              Open your storefront URL and check: (1) brand colors updated globally, (2) hero banner reflects your changes, (3) product cards have the hover interactions you added. This is the same deploy workflow you'd demo to a customer.
+            </Callout>
+          </StepCard>
+          <StepCard stepKey="m2-pdp" number={7} title="Challenge: Add a badge system" isLast>
             <p className="text-sm">Add "NEW" and "SALE" badges to product cards. A product should show "NEW" if <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">product.isNew</code> is true, and show a discount percentage badge if the sale price differs from list price.</p>
             <Callout type="ai" title="Ask Claude Code">
               "Add badge overlays to my ProductCard component — a 'NEW' badge for new arrivals and a discount percentage badge when salePrice exists. Position them in the top-left corner of the image."

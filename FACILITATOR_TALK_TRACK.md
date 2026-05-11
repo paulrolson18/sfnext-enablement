@@ -12,7 +12,7 @@
 | 0:00 | 10 min | Welcome & Overview | Instructor-led |
 | 0:10 | 15 min | Environment Validation | Live walkthrough |
 | 0:25 | 25 min | Module 1 — Architecture | 18 min instruction + 7 min exercises |
-| 0:50 | 45 min | Module 2 — Frontend | 25 min instruction + 20 min exercises |
+| 0:50 | 45 min | Module 2 — Frontend | 22 min instruction + 23 min exercises |
 | 1:35 | 10 min | Break | — |
 | 1:45 | 40 min | Module 3 — Backend + Deployment | 22 min instruction + 18 min exercises |
 | 2:25 | 25 min | Module 4 — AI Development | 13 min instruction + 12 min exercises |
@@ -184,12 +184,14 @@ Walk the six steps slowly. This is where it clicks for most people.
 
 | Time | Section | Minutes |
 |------|---------|---------|
-| 1:50–0:53 | Intro + Odyssey reference | 3 |
+| 0:50–0:53 | Intro + Odyssey reference | 3 |
 | 0:53–1:03 | Part 1 — Brand Tokens (explain 3 + hands-on 7) | 10 |
-| 1:03–1:13 | Part 2 — Hero Banner (explain 4 + hands-on 6) | 10 |
-| 1:13–1:28 | Part 3 — Product Card (explain 5 + hands-on 10) | 15 |
-| 1:28–1:33 | Part 4 — PLP Layout + Page Designer + SE Points | 5 |
-| 1:33–1:35 | Challenge exercise (optional) | 2 |
+| 1:03–1:11 | Part 2 — Hero Banner (explain 3 + hands-on 5) | 8 |
+| 1:11–1:14 | Part 2b — Page Designer HeroBanner exercise | 3 |
+| 1:14–1:24 | Part 3 — Product Card (explain 5 + hands-on 5) | 10 |
+| 1:24–1:28 | Part 4 — PLP Layout + Page Designer + SE Points | 4 |
+| 1:28–1:31 | Deploy & verify changes live | 3 |
+| 1:31–1:35 | Challenge exercise (optional) + buffer | 4 |
 
 ### 0:50–0:53 — Intro (3 min)
 
@@ -214,20 +216,30 @@ Walk `tailwind.config.js` — the three key tokens:
 
 If someone is stuck: "Ask Claude Code — 'Update my tailwind.config.js to reflect a [brand type] aesthetic.'"
 
-### 1:03–1:13 — Part 2: Hero Banner (10 min)
+### 1:03–1:11 — Part 2: Hero Banner (8 min)
 
-**Explain (4 min):**
+**Explain (3 min):**
 Show the ISML vs React comparison side-by-side on projector.
 
 **Key point:**
 > "Because the hero is a component with typed props, you can reuse it on the homepage, category pages, and campaign landing pages — same component, different content. In SFRA you'd copy-paste the ISML block."
 
-**Exercise (6 min):**
+**Exercise 2 (5 min):**
 > "Find your hero banner in `src/routes/_index.tsx`. Update the gradient overlay color and CTA button style to match your new brand palette."
 
 The Tailwind class to find: `bg-gradient-to-t from-black/70`. They change it to their brand color.
 
-### 1:13–1:28 — Part 3: Product Card Enhancement (15 min)
+### 1:11–1:14 — Part 2b: Page Designer HeroBanner Exercise (3 min)
+
+**Exercise 3 — Enhance HeroBanner for Page Designer (3 min):**
+> "Now let's make the hero configurable by merchandisers. Open `src/components/HeroBanner.tsx`. Add two new props: `titleColor` (optional string) and `titleAlignment` ('left' | 'center' | 'right'). Apply color as an inline style on the h1, and map alignment to Tailwind classes."
+
+**Say:**
+> "This is the bridge between developer and merchandiser. You add props, Page Designer exposes them as config fields in Business Manager. Ask Claude Code to help — give it the exact prop names and types."
+
+**Facilitator cue:** Walk the room. Most people should be able to add both props and the alignment class map in 3 min. If someone is stuck, point them to the Page Designer code example in the module.
+
+### 1:14–1:24 — Part 3: Product Card Enhancement (10 min)
 
 **Explain (5 min):**
 
@@ -245,19 +257,19 @@ Walk these patterns in the code:
 - `translate-y-full group-hover:translate-y-0` = slide-up animation, zero JS
 - `isHovered` state for image swap = one `useState`
 
-**Exercise (10 min):**
+**Exercise 4 (5 min):**
 > "Find `src/components/ProductCard.tsx`. Add a slide-up Quick Add button on hover. Use the pattern from the module or ask Claude Code."
 
 Claude Code prompt: *"In my ProductCard component, add a Quick Add button that slides up from the bottom on hover. Use Tailwind group-hover and translate-y transitions."*
 
 Walk the room. Redirect anyone adding `style={}` to Tailwind classes.
 
-### 1:28–1:33 — Part 4: PLP Layout + Page Designer + SE Points (5 min)
+### 1:24–1:28 — Part 4: PLP Layout + Page Designer + SE Points (4 min)
 
 **PLP Layout (2 min):**
 > "The entire category page layout is in one file. Changing column count is one class name."
 
-Quick exercise:
+**Exercise 5:**
 > "Change your grid from 3 columns to 4 on large screens. Add a product count above the grid."
 
 **Page Designer (1 min — awareness only):**
@@ -266,8 +278,28 @@ Quick exercise:
 **SE Talking Points (1 min):**
 > "Read the amber callout. Which point resonates?"
 
-**Challenge Exercise (1 min):**
+### 1:28–1:31 — Deploy & Verify (3 min)
+
+**Exercise 6 — Deploy changes to Managed Runtime:**
+> "Let's see your work live before the break. Run `pnpm sfnext push` to deploy. Open your storefront URL and verify: brand colors, hero changes, product card enhancements."
+
+**Say:**
+> "This is the same workflow you'd demo to a customer. One command → live site. Watch `b2c mrt tail-logs` if anything looks off."
+
+| Exercise detail | Time |
+|-----------------|------|
+| Run deploy command | 1 min |
+| Open live URL, verify visuals | 1 min |
+| Troubleshoot with `tail-logs` (if needed) | 1 min |
+
+**Note:** If participants don't have MRT project access, demo this on projector.
+
+### 1:31–1:35 — Challenge + Buffer (4 min)
+
+**Exercise 7 (optional):**
 > "If you finished early: add NEW and SALE badges to your product cards."
+
+Use remaining time for stragglers to catch up on deploy or any earlier exercise.
 
 ### 1:35 — Break
 
@@ -580,15 +612,17 @@ Share:
 | 4 | Prove SSR (search HTML response, explain to neighbor) | 1.5 |
 | 5 | Explore config files | 1.0 |
 
-### Module 2 — 20 min total (5 exercises, integrated with instruction)
+### Module 2 — 23 min total (7 exercises, integrated with instruction)
 
 | # | Exercise | Minutes |
 |---|----------|---------|
 | 1 | Update brand colors in `tailwind.config.js` | 7 |
-| 2 | Modify homepage hero gradient + CTA | 6 |
-| 3 | Add Quick Add button to product cards | 10 |
-| 4 | Change PLP grid to 4 columns + add count | — (folded into Part 4 instruction) |
-| 5 | Challenge: Add badge system | 2 (or skip) |
+| 2 | Modify homepage hero gradient + CTA | 5 |
+| 3 | Enhance HeroBanner for Page Designer (titleColor + titleAlignment) | 3 |
+| 4 | Add Quick Add button to product cards | 5 |
+| 5 | Change PLP grid to 4 columns + add count | — (folded into Part 4 instruction) |
+| 6 | Deploy & verify changes on Managed Runtime | 2 |
+| 7 | Challenge: Add badge system | 1 (or skip) |
 
 *Note: Module 2 exercises are woven into each Part, not a separate block.*
 
@@ -621,10 +655,11 @@ If you're running behind, these are safe cuts:
 
 | Priority | What to cut | Saves |
 |----------|-------------|-------|
-| 1 | Module 2 Exercise 5 (badge system) | 2 min |
+| 1 | Module 2 Exercise 7 (badge system challenge) | 1 min |
 | 2 | Module 4 Exercise 5 (Odyssey challenge) | 1 min |
 | 3 | Module 3 Exercise 4 (useRecentlyViewed hook) | 1 min |
-| 4 | Module 4 Part 2 — walk only 1 PromptCard instead of 2 | 1.5 min |
-| 5 | Module 1 — skip Managed Runtime walkthrough, just reference it | 2 min |
+| 4 | Module 2 — fold deploy into Module 3 instead (skip Exercise 6) | 2 min |
+| 5 | Module 4 Part 2 — walk only 1 PromptCard instead of 2 | 1.5 min |
+| 6 | Module 1 — skip Managed Runtime walkthrough, just reference it | 2 min |
 
-**Maximum recovery: ~7.5 min** — enough to absorb one module running long.
+**Maximum recovery: ~8.5 min** — enough to absorb one module running long.
