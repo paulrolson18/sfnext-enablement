@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { ArrowRight, Palette, Layout, Image, Star } from 'lucide-react'
+import { ArrowRight, Palette, Layout, Image, Star, Smartphone } from 'lucide-react'
 import SectionHeader from '../components/SectionHeader'
 import CodeBlock from '../components/CodeBlock'
 import Callout from '../components/Callout'
@@ -407,10 +407,34 @@ export default function Module2() {
           The Product Listing Page (category page) layout is controlled in a single route file. Changing from 3 columns to 4, adding a sidebar, or moving filters all happens here.
         </p>
         <CodeBlock code={plpLayout} language="typescript" filename="src/routes/category.$categoryId.tsx" />
-        <div className="mt-4">
+        <div className="mt-4 space-y-3">
           <Callout type="tip" title="Responsive grid in one line">
             <code className="bg-slate-800 px-1.5 py-0.5 rounded text-violet-300 font-mono text-xs">grid-cols-2 lg:grid-cols-3 xl:grid-cols-4</code> — this single Tailwind class gives you 2 columns on mobile, 3 on desktop, 4 on large screens. No media query files to manage.
           </Callout>
+        </div>
+
+        {/* Mobile-First Design */}
+        <div className="mt-6 p-4 rounded-xl bg-violet-950/15 border border-violet-500/20">
+          <div className="flex items-center gap-2 mb-2">
+            <Smartphone size={15} className="text-violet-400" />
+            <h4 className="text-slate-200 font-semibold text-sm">Mobile-First by Default</h4>
+          </div>
+          <p className="text-slate-400 text-xs leading-relaxed mb-3">
+            Over 70% of commerce traffic is mobile. Tailwind is inherently mobile-first — all styles apply to mobile by default, and breakpoint prefixes (<code className="bg-slate-800 px-1 py-0.5 rounded text-violet-300 font-mono text-xs">md:</code>, <code className="bg-slate-800 px-1 py-0.5 rounded text-violet-300 font-mono text-xs">lg:</code>) add desktop enhancements. This means the mobile experience is always the baseline, never an afterthought.
+          </p>
+          <div className="grid grid-cols-3 gap-2">
+            {[
+              { bp: 'Default', width: '< 768px', desc: 'Mobile — base styles apply' },
+              { bp: 'md:', width: '≥ 768px', desc: 'Tablet — add columns, padding' },
+              { bp: 'lg:', width: '≥ 1024px', desc: 'Desktop — full layout, sidebar' },
+            ].map(({ bp, width, desc }) => (
+              <div key={bp} className="p-2 rounded-lg bg-slate-800/30 border border-slate-700/30 text-center">
+                <code className="text-violet-400 font-mono text-xs font-bold">{bp}</code>
+                <div className="text-slate-500 text-xs">{width}</div>
+                <div className="text-slate-400 text-xs mt-0.5">{desc}</div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 

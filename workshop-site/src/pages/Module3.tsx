@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { ArrowRight, ServerCog, Database, Zap, ArrowLeftRight, AlertTriangle, Rocket, Shield } from 'lucide-react'
+import { ArrowRight, ServerCog, Database, Zap, ArrowLeftRight, AlertTriangle, Rocket, Shield, ShoppingCart, Search, TestTube } from 'lucide-react'
 import SectionHeader from '../components/SectionHeader'
 import CodeBlock from '../components/CodeBlock'
 import Callout from '../components/Callout'
@@ -299,6 +299,37 @@ export default function Module3() {
         </div>
       </section>
 
+      {/* Checkout Flow */}
+      <section>
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-8 h-8 rounded-full bg-amber-500/15 border border-amber-500/30 flex items-center justify-center">
+            <ShoppingCart size={15} className="text-amber-400" />
+          </div>
+          <h2 className="text-xl font-bold text-slate-100">Checkout Architecture</h2>
+          <span className="text-slate-500 text-sm">Awareness</span>
+        </div>
+        <p className="text-slate-400 text-sm mb-4 leading-relaxed">
+          Checkout is the most revenue-critical page on any storefront. Storefront Next's checkout is built on the same loader/action pattern you just learned — each checkout step is a route with server-side data handling.
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+          {[
+            { step: '1. Cart Review', route: 'cart.tsx', detail: 'Loader fetches basket, actions handle quantity updates and promo codes' },
+            { step: '2. Shipping', route: 'checkout.shipping.tsx', detail: 'Address form with action → validates address via SCAPI and saves to basket' },
+            { step: '3. Payment', route: 'checkout.payment.tsx', detail: 'Payment method selection, action calls Shopper Baskets payment API' },
+            { step: '4. Confirmation', route: 'checkout.confirm.tsx', detail: 'Action creates the order, loader redirects to order confirmation' },
+          ].map(({ step, route, detail }) => (
+            <div key={step} className="p-3 rounded-lg bg-amber-950/20 border border-amber-500/20">
+              <div className="text-amber-300 font-semibold text-xs mb-1">{step}</div>
+              <code className="text-amber-400/70 font-mono text-xs">{route}</code>
+              <div className="text-slate-400 text-xs mt-1">{detail}</div>
+            </div>
+          ))}
+        </div>
+        <Callout type="info" title="For customer conversations">
+          When a prospect asks about "1-click checkout" — the template supports accelerated checkout flows where returning customers with saved payment and shipping can skip directly to order confirmation. The entire checkout uses server-side actions, so payment tokens and customer data never reach the browser.
+        </Callout>
+      </section>
+
       {/* SCAPI */}
       <section>
         <div className="flex items-center gap-3 mb-4">
@@ -314,16 +345,40 @@ export default function Module3() {
         <CodeBlock code={scapiExample} language="typescript" filename="src/lib/scapi/products.ts" />
         <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3">
           {[
-            { api: 'Shopper Products', path: 'lib/scapi/products.ts' },
-            { api: 'Shopper Baskets', path: 'lib/scapi/baskets.ts' },
-            { api: 'Shopper Search', path: 'lib/scapi/search.ts' },
-            { api: 'Shopper Customers', path: 'lib/scapi/customers.ts' },
-          ].map(({ api, path }) => (
+            { api: 'Shopper Products', path: 'lib/scapi/products.ts', detail: 'Product detail, variations, images, and pricing' },
+            { api: 'Shopper Baskets', path: 'lib/scapi/baskets.ts', detail: 'Cart management, line items, coupons, shipping' },
+            { api: 'Shopper Search', path: 'lib/scapi/search.ts', detail: 'Keyword search, faceted filtering, sorting, suggestions' },
+            { api: 'Shopper Customers', path: 'lib/scapi/customers.ts', detail: 'Account management, addresses, wishlists, orders' },
+          ].map(({ api, path, detail }) => (
             <div key={api} className="p-3 rounded-lg bg-slate-900/60 border border-slate-700/50">
               <div className="text-slate-200 text-xs font-semibold mb-1">{api}</div>
               <code className="text-slate-500 text-xs font-mono">{path}</code>
+              <div className="text-slate-500 text-xs mt-1">{detail}</div>
             </div>
           ))}
+        </div>
+
+        {/* Search Deeper Dive */}
+        <div className="mt-4 p-4 rounded-xl bg-slate-900/40 border border-slate-700/30">
+          <div className="flex items-center gap-2 mb-2">
+            <Search size={14} className="text-amber-400" />
+            <h4 className="text-slate-200 font-semibold text-sm">Search & Discovery</h4>
+          </div>
+          <p className="text-slate-400 text-xs mb-3 leading-relaxed">
+            Search is a major conversion driver. The Shopper Search API provides keyword search with refinements, spelling suggestions, faceted filtering, and sorting — all configurable through Business Manager's search settings.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+            {[
+              { feature: 'Keyword + Refinements', detail: 'Full-text search with color, size, price range, and brand refinements' },
+              { feature: 'Search Suggestions', detail: 'Typeahead suggestions for faster discovery — integrates with the search bar component' },
+              { feature: 'Custom Sorting', detail: 'Sort by relevance, price, rating, or custom sort rules defined in BM' },
+            ].map(({ feature, detail }) => (
+              <div key={feature} className="p-2 rounded-lg bg-slate-800/40 border border-slate-700/30">
+                <div className="text-slate-300 text-xs font-semibold mb-0.5">{feature}</div>
+                <div className="text-slate-500 text-xs">{detail}</div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -381,6 +436,36 @@ export default function Module3() {
           React Router 7 gives you co-located error boundaries. If a loader throws, the <code className="bg-slate-800 px-1.5 py-0.5 rounded text-amber-400 font-mono text-xs">ErrorBoundary</code> component in the same file handles it — without crashing the rest of the page.
         </p>
         <CodeBlock code={errorBoundary} language="typescript" filename="src/routes/product.$productId.tsx" />
+      </section>
+
+      {/* Testing */}
+      <section>
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-8 h-8 rounded-full bg-amber-500/15 border border-amber-500/30 flex items-center justify-center">
+            <TestTube size={15} className="text-amber-400" />
+          </div>
+          <h2 className="text-xl font-bold text-slate-100">Testing Patterns</h2>
+          <span className="text-slate-500 text-sm">Awareness</span>
+        </div>
+        <p className="text-slate-400 text-sm mb-4 leading-relaxed">
+          Enterprise customers and SI partners will ask about testing strategy. Storefront Next uses modern JavaScript testing frameworks that align with the React ecosystem.
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          {[
+            { tool: 'Vitest', type: 'Unit & Integration', detail: 'Fast test runner for loaders, actions, and utility functions. Same test syntax as Jest but purpose-built for Vite projects.' },
+            { tool: 'React Testing Library', type: 'Component Tests', detail: 'Test components by simulating user interactions — click, type, submit. Encourages testing behavior, not implementation.' },
+            { tool: 'Playwright', type: 'End-to-End', detail: 'Full browser testing for critical user flows: search → PDP → add to cart → checkout. Runs against the local dev server or staging URL.' },
+          ].map(({ tool, type, detail }) => (
+            <div key={tool} className="p-3 rounded-lg bg-amber-950/20 border border-amber-500/20">
+              <div className="text-amber-300 font-semibold text-sm mb-0.5">{tool}</div>
+              <div className="text-amber-400/60 text-xs font-medium mb-1">{type}</div>
+              <div className="text-slate-400 text-xs">{detail}</div>
+            </div>
+          ))}
+        </div>
+        <Callout type="info" title="For customer conversations">
+          When SI partners or enterprise customers ask about test coverage: the template ships with Vitest configured and ready to use. Loaders and actions are plain async functions — easy to unit test without React rendering. For critical flows, Playwright E2E tests run in CI/CD via GitHub Actions.
+        </Callout>
       </section>
 
       {/* Deployment */}

@@ -11,6 +11,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Menu,
+  Play,
+  FileText,
 } from 'lucide-react'
 import { useProgress } from '../context/ProgressContext'
 
@@ -23,13 +25,16 @@ const navItems = [
   { path: '/module/2', label: 'Module 2: Frontend', icon: Paintbrush, number: '2' },
   { path: '/module/3', label: 'Module 3: Backend', icon: ServerCog, number: '3' },
   { path: '/module/4', label: 'Module 4: AI Dev', icon: Sparkles, number: '4' },
+  { label: '— Resources —', divider: true },
+  { path: '/demo-playbook', label: 'Demo Playbook', icon: Play },
+  { path: '/cheat-sheet', label: 'Quick Reference', icon: FileText },
 ]
 
 const moduleStepCounts: Record<string, string[]> = {
   '/env-check': ['env-node', 'env-pnpm', 'env-git', 'env-vscode', 'env-claude', 'env-clone'],
-  '/module/1': ['m1-react', 'm1-rr7', 'm1-tailwind', 'm1-ssr', 'm1-mrt'],
-  '/module/2': ['m2-theme', 'm2-hero', 'm2-product-card', 'm2-plp', 'm2-pdp'],
-  '/module/3': ['m3-loader', 'm3-action', 'm3-scapi', 'm3-custom-hook', 'm3-error'],
+  '/module/1': ['m1-react', 'm1-rr7', 'm1-tailwind', 'm1-ssr', 'm1-mrt', 'm1-cwv'],
+  '/module/2': ['m2-theme', 'm2-hero', 'm2-page-designer-hero', 'm2-product-card', 'm2-plp', 'm2-deploy', 'm2-pdp'],
+  '/module/3': ['m3-loader', 'm3-action', 'm3-scapi', 'm3-custom-hook', 'm3-error', 'm3-deploy'],
   '/module/4': ['m4-setup', 'm4-prompt1', 'm4-prompt2', 'm4-prompt3', 'm4-figma'],
 }
 

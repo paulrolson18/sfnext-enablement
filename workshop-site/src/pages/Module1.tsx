@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { ArrowRight, Layers, Server, Globe, ArrowDown, FileCode2, Package } from 'lucide-react'
+import { ArrowRight, Layers, Server, Globe, ArrowDown, FileCode2, Package, Gauge, Languages } from 'lucide-react'
 import SectionHeader from '../components/SectionHeader'
 import CodeBlock from '../components/CodeBlock'
 import Callout from '../components/Callout'
@@ -254,12 +254,75 @@ export default function Module1() {
         </div>
       </section>
 
+      {/* Internationalization */}
+      <section>
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-8 h-8 rounded-full bg-sky-500/15 border border-sky-500/30 flex items-center justify-center">
+            <Languages size={15} className="text-sky-400" />
+          </div>
+          <h2 className="text-xl font-bold text-slate-100">Internationalization (i18n)</h2>
+          <span className="text-slate-500 text-sm">Awareness</span>
+        </div>
+        <p className="text-slate-400 text-sm mb-4 leading-relaxed">
+          Most enterprise customers operate in multiple locales. Storefront Next supports multi-locale and multi-site storefronts out of the box using path-based locale routing — no additional infrastructure required.
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          {[
+            { title: 'Path-based locales', detail: 'URLs follow /{locale}/{language}/ pattern (e.g., /us/en-US/, /uk/en-GB/). The locale segment routes to the correct site and language.' },
+            { title: 'Translation management', detail: 'Translation strings live in locale-specific JSON files. Components use a translation hook to render the correct language.' },
+            { title: 'Multi-site support', detail: 'One codebase can serve multiple brands/regions. Configuration in config.server.ts maps locales to B2C Commerce sites.' },
+          ].map(({ title, detail }) => (
+            <div key={title} className="p-3 rounded-lg bg-sky-950/20 border border-sky-500/20">
+              <div className="text-sky-300 font-semibold text-sm mb-1">{title}</div>
+              <div className="text-slate-400 text-xs">{detail}</div>
+            </div>
+          ))}
+        </div>
+        <Callout type="info" title="For customer conversations">
+          When a customer asks "how do we handle multiple languages and regions?" — Storefront Next handles this with path-based locale routing, shared components, and locale-specific translation files. The Odyssey reference store demonstrates this with its <code className="bg-slate-800 px-1 py-0.5 rounded text-sky-400 font-mono text-xs">/global/en-GB/</code> URL pattern.
+        </Callout>
+      </section>
+
+      {/* Performance & Core Web Vitals */}
+      <section>
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-8 h-8 rounded-full bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center">
+            <Gauge size={15} className="text-emerald-400" />
+          </div>
+          <h2 className="text-xl font-bold text-slate-100">Performance & Core Web Vitals</h2>
+          <span className="text-slate-500 text-sm">Awareness</span>
+        </div>
+        <p className="text-slate-400 text-sm mb-4 leading-relaxed">
+          Performance is a competitive differentiator. Storefront Next achieves best-in-class Core Web Vitals through Streaming SSR, optimized asset loading, and edge CDN distribution — all built into the architecture.
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          {[
+            { metric: 'LCP', label: 'Largest Contentful Paint', target: '< 2.5s', detail: 'Streaming SSR ensures the hero image/text appears immediately without waiting for all data' },
+            { metric: 'CLS', label: 'Cumulative Layout Shift', target: '< 0.1', detail: 'Server-rendered HTML means layout is stable before hydration — no content jumps' },
+            { metric: 'INP', label: 'Interaction to Next Paint', target: '< 200ms', detail: 'React 19 concurrent features keep the main thread responsive during interactions' },
+          ].map(({ metric, label, target, detail }) => (
+            <div key={metric} className="p-3 rounded-lg bg-emerald-950/20 border border-emerald-500/20">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-emerald-400 font-bold text-sm">{metric}</span>
+                <span className="text-slate-500 text-xs">({label})</span>
+              </div>
+              <div className="text-emerald-300 font-semibold text-xs mb-1">Target: {target}</div>
+              <div className="text-slate-400 text-xs">{detail}</div>
+            </div>
+          ))}
+        </div>
+        <Callout type="info" title="For competitive conversations">
+          When a prospect is comparing Shopify, BigCommerce, or SFRA — Core Web Vitals scores are a concrete, measurable talking point. Storefront Next's Streaming SSR and server-side rendering give it a structural advantage that shows up clearly in Lighthouse audits.
+        </Callout>
+      </section>
+
       <Callout type="tip" title="SE Talking Points">
         <ul className="space-y-1 text-sm">
           <li>• "Storefront Next uses the same mental model as SFRA — routes, data loading, templates — but with modern tooling that developers already know."</li>
           <li>• "Every page is server-rendered for SEO and performance. Product data is in the HTML before the browser runs JavaScript."</li>
           <li>• "Managed Runtime scales elastically — flash sales just work, no capacity planning."</li>
           <li>• "Commerce Apps extend the storefront via git-based pull requests, not cartridge overlays."</li>
+          <li>• "Multi-locale, multi-site — one codebase serves all regions with path-based routing."</li>
         </ul>
       </Callout>
 
@@ -279,8 +342,14 @@ export default function Module1() {
           <StepCard stepKey="m1-ssr" number={4} title="Prove SSR is working">
             <p className="text-sm">In DevTools → Network tab, reload the page. Click the first HTML document. In the Response, search for a product name that's visible on the page. If you find it in the raw HTML (before JavaScript runs), SSR is working. <strong className="text-slate-100">Explain to your neighbor why this matters for SEO.</strong></p>
           </StepCard>
-          <StepCard stepKey="m1-mrt" number={5} title="Explore the config" isLast>
+          <StepCard stepKey="m1-mrt" number={5} title="Explore the config">
             <p className="text-sm">Open <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">config.server.ts</code> and <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">tailwind.config.js</code>. These are your two key configuration files — one controls B2C connections, the other controls visual design tokens.</p>
+          </StepCard>
+          <StepCard stepKey="m1-cwv" number={6} title="Measure Core Web Vitals" isLast>
+            <p className="text-sm">Open DevTools → <strong className="text-slate-200">Lighthouse</strong> tab. Run an audit on your local storefront (Navigation mode, Mobile device). Note the <strong className="text-slate-200">LCP</strong>, <strong className="text-slate-200">CLS</strong>, and <strong className="text-slate-200">INP</strong> scores. These are the numbers you'd cite in a customer conversation about performance.</p>
+            <Callout type="tip" title="SE demo tip">
+              In a live demo, run Lighthouse against the Odyssey reference store or the SE demo storefront. The scores are consistently strong — it's a concrete, visual proof point that complements the "Streaming SSR" talking point.
+            </Callout>
           </StepCard>
         </div>
       </section>
