@@ -13,6 +13,7 @@ import {
   Menu,
   Play,
   FileText,
+  Settings,
 } from 'lucide-react'
 import { useProgress } from '../context/ProgressContext'
 
@@ -20,6 +21,7 @@ const navItems = [
   { path: '/', label: 'Overview', icon: LayoutDashboard, exact: true },
   { path: '/pre-work', label: 'Pre-Work', icon: ClipboardCheck },
   { path: '/env-check', label: 'Env Check', icon: ShieldCheck },
+  { path: '/setup', label: 'Setup', icon: Settings },
   { label: '— Workshop —', divider: true },
   { path: '/module/1', label: 'Module 1: Architecture', icon: Layers, number: '1' },
   { path: '/module/2', label: 'Module 2: Frontend', icon: Paintbrush, number: '2' },
@@ -32,6 +34,7 @@ const navItems = [
 
 const moduleStepCounts: Record<string, string[]> = {
   '/env-check': ['env-node', 'env-pnpm', 'env-git', 'env-vscode', 'env-claude', 'env-clone'],
+  '/setup': ['setup-bm-login', 'setup-admin', 'setup-import-export', 'setup-upload', 'setup-import', 'setup-import-done', 'setup-storefronts', 'setup-add-new', 'setup-configure', 'setup-complete'],
   '/module/1': ['m1-react', 'm1-rr7', 'm1-tailwind', 'm1-ssr', 'm1-mrt', 'm1-cwv'],
   '/module/2': ['m2-theme', 'm2-hero', 'm2-page-designer-hero', 'm2-product-tile', 'm2-plp', 'm2-deploy', 'm2-pdp'],
   '/module/3': ['m3-loader', 'm3-action', 'm3-scapi', 'm3-custom-hook', 'm3-error', 'm3-deploy'],
