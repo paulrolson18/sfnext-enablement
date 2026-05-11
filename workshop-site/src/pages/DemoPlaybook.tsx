@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { ArrowRight, Play, Palette, Gauge, Cpu, ShoppingCart, ExternalLink } from 'lucide-react'
+import { ArrowRight, Play, Gauge, Cpu, ShoppingCart, ExternalLink } from 'lucide-react'
 import SectionHeader from '../components/SectionHeader'
 import Callout from '../components/Callout'
 

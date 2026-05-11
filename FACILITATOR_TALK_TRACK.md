@@ -117,7 +117,7 @@ Walk each layer. Spend more time on the two that differ most from SFRA (React Ro
 **React 19 — 2 min**
 - "A component is just a function that returns JSX. It's a template function."
 - Point out Streaming SSR: "The server sends HTML as it's ready, not all at once. The page shell appears immediately."
-- Show the `ProductCard` code example. "Just a function. Accepts props. Returns markup."
+- Show the `ProductTile` code example. "Just a function. Accepts props. Returns markup."
 
 **React Router 7 — 3 min** ← Spend the most time here
 - "File-based routing: create a file, get a URL. No config."
@@ -192,7 +192,7 @@ Walk the six steps slowly. This is where it clicks for most people.
 | 0:53–1:03 | Part 1 — Brand Tokens (explain 3 + hands-on 7) | 10 |
 | 1:03–1:11 | Part 2 — Hero Banner (explain 3 + hands-on 5) | 8 |
 | 1:11–1:14 | Part 2b — Page Designer HeroBanner exercise | 3 |
-| 1:14–1:24 | Part 3 — Product Card (explain 5 + hands-on 5) | 10 |
+| 1:14–1:24 | Part 3 — Product Tile (explain 5 + hands-on 5) | 10 |
 | 1:24–1:28 | Part 4 — PLP Layout + Page Designer + SE Points | 4 |
 | 1:28–1:31 | Deploy & verify changes live | 3 |
 | 1:31–1:35 | Challenge exercise (optional) + buffer | 4 |
@@ -243,7 +243,7 @@ The Tailwind class to find: `bg-gradient-to-t from-black/70`. They change it to 
 
 **Facilitator cue:** Walk the room. Most people should be able to add both props and the alignment class map in 3 min. If someone is stuck, point them to the Page Designer code example in the module.
 
-### 1:14–1:24 — Part 3: Product Card Enhancement (10 min)
+### 1:14–1:24 — Part 3: Product Tile Enhancement (10 min)
 
 **Explain (5 min):**
 
@@ -262,9 +262,9 @@ Walk these patterns in the code:
 - `isHovered` state for image swap = one `useState`
 
 **Exercise 4 (5 min):**
-> "Find `src/components/ProductCard.tsx`. Add a slide-up Quick Add button on hover. Use the pattern from the module or ask Claude Code."
+> "Find `src/components/product-tile/index.tsx`. Add a slide-up Quick Add button on hover. Use the pattern from the module or ask Claude Code."
 
-Claude Code prompt: *"In my ProductCard component, add a Quick Add button that slides up from the bottom on hover. Use Tailwind group-hover and translate-y transitions."*
+Claude Code prompt: *"In my ProductTile component, add a Quick Add button that slides up from the bottom on hover. Use Tailwind group-hover and translate-y transitions."*
 
 Walk the room. Redirect anyone adding `style={}` to Tailwind classes.
 
@@ -285,7 +285,7 @@ Walk the room. Redirect anyone adding `style={}` to Tailwind classes.
 ### 1:28–1:31 — Deploy & Verify (3 min)
 
 **Exercise 6 — Deploy changes to Managed Runtime:**
-> "Let's see your work live before the break. Run `pnpm sfnext push` to deploy. Open your storefront URL and verify: brand colors, hero changes, product card enhancements."
+> "Let's see your work live before the break. Run `pnpm sfnext push` to deploy. Open your storefront URL and verify: brand colors, hero changes, product tile enhancements."
 
 **Say:**
 > "This is the same workflow you'd demo to a customer. One command → live site. Watch `b2c mrt tail-logs` if anything looks off."
@@ -301,7 +301,7 @@ Walk the room. Redirect anyone adding `style={}` to Tailwind classes.
 ### 1:31–1:35 — Challenge + Buffer (4 min)
 
 **Exercise 7 (optional):**
-> "If you finished early: add NEW and SALE badges to your product cards."
+> "If you finished early: add NEW and SALE badges to your product tiles."
 
 Use remaining time for stragglers to catch up on deploy or any earlier exercise.
 
@@ -522,7 +522,7 @@ Scroll through the "What ships in the template" summary on the page.
 Don't read every PromptCard. Instead, walk the **pattern** using 1–2 examples:
 
 **Strong prompt anatomy (2 min):**
-1. **Name the file** — `src/components/ProductCard.tsx`, not "my product card"
+1. **Name the file** — `src/components/product-tile/index.tsx`, not "my product tile"
 2. **Describe the goal** — "slide-up Quick Add button on hover", not "make it better"
 3. **State constraints** — "Tailwind only, no inline styles, keep existing layout"
 4. **Give a reference** — "similar to the Odyssey storefront pattern"
@@ -560,7 +560,7 @@ Show it reading the file first, then making targeted edits.
 |----------|-------------|------|
 | 1. Explore CLAUDE.md + add brand context | Open existing CLAUDE.md, skim rules, add brand guidelines + "What I'm Building" section, commit | 2 min |
 | 2. Brand in one prompt | Run brand theming prompt adapted to their direction | 3 min |
-| 3. Build a component | Use Figma-to-code prompt to describe ideal product card | 3 min |
+| 3. Build a component | Use Figma-to-code prompt to describe ideal product tile | 3 min |
 | 4. Extend a loader | Ask Claude Code to read category route and add sorting | 3 min |
 | 5. Challenge: Odyssey homepage | Describe one Odyssey feature to Claude Code, build matching component | 1 min (start only — finish post-workshop) |
 
@@ -646,7 +646,7 @@ Share:
 | 1 | Update brand colors in `tailwind.config.js` | 7 |
 | 2 | Modify homepage hero gradient + CTA | 5 |
 | 3 | Enhance HeroBanner for Page Designer (titleColor + titleAlignment) | 3 |
-| 4 | Add Quick Add button to product cards | 5 |
+| 4 | Add Quick Add button to product tiles | 5 |
 | 5 | Change PLP grid to 4 columns + add count | — (folded into Part 4 instruction) |
 | 6 | Deploy & verify changes on Managed Runtime | 2 |
 | 7 | Challenge: Add badge system | 1 (or skip) |

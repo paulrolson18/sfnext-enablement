@@ -45,7 +45,7 @@ workshop-site/src/
 Using `HashRouter` so the built `dist/` can be served from any static host (GitHub Pages, local file system) without server-side routing config. All routes live after the `#` — no 404s on refresh.
 
 ### Participant Progress Tracking
-`ProgressContext` stores step completion state in `localStorage`, keyed by step ID (e.g., `m2-product-card`). Each `StepCard` renders a numbered circle that turns into a green checkmark when clicked. The sidebar nav shows a progress bar per module. This persists across page refreshes so participants don't lose their place.
+`ProgressContext` stores step completion state in `localStorage`, keyed by step ID (e.g., `m2-product-tile`). Each `StepCard` renders a numbered circle that turns into a green checkmark when clicked. The sidebar nav shows a progress bar per module. This persists across page refreshes so participants don't lose their place.
 
 ### SFRA Mental Model Mapping
 A deliberate decision throughout Module 1: every React/RR7 concept is introduced with its SFRA/ISML analog. This matters because the target audience are SFRA practitioners, not React beginners. The mapping (Routes = Controllers, Components = ISML templates, Loaders = pipeline nodes) was the single most valuable framing to include.

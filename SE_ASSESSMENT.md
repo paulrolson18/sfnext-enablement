@@ -123,8 +123,8 @@ What is the purpose of a `CLAUDE.md` file in a Storefront Next project?
 ### Question 13
 Which of the following is a STRONG prompt for Claude Code?
 
-- A) "Make the product card look better"
-- B) "In `src/components/ProductCard.tsx`, add a hover image swap and slide-up Quick Add button using Tailwind `group-hover` classes"
+- A) "Make the product tile look better"
+- B) "In `src/components/product-tile/index.tsx`, add a hover image swap and slide-up Quick Add button using Tailwind `group-hover` classes"
 - C) "Update the styling"
 - D) "Fix the bug in the cart"
 
@@ -162,7 +162,7 @@ A customer's development team uses Cursor (not Claude Code) as their AI coding a
 | 10 | **B** | Split-cookie architecture stores the access token and refresh token in separate cookies. Token refresh happens server-side in middleware — credentials never reach the browser. Guest-to-registered login swaps cookie types atomically. |
 | 11 | **B** | `pnpm sfnext push` deploys to Managed Runtime. `b2c mrt tail-logs` streams live logs from the deployed instance, with filters for error level and search patterns. |
 | 12 | **B** | `CLAUDE.md` is committed to the project root. Claude Code reads it automatically at session start, gaining context about your brand, conventions, and goals — dramatically improving output quality and consistency. |
-| 13 | **B** | Strong prompts name the file, describe the visual goal, reference specific patterns, and state constraints. "In `src/components/ProductCard.tsx`, add a hover image swap and slide-up Quick Add button using Tailwind `group-hover` classes" gives Claude Code everything it needs. |
+| 13 | **B** | Strong prompts name the file, describe the visual goal, reference specific patterns, and state constraints. "In `src/components/product-tile/index.tsx`, add a hover image swap and slide-up Quick Add button using Tailwind `group-hover` classes" gives Claude Code everything it needs. |
 | 14 | **C** | `sfnext_configure_theme` configures your Tailwind theme via AI prompts — it's the fastest path to brand customization. `sfnext_get_guidelines` loads development rules, while `sfnext_analyze_component` inspects existing code. |
 | 15 | **B** | The MCP server works with any AI coding assistant. For Cursor, create `.cursor/mcp.json` with the MCP server configuration. For VS Code + Copilot, use `.vscode/mcp.json`. No vendor lock-in. |
 

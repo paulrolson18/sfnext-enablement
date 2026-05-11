@@ -115,7 +115,7 @@ export default function CheatSheet() {
             { file: 'tailwind.config.js', purpose: 'Design tokens — colors, fonts, border radius' },
             { file: 'config.server.ts', purpose: 'B2C credentials and SCAPI configuration' },
             { file: 'src/lib/scapi/', purpose: 'SCAPI wrapper functions with TypeScript types' },
-            { file: 'src/components/', purpose: 'Reusable UI components (Header, ProductCard, etc.)' },
+            { file: 'src/components/', purpose: 'Reusable UI components (Header, product-tile/, etc.)' },
           ].map(({ file, purpose }) => (
             <div key={file} className="flex gap-3 p-3 rounded-lg bg-slate-900/60 border border-slate-700/50">
               <code className="text-violet-400 font-mono text-xs flex-shrink-0 w-48">{file}</code>
