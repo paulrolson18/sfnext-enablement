@@ -46,6 +46,16 @@ const toolPrereqs = [
     action: 'Download the zip file from',
     actionLink: { label: 'Google Drive', url: 'https://drive.google.com/file/d/136YSJ9ylbphcsGT6B_29-Z530c_wjL2b/view?usp=sharing' },
   },
+  {
+    icon: GitBranch,
+    color: 'text-emerald-400',
+    bg: 'bg-emerald-500/10 border-emerald-500/20',
+    title: 'Git',
+    desc: 'Version control — required for cloning the template and pushing code. Not included in the fast-path script.',
+    verify: 'git --version',
+    action: 'Download from',
+    actionLink: { label: 'git-scm.com', url: 'https://git-scm.com' },
+  },
 ]
 
 const devPrereqs = [
@@ -75,11 +85,11 @@ const devPrereqs = [
     icon: GitBranch,
     color: 'text-emerald-400',
     bg: 'bg-emerald-500/10 border-emerald-500/20',
-    title: 'GitHub',
-    desc: 'Git and the GitHub CLI for cloning the template and deploying via GitHub Actions.',
+    title: 'GitHub CLI',
+    desc: 'The GitHub CLI for creating repos from templates and managing pull requests.',
     verify: 'gh --version',
     installCmd: null,
-    installText: 'Install the GitHub CLI from cli.github.com and Git from git-scm.com',
+    installText: 'Install from cli.github.com',
     installCmds: null,
   },
 ]
