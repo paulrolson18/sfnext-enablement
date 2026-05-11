@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 import SectionHeader from '../components/SectionHeader'
+import CodeBlock from '../components/CodeBlock'
+import InlineCode from '../components/InlineCode'
 import Callout from '../components/Callout'
 import StepCard from '../components/StepCard'
 
@@ -105,9 +107,86 @@ export default function Setup() {
             </Callout>
           </StepCard>
 
-          <StepCard stepKey="setup-complete" number={10} title="Verify your storefront was created" isLast>
+          <StepCard stepKey="setup-complete" number={10} title="Verify your storefront was created">
             <p className="text-sm">
               Once complete, you should see your new storefront listed. Check your GitHub account to confirm the repository was created — this is the codebase you'll be working with throughout the workshop.
+            </p>
+          </StepCard>
+
+          <StepCard stepKey="setup-gh-auth" number={11} title="Authenticate GitHub CLI">
+            <p className="text-sm">
+              Open your terminal and run:
+            </p>
+            <div className="mt-2">
+              <InlineCode code="gh auth login" />
+            </div>
+            <p className="text-sm mt-3">
+              Answer the CLI prompts as follows:
+            </p>
+            <CodeBlock
+              language="bash"
+              code={`? Where do you use GitHub? GitHub.com
+? What is your preferred protocol for Git operations on this host? HTTPS
+? Authenticate Git with your GitHub credentials? Yes
+? How would you like to authenticate GitHub CLI? Login with a web browser`}
+            />
+            <p className="text-sm mt-2">
+              A browser window will open — complete the authentication there, then return to your terminal.
+            </p>
+          </StepCard>
+
+          <StepCard stepKey="setup-wait-deploy" number={12} title="Wait for storefront deployment" isLast>
+            <p className="text-sm">
+              The storefront setup process typically takes <strong className="text-slate-200">15–25 minutes</strong> to complete. Once it's finished, you'll see links to your storefront in Business Manager:
+            </p>
+            <ul className="mt-2 space-y-1.5 text-sm">
+              <li className="flex gap-2">
+                <span className="text-slate-600 mt-0.5 flex-shrink-0">›</span>
+                <span>The <strong className="text-slate-200">eye icon</strong> (👁) will launch your live storefront in a new tab</span>
+              </li>
+              <li className="flex gap-2">
+                <span className="text-slate-600 mt-0.5 flex-shrink-0">›</span>
+                <span>A <strong className="text-slate-200">GitHub repo link</strong> will appear — this is the codebase you'll clone and work with</span>
+              </li>
+            </ul>
+            <Callout type="tip" title="While you wait">
+              This is a great time to review <Link to="/module/1" className="text-sky-400 hover:underline">Module 1: Architecture</Link> to get familiar with the tech stack before diving into code.
+            </Callout>
+          </StepCard>
+        </div>
+      </section>
+
+      {/* Part 3: Connect Claude Code */}
+      <section>
+        <h2 className="text-xl font-bold text-slate-100 mb-6">Part 3 — Connect Claude Code to Your Repo</h2>
+        <div className="space-y-0">
+          <StepCard stepKey="setup-claude-repo" number={13} title="Tell Claude Code about your repo">
+            <p className="text-sm">
+              Open Claude Code in your terminal and paste the following:
+            </p>
+            <div className="mt-2">
+              <CodeBlock
+                language="text"
+                code={`I would like to work on this repo: <paste your GitHub URL from Business Manager>`}
+              />
+            </div>
+            <p className="text-sm mt-2">
+              Copy the GitHub repo URL from Business Manager (from step 12) and paste it in place of the placeholder. Wait for Claude Code to acknowledge before continuing.
+            </p>
+          </StepCard>
+
+          <StepCard stepKey="setup-claude-env" number={14} title="Set up your environment file" isLast>
+            <p className="text-sm">
+              Once Claude Code has cloned and acknowledged the repo, paste:
+            </p>
+            <div className="mt-2">
+              <CodeBlock
+                language="text"
+                code={`I need to setup my .env file`}
+              />
+            </div>
+            <p className="text-sm mt-2">
+              Claude Code will guide you through configuring the <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">.env</code> file with your B2C sandbox credentials — connecting your local development environment to your Commerce Cloud sandbox.
             </p>
           </StepCard>
         </div>
