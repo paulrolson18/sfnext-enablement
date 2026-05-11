@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { ArrowRight, Terminal, GitBranch, Package, Code2, Cpu, Globe } from 'lucide-react'
+import { ArrowRight, Terminal, GitBranch, Package, Code2, Cpu, Globe, Download, Wrench } from 'lucide-react'
 import SectionHeader from '../components/SectionHeader'
 import CodeBlock from '../components/CodeBlock'
 import InlineCode from '../components/InlineCode'
@@ -35,6 +35,16 @@ const toolPrereqs = [
     verify: null,
     action: 'Contact your team lead for sandbox credentials. Create an Account Manager account at',
     actionLink: { label: 'account.demandware.com', url: 'https://account.demandware.com' },
+  },
+  {
+    icon: Download,
+    color: 'text-emerald-400',
+    bg: 'bg-emerald-500/10 border-emerald-500/20',
+    title: 'Market Street Storefront Export',
+    desc: 'Download the Market Street storefront site export zip — you\'ll import this into your sandbox during the workshop.',
+    verify: null,
+    action: 'Download the zip file from',
+    actionLink: { label: 'Google Drive', url: 'https://drive.google.com/file/d/136YSJ9ylbphcsGT6B_29-Z530c_wjL2b/view?usp=sharing' },
   },
 ]
 
@@ -144,10 +154,10 @@ export default function PreWork() {
           Get Your Tools Ready
         </h2>
         <p className="text-slate-400 text-sm mb-4">
-          These three tools require manual setup — get them installed and verified first.
+          These require manual setup — get them installed and downloaded first.
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {toolPrereqs.map(({ icon: Icon, color, bg, title, desc, verify, action, actionLink }) => (
             <div key={title} className={`rounded-xl border p-4 ${bg}`}>
               <div className="flex items-center gap-3 mb-3">
@@ -200,6 +210,28 @@ export default function PreWork() {
             language="bash"
             code={`bash <(curl -fsSL https://raw.githubusercontent.com/lukejohnson-sf/fast-setup/main/setup.sh)`}
           />
+        </div>
+
+        <div className="rounded-xl border p-4 bg-amber-500/10 border-amber-500/20 mb-6">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-9 h-9 rounded-lg flex items-center justify-center bg-amber-500/10 border-amber-500/20">
+              <Wrench size={20} className="text-amber-400" />
+            </div>
+            <h3 className="font-semibold text-slate-100 text-sm">B2C Developer Toolkit CLI</h3>
+          </div>
+          <p className="text-slate-400 text-xs mb-3">
+            The B2C CLI powers sandbox management, code deployment, and MRT operations. Install it globally with npm.
+          </p>
+          <div className="space-y-2 text-xs">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-slate-500">Install:</span>
+              <InlineCode code="npm install -g @salesforce/b2c-cli" />
+            </div>
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-slate-500">Verify:</span>
+              <InlineCode code="b2c --version" />
+            </div>
+          </div>
         </div>
 
         <p className="text-slate-500 text-xs mb-4">Or install each tool manually:</p>
