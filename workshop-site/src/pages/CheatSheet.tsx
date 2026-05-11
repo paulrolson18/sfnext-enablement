@@ -50,7 +50,7 @@ export default function CheatSheet() {
           {[
             { point: 'Speed to launch', detail: '"A brand refresh takes hours, not weeks. Change one config file and the entire storefront updates."' },
             { point: 'Security by architecture', detail: '"All data fetching happens server-side — API keys, tokens, and payment data never reach the browser."' },
-            { point: 'AI-first platform', detail: '"The only commerce platform with a first-party MCP server — the AI understands SCAPI, SLAS, and Page Designer natively."' },
+            { point: 'AI-first platform', detail: '"The only commerce platform with a first-party MCP server and a CLAUDE.md that ships in the template — 22 performance rules, code conventions, and architecture docs. The AI understands SCAPI, SLAS, and Page Designer from the first prompt."' },
             { point: 'Enterprise scale', detail: '"Managed Runtime on AWS Lambda — flash sales with 100x traffic just work, zero capacity planning."' },
             { point: 'Performance built-in', detail: '"Streaming SSR, optimized Core Web Vitals, sub-second first paint — structural advantages, not optimization tricks."' },
             { point: 'Merchandiser control', detail: '"Page Designer lets merchandisers configure pages, arrange components, and manage content — no developer needed for content updates."' },

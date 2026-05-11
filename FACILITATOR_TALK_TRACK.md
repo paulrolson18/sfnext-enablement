@@ -511,9 +511,11 @@ Walk the six-tool grid quickly:
 **CLAUDE.md (2 min):**
 
 **Say:**
-> "This is the highest-leverage thing you can do. CLAUDE.md is a file you commit to your project root. Claude Code reads it automatically. Your brand guidelines, coding conventions, file structure preferences — put it all here. Every prompt starts with full context."
+> "Here's a major advantage most people don't know about: the Storefront Next template *already ships with a comprehensive CLAUDE.md*. Open it — it contains 22 performance rules, code conventions, testing strategy, and links to 20+ architecture docs. Every AI coding assistant reads this automatically. From your very first prompt, the AI knows where files go, how to fetch data, how to handle images, and what coding patterns to follow."
 
-Show the template. Tell everyone to create theirs now (they'll do it in Exercise 1).
+Scroll through the "What ships in the template" summary on the page.
+
+> "This is a differentiator no other commerce platform has. The platform teaches the AI how to build on it. Your job in Exercise 1 is to add *your* brand context on top — colors, typography, tone. The AI combines both for code that's architecturally correct *and* on-brand."
 
 ### 2:30–2:35 — Part 2: Prompt templates (5 min)
 
@@ -556,7 +558,7 @@ Show it reading the file first, then making targeted edits.
 
 | Exercise | What they do | Time |
 |----------|-------------|------|
-| 1. Create CLAUDE.md | Copy template, fill in brand details, commit | 2 min |
+| 1. Explore CLAUDE.md + add brand context | Open existing CLAUDE.md, skim rules, add brand guidelines + "What I'm Building" section, commit | 2 min |
 | 2. Brand in one prompt | Run brand theming prompt adapted to their direction | 3 min |
 | 3. Build a component | Use Figma-to-code prompt to describe ideal product card | 3 min |
 | 4. Extend a loader | Ask Claude Code to read category route and add sorting | 3 min |
@@ -565,7 +567,7 @@ Show it reading the file first, then making targeted edits.
 **Facilitator notes:**
 - Exercises 1–4 are the core. Everyone should get through them.
 - Exercise 5 is aspirational — tell fast finishers to start it, but it's also a great post-workshop activity.
-- Walk the room. Common issues: Claude Code not seeing the MCP tools (restart session), CLAUDE.md in wrong directory.
+- Walk the room. Common issues: Claude Code not seeing the MCP tools (restart session), forgetting to add brand context to the existing CLAUDE.md.
 
 ### 2:48–2:50 — Wrap-up card + Migration callout (2 min)
 
@@ -666,7 +668,7 @@ Share:
 
 | # | Exercise | Minutes |
 |---|----------|---------|
-| 1 | Create CLAUDE.md | 2 |
+| 1 | Explore CLAUDE.md + add brand context | 2 |
 | 2 | Brand storefront in one prompt | 3 |
 | 3 | Build component from detailed prompt | 3 |
 | 4 | Extend loader with context-aware prompting | 3 |
