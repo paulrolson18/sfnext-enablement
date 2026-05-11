@@ -37,12 +37,12 @@ export function ProductTile({ product }: { product: Product }) {
     role: 'Routing & Data',
     sfraAnalog: 'Controllers + pipelines',
     detail: [
-      'File-based routing: create a file in src/routes/ and it becomes a URL. No configuration needed.',
+      'File-based routing: the filename encodes the URL. Dots separate path segments, $ marks dynamic params, and underscore prefixes assign layout groups (_app, _checkout, _empty).',
       'Loaders run server-side before the page renders — like a controller fetching data before returning an ISML template.',
       'Actions handle form submissions and mutations (add to cart, update profile) — they run on the server and redirect.',
     ],
-    code: `// src/routes/product.$productId.tsx
-// URL: /product/123
+    code: `// src/routes/_app.product.$productId.tsx
+// URL: /product/123 (rendered inside _app.tsx layout)
 
 export async function loader({ params }: LoaderArgs) {
   // Runs server-side — fetch product from SCAPI
@@ -102,11 +102,20 @@ sfnext push --environment production`,
 
 const fileStructure = `storefront-next-template/
 ├── src/
-│   ├── routes/              ← Pages (file = URL)
-│   │   ├── _index.tsx       ← Homepage (/)
-│   │   ├── search.tsx       ← Search page (/search)
-│   │   ├── category.$id.tsx ← Category (/category/womens)
-│   │   └── product.$id.tsx  ← PDP (/product/123)
+│   ├── routes/                              ← Pages (filename = URL)
+│   │   ├── _app.tsx                         ← Main layout (header, footer, nav)
+│   │   ├── _app._index.tsx                  ← Homepage (/)
+│   │   ├── _app.product.$productId.tsx      ← PDP (/product/123)
+│   │   ├── _app.category.$categoryId.tsx    ← PLP (/category/womens)
+│   │   ├── _app.cart.tsx                    ← Cart (/cart)
+│   │   ├── _app.search.tsx                  ← Search (/search)
+│   │   ├── _app.account.orders.$orderNo.tsx ← Order detail
+│   │   ├── _checkout.tsx                    ← Checkout layout (minimal chrome)
+│   │   ├── _checkout.checkout.tsx           ← Checkout page (/checkout)
+│   │   ├── _empty.tsx                       ← Empty layout (no header/footer)
+│   │   ├── _empty.login.tsx                 ← Login (/login)
+│   │   ├── action.cart-item-add.tsx         ← Cart add mutation (no UI)
+│   │   └── resource.robots[.]txt.ts         ← API endpoint (no UI)
 │   │
 │   ├── components/          ← Reusable UI pieces
 │   │   ├── Header.tsx
@@ -130,7 +139,7 @@ const fileStructure = `storefront-next-template/
 const requestFlow = [
   { step: 'Browser requests /product/123', icon: Globe, color: 'text-sky-400' },
   { step: 'MRT Lambda function receives request', icon: Server, color: 'text-emerald-400' },
-  { step: 'React Router matches route → product.$id.tsx', icon: FileCode2, color: 'text-blue-400' },
+  { step: 'React Router matches route → _app.product.$productId.tsx', icon: FileCode2, color: 'text-blue-400' },
   { step: 'loader() runs server-side → calls SCAPI for product data', icon: ArrowDown, color: 'text-violet-400' },
   { step: 'React renders ProductPage with data → HTML streams to browser', icon: Layers, color: 'text-amber-400' },
   { step: 'Browser hydrates: React takes over for interactions', icon: '⚛️' as any, color: 'text-sky-400' },
@@ -189,7 +198,7 @@ export default function Module1() {
         <CodeBlock code={fileStructure} language="bash" filename="storefront-next-template/" />
         <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
           {[
-            { folder: 'src/routes/', desc: 'Each file is a page. The filename defines the URL pattern.' },
+            { folder: 'src/routes/', desc: 'Each file is a page. The filename encodes layout group, path segments, and dynamic params.' },
             { folder: 'src/components/', desc: 'Reusable UI. A component renders the same way wherever you use it.' },
             { folder: 'src/lib/scapi/', desc: 'API client wrappers for B2C Commerce Shopper APIs.' },
             { folder: 'tailwind.config.js', desc: 'Your brand tokens. Change colors, fonts, and spacing here.' },
@@ -200,6 +209,151 @@ export default function Module1() {
             </div>
           ))}
         </div>
+      </section>
+
+      {/* Route file naming conventions */}
+      <section>
+        <h2 className="text-xl font-bold text-slate-100 mb-3">Route File Naming Conventions</h2>
+        <p className="text-slate-400 text-sm mb-4 leading-relaxed">
+          In Storefront Next, the <strong className="text-slate-200">filename encodes the entire URL structure</strong>. Dots separate path segments, <code className="bg-slate-800 px-1 py-0.5 rounded text-sky-400 font-mono text-xs">$</code> marks dynamic parameters, and underscore prefixes define which layout wraps the page.
+        </p>
+
+        {/* Anatomy of a route file */}
+        <div className="mb-6 p-4 rounded-xl bg-slate-900/60 border border-sky-500/30">
+          <h3 className="text-sm font-bold text-sky-400 mb-3">Anatomy of a Route Filename</h3>
+          <div className="font-mono text-sm mb-3">
+            <span className="text-violet-400">_app</span>
+            <span className="text-slate-500">.</span>
+            <span className="text-sky-400">product</span>
+            <span className="text-slate-500">.</span>
+            <span className="text-emerald-400">$productId</span>
+            <span className="text-slate-500">.tsx</span>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+            <div className="p-2 rounded bg-violet-950/30 border border-violet-500/20">
+              <span className="text-violet-400 font-bold">_app.</span>
+              <span className="text-slate-400"> — Layout prefix. Renders inside the <code className="text-violet-300">_app.tsx</code> layout (header, footer, nav).</span>
+            </div>
+            <div className="p-2 rounded bg-sky-950/30 border border-sky-500/20">
+              <span className="text-sky-400 font-bold">product.</span>
+              <span className="text-slate-400"> — Path segment. Becomes <code className="text-sky-300">/product</code> in the URL.</span>
+            </div>
+            <div className="p-2 rounded bg-emerald-950/30 border border-emerald-500/20">
+              <span className="text-emerald-400 font-bold">$productId</span>
+              <span className="text-slate-400"> — Dynamic parameter. Matches any value (e.g., <code className="text-emerald-300">/product/123</code>).</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Three layout groups */}
+        <h3 className="text-sm font-bold text-slate-200 mb-3">Three Layout Groups</h3>
+        <p className="text-slate-400 text-xs mb-3">
+          The underscore prefix (<code className="bg-slate-800 px-1 py-0.5 rounded text-sky-400 font-mono text-xs">_</code>) creates a <strong className="text-slate-300">pathless layout route</strong> — it wraps child pages but doesn't add a segment to the URL. The template ships with three:
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
+          {[
+            {
+              layout: '_app.tsx',
+              color: 'border-sky-500/30 bg-sky-950/20',
+              titleColor: 'text-sky-400',
+              desc: 'Full storefront chrome',
+              detail: 'Header, footer, navigation, mini-cart. Used by homepage, PDP, PLP, cart, search, account pages.',
+              examples: ['_app._index.tsx → /', '_app.product.$productId.tsx → /product/123', '_app.cart.tsx → /cart'],
+            },
+            {
+              layout: '_checkout.tsx',
+              color: 'border-amber-500/30 bg-amber-950/20',
+              titleColor: 'text-amber-400',
+              desc: 'Minimal checkout chrome',
+              detail: 'Stripped-down header, no footer navigation. Keeps shoppers focused on completing their purchase.',
+              examples: ['_checkout.checkout.tsx → /checkout'],
+            },
+            {
+              layout: '_empty.tsx',
+              color: 'border-violet-500/30 bg-violet-950/20',
+              titleColor: 'text-violet-400',
+              desc: 'Empty shell (no header/footer)',
+              detail: 'Clean page with no storefront chrome. Used for authentication screens and maintenance.',
+              examples: ['_empty.login.tsx → /login', '_empty.forgot-password.tsx → /forgot-password'],
+            },
+          ].map(({ layout, color, titleColor, desc, detail, examples }) => (
+            <div key={layout} className={`p-3 rounded-xl border ${color}`}>
+              <code className={`font-mono text-sm font-bold ${titleColor}`}>{layout}</code>
+              <div className="text-slate-200 text-xs font-semibold mt-1">{desc}</div>
+              <div className="text-slate-400 text-xs mt-1 mb-2">{detail}</div>
+              <div className="space-y-1">
+                {examples.map((ex) => (
+                  <div key={ex} className="text-xs font-mono text-slate-500">{ex}</div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Route examples table */}
+        <h3 className="text-sm font-bold text-slate-200 mb-3">Route Examples from the Template</h3>
+        <div className="overflow-x-auto mb-4">
+          <table className="w-full text-xs">
+            <thead>
+              <tr className="border-b border-slate-700">
+                <th className="text-left py-2 px-3 text-slate-400 font-semibold">File</th>
+                <th className="text-left py-2 px-3 text-slate-400 font-semibold">URL</th>
+                <th className="text-left py-2 px-3 text-slate-400 font-semibold">Layout</th>
+              </tr>
+            </thead>
+            <tbody className="font-mono">
+              {[
+                { file: '_app._index.tsx', url: '/', layout: 'Main' },
+                { file: '_app.product.$productId.tsx', url: '/product/:productId', layout: 'Main' },
+                { file: '_app.category.$categoryId.tsx', url: '/category/:categoryId', layout: 'Main' },
+                { file: '_app.cart.tsx', url: '/cart', layout: 'Main' },
+                { file: '_app.search.tsx', url: '/search', layout: 'Main' },
+                { file: '_app.account.orders.$orderNo.tsx', url: '/account/orders/:orderNo', layout: 'Main' },
+                { file: '_checkout.checkout.tsx', url: '/checkout', layout: 'Checkout' },
+                { file: '_empty.login.tsx', url: '/login', layout: 'Empty' },
+                { file: '_empty.forgot-password.tsx', url: '/forgot-password', layout: 'Empty' },
+              ].map(({ file, url, layout }) => (
+                <tr key={file} className="border-b border-slate-800/50">
+                  <td className="py-1.5 px-3 text-sky-400">{file}</td>
+                  <td className="py-1.5 px-3 text-slate-300">{url}</td>
+                  <td className="py-1.5 px-3 text-slate-500">{layout}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Special file types */}
+        <h3 className="text-sm font-bold text-slate-200 mb-3">Special Route Types</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+          <div className="p-3 rounded-lg bg-amber-950/20 border border-amber-500/20">
+            <code className="text-amber-400 font-mono text-sm font-bold">action.*</code>
+            <div className="text-slate-200 text-xs font-semibold mt-1">Form Mutation Handlers</div>
+            <div className="text-slate-400 text-xs mt-1">
+              Handle POST requests from forms — add to cart, wishlist, coupon apply. No page rendering, no UI. They process the mutation and redirect.
+            </div>
+            <div className="mt-2 space-y-0.5 font-mono text-xs text-slate-500">
+              <div>action.cart-item-add.tsx</div>
+              <div>action.wishlist-add.ts</div>
+              <div>action.coupon-add.ts</div>
+            </div>
+          </div>
+          <div className="p-3 rounded-lg bg-emerald-950/20 border border-emerald-500/20">
+            <code className="text-emerald-400 font-mono text-sm font-bold">resource.*</code>
+            <div className="text-slate-200 text-xs font-semibold mt-1">API-Style Endpoints</div>
+            <div className="text-slate-400 text-xs mt-1">
+              Return data (JSON, XML, text) instead of HTML pages. Used for robots.txt, sitemap, health checks, and programmatic endpoints.
+            </div>
+            <div className="mt-2 space-y-0.5 font-mono text-xs text-slate-500">
+              <div>resource.robots[.]txt.ts</div>
+              <div>resource.sitemap[.]xml.ts</div>
+            </div>
+          </div>
+        </div>
+
+        <Callout type="info" title="SFRA analog">
+          Think of layout prefixes like <strong>stacking cartridges</strong> — <code className="bg-slate-800 px-1 py-0.5 rounded text-sky-400 font-mono text-xs">_app.tsx</code> is your <code className="bg-slate-800 px-1 py-0.5 rounded text-sky-400 font-mono text-xs">app.isml</code> (main decorator), <code className="bg-slate-800 px-1 py-0.5 rounded text-sky-400 font-mono text-xs">_checkout.tsx</code> is your <code className="bg-slate-800 px-1 py-0.5 rounded text-sky-400 font-mono text-xs">checkout.isml</code> decorator. The <code className="bg-slate-800 px-1 py-0.5 rounded text-sky-400 font-mono text-xs">action.*</code> files are like SFRA <code className="bg-slate-800 px-1 py-0.5 rounded text-sky-400 font-mono text-xs">*-ajax</code> controllers — they process data without rendering a full page.
+        </Callout>
       </section>
 
       {/* Request lifecycle */}
@@ -334,7 +488,7 @@ export default function Module1() {
             <p className="text-sm">Run <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">code .</code> from your project directory. Expand the <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">src/</code> folder in the file tree.</p>
           </StepCard>
           <StepCard stepKey="m1-rr7" number={2} title="Trace a request through the code">
-            <p className="text-sm">Open <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">src/routes/_index.tsx</code>. Find the <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">loader()</code> function. Ask Claude Code: <em>"Explain what this loader does and what SCAPI calls it makes."</em> Verify the answer against the request lifecycle diagram above.</p>
+            <p className="text-sm">Open <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">src/routes/_app._index.tsx</code>. Find the <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">loader()</code> function. Ask Claude Code: <em>"Explain what this loader does and what SCAPI calls it makes."</em> Verify the answer against the request lifecycle diagram above.</p>
           </StepCard>
           <StepCard stepKey="m1-tailwind" number={3} title="Inspect Tailwind classes in the browser">
             <p className="text-sm">In your browser's DevTools, inspect the homepage hero banner. Notice the class names like <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">relative overflow-hidden rounded-2xl</code>. Find where they're defined in the source.</p>
