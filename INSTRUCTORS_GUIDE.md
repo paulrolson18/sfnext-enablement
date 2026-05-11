@@ -168,7 +168,7 @@ Keep coming back to this map throughout the module.
 - A component is just a function that returns JSX (HTML-like syntax). No new mental model needed — it's a template function.
 - The new part: Streaming SSR. The server doesn't wait for all API calls to finish before sending HTML. It sends what it has and streams the rest. This is why Storefront Next loads fast — the shell of the page appears immediately while product data is still fetching.
 - Suspense boundaries: show a skeleton card while a product is loading, swap in real content when it arrives.
-- Show the `ProductCard` code example. Point out: it's just a function, it accepts props, it returns HTML-looking stuff.
+- Show the `ProductTile` code example. Point out: it's just a function, it accepts props, it returns HTML-looking stuff.
 
 **React Router 7 — "Controllers + Pipelines"**  
 - File-based routing: create `src/routes/my-page.tsx` and `/my-page` is a live URL. No routing config file to maintain.
@@ -288,7 +288,7 @@ The key point: because the hero is a component, you can use it in multiple place
 
 The Tailwind class to find is likely something like `bg-gradient-to-t from-black/70`. If their primary color is, say, deep navy, they'd change it to `from-[#0a0a2e]/80` or map it to their custom token.
 
-### Part 3 — Product Card Enhancement (15 min)
+### Part 3 — Product Tile Enhancement (15 min)
 
 This is the longest and most impactful part of Module 2. Spend extra time here if the group is engaged.
 
@@ -301,23 +301,23 @@ Open the Odyssey product listing page. Show participants:
 
 > "Each of these is a small independent behavior. React state handles whether the user is hovering. Tailwind's `group-hover` classes handle the CSS. There's no JavaScript file to maintain separately — the behavior and the style are in the same component."
 
-Walk through the enhanced `ProductCard` code in the module. Point out these specific patterns:
+Walk through the enhanced `ProductTile` code in the module. Point out these specific patterns:
 - `className="group ..."` on the parent + `className="group-hover:opacity-100 ..."` on the child = CSS-only hover coordination
 - `translate-y-full group-hover:translate-y-0 transition-transform` = slide-up animation, no JS needed
 - `isHovered` state for the image swap = one `useState`, two `onMouseEnter`/`onMouseLeave` handlers
 
 **Hands-on (10 min):**  
-> "Find `src/components/ProductCard.tsx`. Add a slide-up Quick Add button that appears on hover. Use the pattern from the module as a guide — or ask Claude Code."
+> "Find `src/components/product-tile/index.tsx`. Add a slide-up Quick Add button that appears on hover. Use the pattern from the module as a guide — or ask Claude Code."
 
 For participants who want to use Claude Code:
-> "In my ProductCard component, add a Quick Add button that slides up from the bottom on hover. Use Tailwind group-hover and translate-y transitions. Don't break the existing layout."
+> "In my ProductTile component, add a Quick Add button that slides up from the bottom on hover. Use Tailwind group-hover and translate-y transitions. Don't break the existing layout."
 
 Walk around. Watch for people adding inline `style=` attributes — redirect them to Tailwind classes.
 
 ### Part 4 — PLP Layout (10 min)
 
 **Explain (3 min):**  
-Show the category route structure. The entire layout — sidebar, grid, product cards — is in one file. Changing column count is one class name. Swapping filter position from left to right is moving a `div`.
+Show the category route structure. The entire layout — sidebar, grid, product tiles — is in one file. Changing column count is one class name. Swapping filter position from left to right is moving a `div`.
 
 > "In SFRA, layout was spread across pipeline parameters, ISML templates, Bootstrap grid classes, and JavaScript. Here it's one file. One place to look, one place to change."
 
@@ -339,7 +339,7 @@ Same pattern as Module 1: draw attention to the amber callout, give participants
 ### Challenge exercise (if time allows)
 
 For participants who finish early:
-> "Add a badge system to your product cards. Show 'NEW' if `product.isNew === true`, and show a discount percentage badge if the product has a sale price. Reference the Odyssey storefront for how the badges are positioned."
+> "Add a badge system to your product tiles. Show 'NEW' if `product.isNew === true`, and show a discount percentage badge if the product has a sale price. Reference the Odyssey storefront for how the badges are positioned."
 
 ---
 
@@ -506,7 +506,7 @@ Have everyone create their `CLAUDE.md` right now, before the prompt exercises. T
 Walk each of the three brand/look-and-feel prompts and three logic prompts. For each one, emphasize the pattern:
 
 **What makes a strong prompt:**
-1. **Name the file.** Don't say "my product card" — say `src/components/ProductCard.tsx`
+1. **Name the file.** Don't say "my product tile" — say `src/components/product-tile/index.tsx`
 2. **Describe the goal, not the steps.** Don't say "add a div with class X" — say "add a Quick Add button that slides up on hover"
 3. **State the constraints.** "Use Tailwind only, no inline styles." "Don't change the prop interface." "Keep the existing layout."
 4. **Give a reference if you have one.** "Similar to the Odyssey storefront pattern."
@@ -543,7 +543,7 @@ Everyone should do this. 2 minutes. Commit it.
 Give participants the brand theming prompt template from the module. Tell them to adapt it to their own direction and run it. 2 minutes.
 
 **Exercise 3 — Build a component with a detailed prompt**  
-Use the Figma-to-code prompt template. Have each participant describe their ideal product card with specifics: dimensions, colors, hover behavior. 2 minutes.
+Use the Figma-to-code prompt template. Have each participant describe their ideal product tile with specifics: dimensions, colors, hover behavior. 2 minutes.
 
 **Exercise 4 — Extend a loader with context-aware prompting**  
 Have participants ask Claude Code to read their category route and add sorting to the loader. Emphasize: Claude Code will read the actual file and extend it — not generate something generic. 2 minutes.
@@ -574,7 +574,7 @@ End Module 4 with this:
 
 Quickly navigate through each module page on the projector. As you click through:
 
-> "In Module 1 you mapped the stack to what you already know. In Module 2 you changed the visual experience — brand tokens, hero banner, product cards. In Module 3 you changed how data flows — loaders, actions, SCAPI. In Module 4 you built a repeatable AI-accelerated workflow."
+> "In Module 1 you mapped the stack to what you already know. In Module 2 you changed the visual experience — brand tokens, hero banner, product tiles. In Module 3 you changed how data flows — loaders, actions, SCAPI. In Module 4 you built a repeatable AI-accelerated workflow."
 
 ### The SE pitch for this in a customer conversation
 

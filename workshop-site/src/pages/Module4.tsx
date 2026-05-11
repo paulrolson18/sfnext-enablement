@@ -271,7 +271,7 @@ Update my tailwind.config.js to reflect this aesthetic:
 - Card corners: slightly rounded (8px), not pill-shaped
 - Remove any bright/saturated colors
 
-After updating the config, show me what the ProductCard would look like with the new tokens applied.`}
+After updating the config, show me what the ProductTile would look like with the new tokens applied.`}
             followUp={`The colors look right. Now update the button component to use the rose accent with a thin border style (outlined) rather than filled. Buttons should be very minimal.`}
           />
 
@@ -302,7 +302,7 @@ Types: Define a PromoBannerProps interface with full TypeScript types.`}
             categoryColor="text-violet-300"
             title="Implement a design from Figma description"
             description="Describe exactly what you see in Figma. Include layout, spacing, colors, hover states, and any animations. Claude Code translates this to Tailwind + React."
-            prompt={`I have a Figma design for a product card. Here's the spec:
+            prompt={`I have a Figma design for a product tile. Here's the spec:
 
 Layout: 280px wide card, white background, 12px border radius, 1px #e5e7eb border
 Image section: full width, aspect-ratio 4:5, object-fit cover, gray-50 background
@@ -319,7 +319,7 @@ Add to cart: Not visible by default. On hover, a pill button "Add to Cart" slide
 from bottom with 200ms ease transition. 40px tall, full width minus 24px horizontal
 padding, #111827 background, white text.
 
-Build this as src/components/ProductCard.tsx with a ProductCardProps interface.`}
+Build this as src/components/product-tile/index.tsx with a ProductTileProps interface.`}
           />
         </div>
       </section>
@@ -353,7 +353,7 @@ Context:
 Add:
 1. A getRecommendations(productId, recommenderName) function in src/lib/scapi/recommendations.ts
 2. Update the loader to fetch recommendations in parallel
-3. Add a RecommendedProducts component that shows 4 product cards in a horizontal scroll on mobile, grid on desktop
+3. Add a RecommendedProducts component that shows 4 product tiles in a horizontal scroll on mobile, grid on desktop
 4. Wire it into the page below the product detail section`}
             followUp={`The recommendations are loading. Now add a loading skeleton — show 4 gray placeholder cards while the recommendations are fetching, using React Suspense.`}
           />
@@ -418,7 +418,7 @@ Create:
             <h3 className="text-red-400 font-semibold text-sm mb-3">Weak prompts (vague output)</h3>
             <div className="space-y-2">
               {[
-                '"Make the product card look better"',
+                '"Make the product tile look better"',
                 '"Add a feature to the cart"',
                 '"Fix the bug"',
                 '"Update the styling"',
@@ -434,7 +434,7 @@ Create:
             <h3 className="text-emerald-400 font-semibold text-sm mb-3">Strong prompts (precise output)</h3>
             <div className="space-y-2">
               {[
-                '"In ProductCard.tsx, add a hover image swap and slide-up Quick Add button using group-hover Tailwind classes"',
+                '"In src/components/product-tile/index.tsx, add a hover image swap and slide-up Quick Add button using group-hover Tailwind classes"',
                 '"Add an Add to Wishlist action to product.$productId.tsx using the SCAPI customer lists endpoint"',
                 '"The product images return 404 — check how imageUrl is mapped in lib/scapi/products.ts"',
                 '"Update tailwind.config.js: change all primary-500 references to this hex: #1a1a2e"',
@@ -475,7 +475,7 @@ Create:
             </Callout>
           </StepCard>
           <StepCard stepKey="m4-prompt2" number={3} title="Build a component with a detailed prompt">
-            <p className="text-sm">Use the Figma-to-code prompt template to describe your ideal product card to Claude Code. Include specific measurements, colors, and hover behavior. Accept or refine the output.</p>
+            <p className="text-sm">Use the Figma-to-code prompt template to describe your ideal product tile to Claude Code. Include specific measurements, colors, and hover behavior. Accept or refine the output.</p>
           </StepCard>
           <StepCard stepKey="m4-prompt3" number={4} title="Extend a loader with context-aware prompting">
             <p className="text-sm">Start a Claude Code session in your project. Ask it to read your category route (<code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">src/routes/category.$categoryId.tsx</code>) and add sorting capability to the loader. See how it uses your existing code as context.</p>

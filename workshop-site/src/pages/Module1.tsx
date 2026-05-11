@@ -18,8 +18,8 @@ const techStack = [
       'React 19 adds Streaming SSR: the server sends HTML progressively as data loads, giving instant page paint before the API calls finish.',
       'Suspense boundaries let you show loading skeletons while data is fetching — great for product grids.',
     ],
-    code: `// src/components/ProductCard.tsx
-export function ProductCard({ product }: { product: Product }) {
+    code: `// src/components/product-tile/index.tsx
+export function ProductTile({ product }: { product: Product }) {
   return (
     <div className="rounded-xl border border-slate-700 p-4">
       <img src={product.imageUrl} alt={product.name} />
@@ -110,7 +110,7 @@ const fileStructure = `storefront-next-template/
 │   │
 │   ├── components/          ← Reusable UI pieces
 │   │   ├── Header.tsx
-│   │   ├── ProductCard.tsx
+│   │   ├── product-tile/    ← Product display component
 │   │   └── ui/              ← ShadCN components
 │   │
 │   ├── hooks/               ← Shared React logic

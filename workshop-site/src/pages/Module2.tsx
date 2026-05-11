@@ -147,15 +147,15 @@ export default {
         display: ['Playfair Display', 'Georgia', 'serif'],
       },
       borderRadius: {
-        'product': '12px',  // ← Product card radius
+        'product': '12px',  // ← Product tile radius
         'btn': '9999px',    // ← Pill buttons
       }
     },
   },
 }`
 
-const productCardBefore = `// Default product card (simplified)
-export function ProductCard({ product }: { product: Product }) {
+const productTileBefore = `// Default product tile (simplified)
+export function ProductTile({ product }: { product: Product }) {
   return (
     <div className="border rounded p-4">
       <img src={product.image} alt={product.name} />
@@ -165,8 +165,8 @@ export function ProductCard({ product }: { product: Product }) {
   )
 }`
 
-const productCardAfter = `// Enhanced product card — Odyssey style
-export function ProductCard({ product }: { product: Product }) {
+const productTileAfter = `// Enhanced product tile — Odyssey style
+export function ProductTile({ product }: { product: Product }) {
   const [isWishlisted, setIsWishlisted] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
 
@@ -276,7 +276,7 @@ export default function CategoryPage() {
         <div className="flex-1">
           <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {products.map(p => (
-              <ProductCard key={p.id} product={p} />
+              <ProductTile key={p.id} product={p} />
             ))}
           </div>
           <Pagination />
@@ -357,26 +357,26 @@ export default function Module2() {
         </Callout>
       </section>
 
-      {/* Section 3: Product Card */}
+      {/* Section 3: Product Tile */}
       <section>
         <div className="flex items-center gap-3 mb-4">
           <div className="w-8 h-8 rounded-full bg-violet-500/15 border border-violet-500/30 flex items-center justify-center">
             <Star size={15} className="text-violet-400" />
           </div>
-          <h2 className="text-xl font-bold text-slate-100">Part 3 — Product Card Enhancement</h2>
+          <h2 className="text-xl font-bold text-slate-100">Part 3 — Product Tile Enhancement</h2>
           <span className="text-slate-500 text-sm">15 min</span>
         </div>
         <p className="text-slate-400 text-sm mb-4 leading-relaxed">
-          Product cards drive conversion. The Odyssey store uses hover image swaps, slide-up Quick Add, wishlist toggling, and sale price display. Let's add all of that.
+          Product tiles drive conversion. The Odyssey store uses hover image swaps, slide-up Quick Add, wishlist toggling, and sale price display. Let's add all of that.
         </p>
 
         <div className="mb-4">
           <p className="text-slate-500 text-xs font-medium mb-2 uppercase tracking-wider">Before — bare minimum</p>
-          <CodeBlock code={productCardBefore} language="typescript" />
+          <CodeBlock code={productTileBefore} language="typescript" />
         </div>
         <div>
           <p className="text-sky-400 text-xs font-medium mb-2 uppercase tracking-wider">After — Odyssey-quality card</p>
-          <CodeBlock code={productCardAfter} language="typescript" filename="src/components/ProductCard.tsx" />
+          <CodeBlock code={productTileAfter} language="typescript" filename="src/components/product-tile/index.tsx" />
         </div>
 
         <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -513,10 +513,10 @@ export default function Module2() {
               These are exactly the kind of props a merchandiser controls through Business Manager. When you add the Page Designer decorators later, each prop becomes a configurable field in the BM editing interface — no code changes needed for content updates.
             </Callout>
           </StepCard>
-          <StepCard stepKey="m2-product-card" number={4} title="Add Quick Add to product cards">
-            <p className="text-sm">Find <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">src/components/ProductCard.tsx</code>. Add a slide-up Quick Add button that appears on hover using the pattern shown above.</p>
+          <StepCard stepKey="m2-product-tile" number={4} title="Add Quick Add to product tiles">
+            <p className="text-sm">Find <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">src/components/product-tile/index.tsx</code>. Add a slide-up Quick Add button that appears on hover using the pattern shown above.</p>
             <Callout type="ai" title="Ask Claude Code">
-              "In my ProductCard component, add a Quick Add button that slides up from the bottom on hover. Use Tailwind group-hover and translate-y transitions."
+              "In my ProductTile component, add a Quick Add button that slides up from the bottom on hover. Use Tailwind group-hover and translate-y transitions."
             </Callout>
           </StepCard>
           <StepCard stepKey="m2-plp" number={5} title="Change the PLP grid layout">
@@ -538,13 +538,13 @@ export default function Module2() {
               </div>
             </div>
             <Callout type="tip" title="What to verify">
-              Open your storefront URL and check: (1) brand colors updated globally, (2) hero banner reflects your changes, (3) product cards have the hover interactions you added. This is the same deploy workflow you'd demo to a customer.
+              Open your storefront URL and check: (1) brand colors updated globally, (2) hero banner reflects your changes, (3) product tiles have the hover interactions you added. This is the same deploy workflow you'd demo to a customer.
             </Callout>
           </StepCard>
           <StepCard stepKey="m2-pdp" number={7} title="Challenge: Add a badge system" isLast>
-            <p className="text-sm">Add "NEW" and "SALE" badges to product cards. A product should show "NEW" if <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">product.isNew</code> is true, and show a discount percentage badge if the sale price differs from list price.</p>
+            <p className="text-sm">Add "NEW" and "SALE" badges to product tiles. A product should show "NEW" if <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">product.isNew</code> is true, and show a discount percentage badge if the sale price differs from list price.</p>
             <Callout type="ai" title="Ask Claude Code">
-              "Add badge overlays to my ProductCard component — a 'NEW' badge for new arrivals and a discount percentage badge when salePrice exists. Position them in the top-left corner of the image."
+              "Add badge overlays to my ProductTile component — a 'NEW' badge for new arrivals and a discount percentage badge when salePrice exists. Position them in the top-left corner of the image."
             </Callout>
           </StepCard>
         </div>
