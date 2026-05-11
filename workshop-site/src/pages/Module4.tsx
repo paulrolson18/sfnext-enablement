@@ -80,35 +80,53 @@ b2c config set --client-id YOUR_CLIENT_ID
 # 4. Verify Claude Code sees the MCP tools
 # In Claude Code, ask: "What Storefront Next tools do you have?"`
 
-const claudeMdExample = `# Storefront Next Project
-# CLAUDE.md — project context for Claude Code
+const claudeMdShipped = `# What ships in the template's CLAUDE.md:
 
-## Project
-This is a Storefront Next storefront for [Brand Name].
-We're customizing the Odyssey reference implementation.
+## Project Structure
+├── src/routes/       — File-based routes (React Router 7)
+├── src/components/   — React components (ui/ for Radix + Tailwind)
+├── src/lib/          — Shared utils, hooks, adapters
+├── config.server.ts  — Configuration defaults
+└── docs/             — 20+ detailed architecture docs
 
-## Tech Stack
-- React 19 + React Router 7
-- Tailwind CSS 4 (utility-first, NO custom CSS files)
-- TypeScript strict mode
-- SCAPI for all B2C Commerce API calls
+## Performance & Data Rules (22 rules!)
+✓ Server-load everything — no useEffect for initial data
+✓ Classify data: critical (await) vs non-critical (Promise)
+✓ One <Suspense> boundary per async operation
+✓ Skeleton screens for known layouts
+✓ URL-worthy state in useSearchParams, not useState
+✓ <DynamicImage> with widths for all product images
 
-## Brand Guidelines
+## Code Conventions
+✓ Apache 2.0 copyright header (ESLint-enforced)
+✓ Site-context-aware Link/NavLink (not React Router originals)
+✓ Tailwind utility classes + design tokens (not hard-coded colors)
+✓ cn() from @/lib/utils to merge class names
+
+## Testing Strategy
+✓ Unit tests (Vitest + React Testing Library)
+✓ Storybook snapshot + interaction tests
+✓ A11y tests via axe-core
+
+## 20+ Linked Architecture Docs
+Data fetching, Suspense patterns, state management,
+adapter pattern, auth, i18n, multi-site, Page Designer,
+images, SEO, performance, testing, and more.`
+
+const claudeMdCustomize = `# Storefront Next Project
+# Add YOUR customizations to CLAUDE.md
+
+## Brand Guidelines (add these!)
 - Primary color: #1a1a2e (deep navy)
 - Accent color: #c9a84c (gold)
 - Typography: Helvetica Neue for body, Playfair Display for headings
 - Border radius: 12px for cards, pill (9999px) for buttons
 - Tone: upscale, editorial, minimal
 
-## Coding Conventions
-- Components go in src/components/
-- Use Tailwind classes only — no inline styles, no CSS modules
-- Every SCAPI call must have a typed return interface
-- Use async/await, not .then() chains
-- Error boundaries required on all route files
-
-## What I'm Building
-[Describe what you're working on today]`
+## What I'm Building (add this!)
+Building a luxury fashion storefront targeting
+high-end women's apparel. Focus on editorial
+product photography and minimal UI.`
 
 export default function Module4() {
   return (
@@ -153,12 +171,51 @@ export default function Module4() {
         <div className="mt-6">
           <h3 className="font-semibold text-slate-200 mb-3 flex items-center gap-2">
             <MessageSquare size={15} className="text-violet-400" />
-            Create a CLAUDE.md in your project root
+            CLAUDE.md — Already Included in the Template
           </h3>
-          <p className="text-slate-400 text-sm mb-3">
-            CLAUDE.md is a project-level context file that Claude Code reads automatically. Use it to describe your brand, conventions, and what you're building. This dramatically improves output quality.
+          <p className="text-slate-400 text-sm mb-3 leading-relaxed">
+            Unlike most projects where you'd create CLAUDE.md from scratch, <strong className="text-slate-200">the Storefront Next template ships with a comprehensive CLAUDE.md already in the project root</strong>. It contains 22 performance &amp; data rules, code conventions, testing strategy, project structure, all common commands, and links to 20+ architecture docs. This means Claude Code (or any AI coding assistant) has deep platform context from the first prompt — no setup required.
           </p>
-          <CodeBlock code={claudeMdExample} language="markdown" filename="CLAUDE.md" />
+
+          <div className="rounded-xl border border-emerald-500/20 bg-emerald-950/10 p-4 mb-4">
+            <h4 className="text-emerald-400 font-semibold text-sm mb-3">Why this matters — what you get out of the box</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {[
+                { label: 'Platform-aware AI from prompt #1', desc: 'The AI knows the file structure, routing conventions, and where every piece of code belongs — no explaining the project.' },
+                { label: '22 performance rules enforced', desc: 'Server-load everything, Suspense boundaries, DynamicImage, URL state — the AI follows these automatically.' },
+                { label: 'Code conventions built in', desc: 'Copyright headers, site-context-aware Link/NavLink, Tailwind design tokens, cn() usage — consistent code on every generation.' },
+                { label: 'Architecture docs linked', desc: '20+ detailed docs for data fetching, state management, auth, i18n, Page Designer — the AI can read these for deeper context.' },
+              ].map(({ label, desc }) => (
+                <div key={label} className="flex items-start gap-2">
+                  <CheckCircle2 size={14} className="text-emerald-400 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <span className="text-emerald-300 text-xs font-semibold">{label}</span>
+                    <p className="text-slate-400 text-xs mt-0.5">{desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <p className="text-slate-400 text-sm mb-3">
+            Here's a summary of what's already in the template's CLAUDE.md:
+          </p>
+          <CodeBlock code={claudeMdShipped} language="markdown" filename="CLAUDE.md (ships with template)" />
+
+          <div className="mt-4">
+            <Callout type="tip" title="Customize it for your brand">
+              The template CLAUDE.md covers platform rules and conventions. To get even better AI output, <strong className="text-slate-200">add your brand-specific context</strong> — brand colors, typography, tone, and what you're building. The AI combines both for production-quality, on-brand code.
+            </Callout>
+          </div>
+          <div className="mt-3">
+            <CodeBlock code={claudeMdCustomize} language="markdown" filename="Add to your CLAUDE.md" />
+          </div>
+
+          <div className="mt-4">
+            <Callout type="info" title="AGENTS.md — works with every AI tool, not just one">
+              The template actually ships with <code className="bg-slate-800 px-1.5 py-0.5 rounded text-violet-400 font-mono text-xs">AGENTS.md</code> as the source file, and <code className="bg-slate-800 px-1.5 py-0.5 rounded text-violet-400 font-mono text-xs">CLAUDE.md</code> is a symlink to it. <strong className="text-slate-200">AGENTS.md is the emerging industry standard</strong> that AI coding tools are converging on — Codex, Cursor, Copilot, and others all read it. This means the same 22 rules, conventions, and architecture docs work across every AI coding assistant automatically. No vendor lock-in, no duplicate config files, one source of truth for all agents.
+            </Callout>
+          </div>
         </div>
 
         <div className="mt-6">
@@ -397,7 +454,7 @@ Create:
           <li>• "Storefront Next is the only commerce platform with a first-party MCP server — the AI assistant understands SCAPI, SLAS, Managed Runtime, and Page Designer natively."</li>
           <li>• "A detailed prompt generates production-quality components in under a minute — faster than copying from documentation."</li>
           <li>• "The MCP server works across AI assistants — Claude Code, Cursor, VS Code + Copilot. No vendor lock-in."</li>
-          <li>• "CLAUDE.md gives every developer on the team consistent AI output — brand guidelines, conventions, and context travel with the codebase."</li>
+          <li>• "The template ships with a CLAUDE.md containing 22 performance rules, code conventions, and links to 20+ architecture docs — every AI coding assistant has deep platform context from the first prompt, no setup required."</li>
         </ul>
       </Callout>
 
@@ -405,8 +462,11 @@ Create:
       <section>
         <h2 className="text-xl font-bold text-slate-100 mb-6">Hands-On Exercises</h2>
         <div className="space-y-0">
-          <StepCard stepKey="m4-setup" number={1} title="Set up CLAUDE.md in your project">
-            <p className="text-sm">Create a <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">CLAUDE.md</code> file in your project root using the template above. Fill in your actual brand preferences and what you're building today. This is permanent — commit it to git.</p>
+          <StepCard stepKey="m4-setup" number={1} title="Explore CLAUDE.md and add your brand context">
+            <p className="text-sm">Open <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">CLAUDE.md</code> in your project root — it's already there. Skim the performance rules and code conventions. Then add your brand guidelines (colors, typography, tone) and a "What I'm Building" section. Commit the changes to git.</p>
+            <Callout type="tip" title="Why this matters">
+              The template's CLAUDE.md gives the AI platform knowledge. Your additions give it brand knowledge. Together, every prompt produces code that's both architecturally correct <em>and</em> on-brand.
+            </Callout>
           </StepCard>
           <StepCard stepKey="m4-prompt1" number={2} title="Brand your storefront in one prompt">
             <p className="text-sm">Open Claude Code in your project directory. Use the brand theming prompt above (adapted for your own brand direction) to update <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">tailwind.config.js</code> and see your entire storefront change.</p>
