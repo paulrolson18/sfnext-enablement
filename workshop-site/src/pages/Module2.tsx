@@ -60,6 +60,66 @@ export function HeroBanner({
   )
 }`
 
+const pageDesignerHero = `// src/components/HeroBanner.tsx — Enhanced for Page Designer
+interface HeroBannerProps {
+  title: string
+  subtitle: string
+  ctaText: string
+  ctaHref: string
+  imageSrc: string
+  theme?: 'light' | 'dark'
+  // ↓ New props for Page Designer control
+  titleColor?: string        // e.g. '#c9a84c', 'white', 'var(--brand-primary)'
+  titleAlignment?: 'left' | 'center' | 'right'
+}
+
+export function HeroBanner({
+  title, subtitle, ctaText, ctaHref, imageSrc, theme = 'dark',
+  titleColor,
+  titleAlignment = 'left',
+}: HeroBannerProps) {
+  // Map alignment to Tailwind classes
+  const alignmentClasses = {
+    left: 'text-left items-start',
+    center: 'text-center items-center',
+    right: 'text-right items-end',
+  }
+
+  return (
+    <div className="relative overflow-hidden rounded-2xl min-h-[500px] flex items-end">
+      <img src={imageSrc} alt="" className="absolute inset-0 w-full h-full object-cover" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+
+      <div className={\`relative z-10 p-8 md:p-12 flex flex-col w-full \${alignmentClasses[titleAlignment]}\`}>
+        <h1
+          className="text-4xl md:text-5xl font-bold mb-3 leading-tight"
+          style={titleColor ? { color: titleColor } : undefined}
+        >
+          {title}
+        </h1>
+        <p className={\`text-slate-200 text-lg mb-6 \${titleAlignment === 'center' ? 'max-w-lg mx-auto' : 'max-w-md'}\`}>
+          {subtitle}
+        </p>
+        <a href={ctaHref}
+          className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-slate-900 font-semibold hover:bg-slate-100 transition-colors shadow-lg">
+          {ctaText} →
+        </a>
+      </div>
+    </div>
+  )
+}
+
+// Page Designer metadata — this tells BM what the merchandiser can configure
+// The MCP tool sfnext_add_page_designer_decorator generates this automatically
+@PageType({ id: 'hero-banner', label: 'Hero Banner' })
+@RegionDefinition({
+  attributes: [
+    { id: 'titleColor', type: 'color', label: 'Title Color', default: '#ffffff' },
+    { id: 'titleAlignment', type: 'enum', label: 'Title Alignment',
+      values: ['left', 'center', 'right'], default: 'left' },
+  ]
+})`
+
 const themeTokens = `// tailwind.config.js — Brand Customization
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -379,9 +439,15 @@ export default function Module2() {
           ))}
         </div>
         <div className="mt-4">
-          <Callout type="info" title="For customer conversations">
-            If a merchandiser asks "can I change the page without a developer?" — the answer is yes. Page Designer lets them configure pages, arrange components, and manage content regions through Business Manager, while the storefront renders those components as React.
-          </Callout>
+          <p className="text-slate-400 text-sm mb-4 leading-relaxed">
+            In practice, this means adding props to your components that a merchandiser can control — like title color, text alignment, or layout variants. The component code stays clean; the metadata decorators tell Business Manager what's configurable.
+          </p>
+          <CodeBlock code={pageDesignerHero} language="typescript" filename="src/components/HeroBanner.tsx — Page Designer Enhanced" />
+          <div className="mt-4">
+            <Callout type="info" title="For customer conversations">
+              If a merchandiser asks "can I change the page without a developer?" — the answer is yes. Page Designer lets them configure pages, arrange components, and manage content regions through Business Manager, while the storefront renders those components as React. The hero banner above is a concrete example — a merchandiser can change the title color and alignment without touching code.
+            </Callout>
+          </div>
         </div>
       </section>
 
@@ -407,16 +473,32 @@ export default function Module2() {
           <StepCard stepKey="m2-hero" number={2} title="Modify the homepage hero">
             <p className="text-sm">Find the hero banner in your homepage route (<code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">src/routes/_index.tsx</code>). Update the gradient overlay color and CTA button style to match your new brand colors.</p>
           </StepCard>
-          <StepCard stepKey="m2-product-card" number={3} title="Add Quick Add to product cards">
+          <StepCard stepKey="m2-page-designer-hero" number={3} title="Enhance HeroBanner for Page Designer">
+            <p className="text-sm">
+              Open <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">src/components/HeroBanner.tsx</code>.
+              Add two new props to <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">HeroBannerProps</code>:{' '}
+              <code className="bg-slate-800 px-1.5 py-0.5 rounded text-violet-400 font-mono text-xs">titleColor</code> (an optional string for any CSS color) and{' '}
+              <code className="bg-slate-800 px-1.5 py-0.5 rounded text-violet-400 font-mono text-xs">titleAlignment</code> (left, center, or right).
+              Update the component to apply these props — use an inline <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">style</code> for the color
+              and map the alignment to Tailwind classes. Test by passing different values from the homepage route.
+            </p>
+            <Callout type="ai" title="Ask Claude Code">
+              "In my HeroBanner component, add a titleColor prop (optional string) and a titleAlignment prop ('left' | 'center' | 'right'). Apply the color as an inline style on the h1 and map alignment to Tailwind text-left/center/right classes. Update the content wrapper to align child elements accordingly."
+            </Callout>
+            <Callout type="tip" title="Why this matters for Page Designer">
+              These are exactly the kind of props a merchandiser controls through Business Manager. When you add the Page Designer decorators later, each prop becomes a configurable field in the BM editing interface — no code changes needed for content updates.
+            </Callout>
+          </StepCard>
+          <StepCard stepKey="m2-product-card" number={4} title="Add Quick Add to product cards">
             <p className="text-sm">Find <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">src/components/ProductCard.tsx</code>. Add a slide-up Quick Add button that appears on hover using the pattern shown above.</p>
             <Callout type="ai" title="Ask Claude Code">
               "In my ProductCard component, add a Quick Add button that slides up from the bottom on hover. Use Tailwind group-hover and translate-y transitions."
             </Callout>
           </StepCard>
-          <StepCard stepKey="m2-plp" number={4} title="Change the PLP grid layout">
+          <StepCard stepKey="m2-plp" number={5} title="Change the PLP grid layout">
             <p className="text-sm">Find the product grid in your category route. Change it from 3 columns to 4 columns on large screens. Add a visible count ("553 products") above the grid.</p>
           </StepCard>
-          <StepCard stepKey="m2-pdp" number={5} title="Challenge: Add a badge system" isLast>
+          <StepCard stepKey="m2-pdp" number={6} title="Challenge: Add a badge system" isLast>
             <p className="text-sm">Add "NEW" and "SALE" badges to product cards. A product should show "NEW" if <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">product.isNew</code> is true, and show a discount percentage badge if the sale price differs from list price.</p>
             <Callout type="ai" title="Ask Claude Code">
               "Add badge overlays to my ProductCard component — a 'NEW' badge for new arrivals and a discount percentage badge when salePrice exists. Position them in the top-left corner of the image."
