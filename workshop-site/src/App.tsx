@@ -4,6 +4,7 @@ import Layout from './components/Layout'
 import Overview from './pages/Overview'
 import PreWork from './pages/PreWork'
 import EnvCheck from './pages/EnvCheck'
+import Setup from './pages/Setup'
 import Module1 from './pages/Module1'
 import Module2 from './pages/Module2'
 import Module3 from './pages/Module3'
@@ -20,6 +21,7 @@ export default function App() {
             <Route index element={<Overview />} />
             <Route path="pre-work" element={<PreWork />} />
             <Route path="env-check" element={<EnvCheck />} />
+            <Route path="setup" element={<Setup />} />
             <Route path="module/1" element={<Module1 />} />
             <Route path="module/2" element={<Module2 />} />
             <Route path="module/3" element={<Module3 />} />

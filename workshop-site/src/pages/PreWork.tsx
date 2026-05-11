@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { ArrowRight, Terminal, GitBranch, Package, Code2, Cpu, Globe, Download, Wrench } from 'lucide-react'
+import { ArrowRight, Terminal, GitBranch, Package, Code2, Cpu, Globe, Download } from 'lucide-react'
 import SectionHeader from '../components/SectionHeader'
 import CodeBlock from '../components/CodeBlock'
 import InlineCode from '../components/InlineCode'
@@ -31,10 +31,10 @@ const toolPrereqs = [
     color: 'text-sky-400',
     bg: 'bg-sky-500/10 border-sky-500/20',
     title: 'B2C Sandbox Access',
-    desc: 'You\'ll need access to a B2C Commerce sandbox with SCAPI credentials.',
+    desc: 'It is recommended that you start with a newly created, empty sandbox.',
     verify: null,
-    action: 'Contact your team lead for sandbox credentials. Create an Account Manager account at',
-    actionLink: { label: 'account.demandware.com', url: 'https://account.demandware.com' },
+    action: '',
+    actionLink: { label: 'Create One', url: 'https://www.solutionswork.space/demos/requestdemo/910c0406-8172-647c-a8ef-272adbb37a02' },
   },
   {
     icon: Download,
@@ -45,6 +45,16 @@ const toolPrereqs = [
     verify: null,
     action: 'Download the zip file from',
     actionLink: { label: 'Google Drive', url: 'https://drive.google.com/file/d/136YSJ9ylbphcsGT6B_29-Z530c_wjL2b/view?usp=sharing' },
+  },
+  {
+    icon: GitBranch,
+    color: 'text-emerald-400',
+    bg: 'bg-emerald-500/10 border-emerald-500/20',
+    title: 'Git',
+    desc: 'Version control — required for cloning the template and pushing code. Not included in the fast-path script.',
+    verify: 'git --version',
+    action: 'Download from',
+    actionLink: { label: 'git-scm.com', url: 'https://git-scm.com' },
   },
 ]
 
@@ -75,11 +85,11 @@ const devPrereqs = [
     icon: GitBranch,
     color: 'text-emerald-400',
     bg: 'bg-emerald-500/10 border-emerald-500/20',
-    title: 'Git + GitHub Account',
-    desc: 'For cloning the template and deploying via GitHub Actions.',
-    verify: 'git --version',
+    title: 'GitHub CLI',
+    desc: 'The GitHub CLI for creating repos from templates and managing pull requests.',
+    verify: 'gh --version',
     installCmd: null,
-    installText: 'Download from git-scm.com and create a GitHub account at github.com',
+    installText: 'Install from cli.github.com',
     installCmds: null,
   },
 ]
@@ -210,28 +220,6 @@ export default function PreWork() {
             language="bash"
             code={`bash <(curl -fsSL https://raw.githubusercontent.com/lukejohnson-sf/fast-setup/main/setup.sh)`}
           />
-        </div>
-
-        <div className="rounded-xl border p-4 bg-amber-500/10 border-amber-500/20 mb-6">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="w-9 h-9 rounded-lg flex items-center justify-center bg-amber-500/10 border-amber-500/20">
-              <Wrench size={20} className="text-amber-400" />
-            </div>
-            <h3 className="font-semibold text-slate-100 text-sm">B2C Developer Toolkit CLI</h3>
-          </div>
-          <p className="text-slate-400 text-xs mb-3">
-            The B2C CLI powers sandbox management, code deployment, and MRT operations. Install it globally with npm.
-          </p>
-          <div className="space-y-2 text-xs">
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-slate-500">Install:</span>
-              <InlineCode code="npm install -g @salesforce/b2c-cli" />
-            </div>
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-slate-500">Verify:</span>
-              <InlineCode code="b2c --version" />
-            </div>
-          </div>
         </div>
 
         <p className="text-slate-500 text-xs mb-4">Or install each tool manually:</p>
