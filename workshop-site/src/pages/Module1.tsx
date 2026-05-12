@@ -65,7 +65,7 @@ export default function ProductPage() {
     detail: [
       'Tailwind is utility-first CSS: you style elements by adding class names like bg-sky-500 or rounded-xl — no separate CSS files.',
       'ShadCN gives you pre-built accessible components (buttons, dialogs, dropdowns) that you own and can modify.',
-      'Design tokens (colors, spacing, fonts) are configured in tailwind.config.js — change a token, update the entire site.',
+      'Design tokens (colors, spacing, fonts) are configured in your CSS with @theme — change a token, update the entire site.',
     ],
     code: `// Before: SFRA approach
 // <div class="product-card">
@@ -126,15 +126,19 @@ const fileStructure = `storefront-next-template/
 │   │   └── useCart.ts
 │   │
 │   ├── lib/                 ← Utilities & API clients
-│   │   ├── scapi/           ← SCAPI wrappers
+│   │   ├── api/             ← SCAPI wrappers (.server.ts)
+│   │   ├── api-clients.server.ts  ← createApiClients(context)
 │   │   └── utils.ts
+│   │
+│   ├── theme/               ← Design tokens & Tailwind config
+│   │   ├── tokens/brand.css ← Brand colors, light/dark mode
+│   │   ├── tailwind.css     ← @theme block (CSS vars → Tailwind)
+│   │   └── index.css        ← Entry point (imports all)
 │   │
 │   └── providers/           ← React Context (global state)
 │       └── CartProvider.tsx
 │
-├── config.server.ts         ← App config (B2C credentials)
-├── tailwind.config.js       ← Design tokens
-└── .env                     ← Secrets (not in git!)`
+└── .env                     ← B2C credentials (not in git!)`
 
 const requestFlow = [
   { step: 'Browser requests /product/123', icon: Globe, color: 'text-sky-400' },
@@ -200,8 +204,8 @@ export default function Module1() {
           {[
             { folder: 'src/routes/', desc: 'Each file is a page. The filename encodes layout group, path segments, and dynamic params.' },
             { folder: 'src/components/', desc: 'Reusable UI. A component renders the same way wherever you use it.' },
-            { folder: 'src/lib/scapi/', desc: 'API client wrappers for B2C Commerce Shopper APIs.' },
-            { folder: 'tailwind.config.js', desc: 'Your brand tokens. Change colors, fonts, and spacing here.' },
+            { folder: 'src/lib/api/', desc: 'API client wrappers (.server.ts) for B2C Commerce Shopper APIs.' },
+            { folder: 'src/theme/tokens/', desc: 'Brand colors, light/dark mode tokens. Tailwind @theme bridge in tailwind.css.' },
           ].map(({ folder, desc }) => (
             <div key={folder} className="flex gap-3 p-3 rounded-lg bg-slate-900/60 border border-slate-700/50">
               <code className="text-sky-400 font-mono text-xs flex-shrink-0 mt-0.5">{folder}</code>
@@ -424,7 +428,7 @@ export default function Module1() {
           {[
             { title: 'Path-based locales', detail: 'URLs follow /{locale}/{language}/ pattern (e.g., /us/en-US/, /uk/en-GB/). The locale segment routes to the correct site and language.' },
             { title: 'Translation management', detail: 'Translation strings live in locale-specific JSON files. Components use a translation hook to render the correct language.' },
-            { title: 'Multi-site support', detail: 'One codebase can serve multiple brands/regions. Configuration in config.server.ts maps locales to B2C Commerce sites.' },
+            { title: 'Multi-site support', detail: 'One codebase can serve multiple brands/regions. Server configuration maps locales to B2C Commerce sites.' },
           ].map(({ title, detail }) => (
             <div key={title} className="p-3 rounded-lg bg-sky-950/20 border border-sky-500/20">
               <div className="text-sky-300 font-semibold text-sm mb-1">{title}</div>
@@ -496,8 +500,8 @@ export default function Module1() {
           <StepCard stepKey="m1-ssr" number={4} title="Prove SSR is working">
             <p className="text-sm">In DevTools → Network tab, reload the page. Click the first HTML document. In the Response, search for a product name that's visible on the page. If you find it in the raw HTML (before JavaScript runs), SSR is working. <strong className="text-slate-100">Explain to your neighbor why this matters for SEO.</strong></p>
           </StepCard>
-          <StepCard stepKey="m1-mrt" number={5} title="Explore the config">
-            <p className="text-sm">Open <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">config.server.ts</code> and <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">tailwind.config.js</code>. These are your two key configuration files — one controls B2C connections, the other controls visual design tokens.</p>
+          <StepCard stepKey="m1-mrt" number={5} title="Explore the design tokens">
+            <p className="text-sm">Open <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">src/theme/tokens/brand.css</code> to see brand color variables, then open <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">src/theme/tailwind.css</code> and find the <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">@theme</code> block that bridges CSS variables to Tailwind utilities — Tailwind v4 uses CSS-based configuration instead of a JS config file. Then open <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">.env</code> to see the B2C connection credentials.</p>
           </StepCard>
           <StepCard stepKey="m1-cwv" number={6} title="Measure Core Web Vitals" isLast>
             <p className="text-sm">Open DevTools → <strong className="text-slate-200">Lighthouse</strong> tab. Run an audit on your local storefront (Navigation mode, Mobile device). Note the <strong className="text-slate-200">LCP</strong>, <strong className="text-slate-200">CLS</strong>, and <strong className="text-slate-200">INP</strong> scores. These are the numbers you'd cite in a customer conversation about performance.</p>

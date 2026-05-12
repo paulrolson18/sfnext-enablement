@@ -14,8 +14,8 @@ const demos = [
     setup: 'Storefront template cloned and running locally. Odyssey storefront open in a tab.',
     steps: [
       { action: 'Show the running storefront', say: '"This is a fully functional storefront — product listing, product detail, cart, checkout — running locally. It took one command to set up."' },
-      { action: 'Open tailwind.config.js', say: '"Let\'s rebrand this storefront in real time. I\'ll change the primary color to match your brand."' },
-      { action: 'Change primary color to customer\'s brand hex', say: '"Save — and watch. Every button, link, and accent across the entire site just updated. One file, one change."' },
+      { action: 'Open src/theme/tokens/brand.css', say: '"Let\'s rebrand this storefront in real time. I\'ll change the primary color to match your brand."' },
+      { action: 'Change --brand-primary to customer\'s brand hex', say: '"Save — and watch. Every button, link, and accent across the entire site just updated. One token, one change."' },
       { action: 'Show the hero banner, PLP, and PDP', say: '"This is the template out of the box. From here, a developer customizes components — not builds infrastructure."' },
       { action: 'Run pnpm sfnext push', say: '"One command to deploy. It\'s now live on Managed Runtime with CDN, SSL, and global routing — all automatic."' },
     ],
@@ -31,7 +31,7 @@ const demos = [
     setup: 'Claude Code open with MCP server configured. CLAUDE.md in project root.',
     steps: [
       { action: 'Show CLAUDE.md file', say: '"This file gives the AI full context about our project — brand guidelines, conventions, and architecture. Every developer on the team gets consistent AI output."' },
-      { action: 'Run a brand theming prompt in Claude Code', say: '"Watch — I\'ll ask Claude Code to update our brand palette. It reads the actual tailwind.config.js, understands the structure, and makes targeted edits."' },
+      { action: 'Run a brand theming prompt in Claude Code', say: '"Watch — I\'ll ask Claude Code to update our brand palette. It reads the actual brand token files, understands the structure, and makes targeted edits."' },
       { action: 'Show Claude Code reading the file first', say: '"Notice it reads the file before editing. It\'s not generating from a template — it understands the existing code."' },
       { action: 'Run a component build prompt', say: '"Now let\'s ask it to build a promo banner with a countdown timer. One prompt, production-quality component."' },
       { action: 'Show the MCP tools list', say: '"This is the only commerce platform with a first-party MCP server. The AI assistant understands SCAPI, SLAS, Page Designer, and Managed Runtime natively."' },
@@ -90,7 +90,7 @@ export default function DemoPlaybook() {
       />
 
       <Callout type="info" title="Before any demo">
-        Have these ready: (1) local storefront running on localhost, (2) Odyssey or SE demo store URL in a browser tab, (3) Claude Code open with MCP server configured, (4) tailwind.config.js visible in VS Code. The first 30 seconds of any demo should show a working storefront — it immediately establishes credibility.
+        Have these ready: (1) local storefront running on localhost, (2) Odyssey or SE demo store URL in a browser tab, (3) Claude Code open with MCP server configured, (4) src/theme/tokens/brand.css visible in VS Code. The first 30 seconds of any demo should show a working storefront — it immediately establishes credibility.
       </Callout>
 
       {/* Demo selector */}
