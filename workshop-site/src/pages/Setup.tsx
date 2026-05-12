@@ -192,6 +192,143 @@ export default function Setup() {
         </div>
       </section>
 
+      {/* Part 4: Page Designer Setup */}
+      <section>
+        <h2 className="text-xl font-bold text-slate-100 mb-6">Part 4 — Page Designer Setup</h2>
+        <p className="text-slate-400 text-sm mb-6">
+          Page Designer lets merchandisers configure pages visually in Business Manager. To enable it with Storefront Next, you need to configure your MRT environment, deploy the Page Designer cartridge, and add it to your site path.
+        </p>
+        <div className="space-y-0">
+          <StepCard stepKey="setup-pd-mrt" number={15} title="Configure MRT environment settings">
+            <p className="text-sm">
+              In your MRT Environment settings, scroll down to <strong className="text-slate-100">Advanced Settings</strong> (near the bottom):
+            </p>
+            <ul className="mt-2 space-y-1.5 text-sm">
+              <li className="flex gap-2">
+                <span className="text-slate-600 mt-0.5 flex-shrink-0">›</span>
+                <span><strong className="text-slate-200">Enable server-side cookies</strong></span>
+              </li>
+              <li className="flex gap-2">
+                <span className="text-slate-600 mt-0.5 flex-shrink-0">›</span>
+                <span>Verify the <strong className="text-slate-200">proxy</strong> is configured:</span>
+              </li>
+            </ul>
+            <div className="mt-3 p-3 rounded-lg bg-slate-900/60 border border-slate-700/50">
+              <div className="grid grid-cols-3 gap-2 text-xs">
+                <div>
+                  <span className="text-slate-500">Path:</span>
+                  <div className="text-slate-200 font-mono mt-0.5">api</div>
+                </div>
+                <div>
+                  <span className="text-slate-500">Host:</span>
+                  <div className="text-slate-200 font-mono mt-0.5">kv7kzm78.api.commercecloud.salesforce.com</div>
+                </div>
+                <div>
+                  <span className="text-slate-500">Protocol:</span>
+                  <div className="text-slate-200 font-mono mt-0.5">https</div>
+                </div>
+              </div>
+            </div>
+          </StepCard>
+
+          <StepCard stepKey="setup-pd-build" number={16} title="Build and deploy to MRT">
+            <p className="text-sm">
+              Run the following from your storefront project directory:
+            </p>
+            <div className="mt-2">
+              <CodeBlock
+                language="bash"
+                code={`pnpm install
+pnpm build`}
+              />
+            </div>
+          </StepCard>
+
+          <StepCard stepKey="setup-pd-access-key" number={17} title="Generate an access key">
+            <p className="text-sm">
+              In Business Manager:
+            </p>
+            <ul className="mt-2 space-y-1.5 text-sm">
+              <li className="flex gap-2">
+                <span className="text-slate-600 mt-0.5 flex-shrink-0">1.</span>
+                <span>Open <strong className="text-slate-200">My Profile</strong></span>
+              </li>
+              <li className="flex gap-2">
+                <span className="text-slate-600 mt-0.5 flex-shrink-0">2.</span>
+                <span>Click <strong className="text-slate-200">Manage Access Keys</strong></span>
+              </li>
+              <li className="flex gap-2">
+                <span className="text-slate-600 mt-0.5 flex-shrink-0">3.</span>
+                <span>Create a key for <strong className="text-sky-400">WebDAV File Access and UX Studio</strong></span>
+              </li>
+              <li className="flex gap-2">
+                <span className="text-slate-600 mt-0.5 flex-shrink-0">4.</span>
+                <span>Copy the key — you'll need it in the next step</span>
+              </li>
+            </ul>
+            <p className="text-sm mt-3">
+              Then from the <strong className="text-slate-200">Administration</strong> homepage, copy the <strong className="text-slate-200">Code Version Name</strong>.
+            </p>
+          </StepCard>
+
+          <StepCard stepKey="setup-pd-dw-json" number={18} title="Edit dw.json">
+            <p className="text-sm">
+              Open <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">dw.json</code> in your project root and update these values:
+            </p>
+            <div className="mt-2">
+              <CodeBlock
+                language="json"
+                filename="dw.json"
+                code={`{
+    "hostname": "devXX-realm27-qa223.demandware.net",
+    "username": "{yourSalesforceEmail}",
+    "password": "{yourAccessKey}",
+    "code-version": "{Code Version Name}"
+}`}
+              />
+            </div>
+            <Callout type="warning" title="Don't commit credentials">
+              Make sure <code className="bg-slate-800 px-1 py-0.5 rounded font-mono text-xs">dw.json</code> is in your <code className="bg-slate-800 px-1 py-0.5 rounded font-mono text-xs">.gitignore</code>. Never push access keys to GitHub.
+            </Callout>
+          </StepCard>
+
+          <StepCard stepKey="setup-pd-cartridge" number={19} title="Generate and deploy the cartridge">
+            <p className="text-sm">
+              From your storefront-next repo, run:
+            </p>
+            <div className="mt-2">
+              <CodeBlock
+                language="bash"
+                code={`pnpm sfnext generate-cartridge -d .
+pnpm sfnext deploy-cartridge`}
+              />
+            </div>
+            <p className="text-sm mt-2">
+              This generates the Page Designer cartridge and deploys it to your sandbox.
+            </p>
+          </StepCard>
+
+          <StepCard stepKey="setup-pd-sitepath" number={20} title="Add cartridge to site path" isLast>
+            <p className="text-sm">
+              In Business Manager:
+            </p>
+            <ul className="mt-2 space-y-1.5 text-sm">
+              <li className="flex gap-2">
+                <span className="text-slate-600 mt-0.5 flex-shrink-0">1.</span>
+                <span><strong className="text-slate-200">Administration</strong> → <strong className="text-slate-200">Sites</strong> → <strong className="text-slate-200">Manage Sites</strong> → select <strong className="text-sky-400">your site</strong> → <strong className="text-slate-200">Settings</strong></span>
+              </li>
+              <li className="flex gap-2">
+                <span className="text-slate-600 mt-0.5 flex-shrink-0">2.</span>
+                <span>Add <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">app_storefrontnext_base</code> to the cartridge path</span>
+              </li>
+            </ul>
+            <Callout type="tip" title="Verify it works">
+              After adding the cartridge, open Page Designer in Business Manager. You should see Storefront Next components available for use in your pages.
+            </Callout>
+          </StepCard>
+        </div>
+      </section>
+
       <div className="flex justify-end">
         <Link
           to="/module/1"
