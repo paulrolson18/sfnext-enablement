@@ -120,38 +120,32 @@ export function HeroBanner({
   ]
 })`
 
-const themeTokens = `// tailwind.config.js — Brand Customization
-/** @type {import('tailwindcss').Config} */
-export default {
-  theme: {
-    extend: {
-      colors: {
-        // Replace with your brand palette
-        primary: {
-          50:  '#f0f9ff',
-          100: '#e0f2fe',
-          500: '#0ea5e9',  // ← Main brand color
-          600: '#0284c7',  // ← Hover state
-          900: '#0c4a6e',
-        },
-        // Odyssey-inspired: warm neutrals + gold accent
-        accent: {
-          DEFAULT: '#c9a84c',  // ← Gold accent
-          light: '#f0d78a',
-          dark: '#8a6d1c',
-        }
-      },
-      fontFamily: {
-        // Use custom brand fonts
-        sans: ['Helvetica Neue', 'Arial', 'sans-serif'],
-        display: ['Playfair Display', 'Georgia', 'serif'],
-      },
-      borderRadius: {
-        'product': '12px',  // ← Product tile radius
-        'btn': '9999px',    // ← Pill buttons
-      }
-    },
-  },
+const themeTokens = `/* src/theme/tokens/brand.css — Brand Customization */
+/* Tailwind v4 uses CSS variables instead of a JS config file. */
+/* Change these values to match your brand — every component updates instantly. */
+
+:root {
+    /* brand primary (e.g. CTA buttons, links) */
+    --brand-primary: #000000;
+    --brand-primary-hover: #333333;
+
+    /* Brand Colors — replace with your palette */
+    --brand-black: #000000;
+    --brand-black-off: #121212;
+    --brand-black-charcoal: #242424;
+    --brand-white: #ffffff;
+    --brand-white-bone: #fafaf9;
+    --brand-gray-50: #fafafa;
+    --brand-gray-100: #f5f5f5;
+    --brand-gray-200: #ededed;
+    --brand-gray-500: #9e9e9e;
+    --brand-gray-800: #424242;
+}
+
+.dark {
+    /* Dark mode overrides */
+    --brand-primary: #fafafa;
+    --brand-primary-hover: #d9d9d9;
 }`
 
 const productTileBefore = `// Default product tile (simplified)
@@ -310,14 +304,14 @@ export default function Module2() {
           <span className="text-slate-500 text-sm">10 min</span>
         </div>
         <p className="text-slate-400 text-sm mb-5 leading-relaxed">
-          The fastest way to make a storefront look like a specific brand is to update the design tokens in <code className="bg-slate-800 px-1.5 py-0.5 rounded text-violet-400 font-mono text-xs">tailwind.config.js</code>. Every color, font, and border radius across the entire site updates instantly.
+          The fastest way to make a storefront look like a specific brand is to update the design tokens in <code className="bg-slate-800 px-1.5 py-0.5 rounded text-violet-400 font-mono text-xs">src/theme/tokens/brand.css</code>. Tailwind v4 uses CSS variables instead of a JS config — every color, font, and spacing value across the entire site updates instantly when you change a token.
         </p>
-        <CodeBlock code={themeTokens} language="javascript" filename="tailwind.config.js" />
+        <CodeBlock code={themeTokens} language="css" filename="src/theme/tokens/brand.css" />
         <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3">
           {[
-            { label: 'Primary Color', value: 'colors.primary.500', impact: 'Buttons, links, highlights' },
-            { label: 'Accent Color', value: 'colors.accent.DEFAULT', impact: 'Badges, promotions, sale prices' },
-            { label: 'Font Family', value: 'fontFamily.sans', impact: 'All body text site-wide' },
+            { label: 'Brand Primary', value: '--brand-primary', impact: 'CTA buttons, links, highlights' },
+            { label: 'Gray Scale', value: '--brand-gray-*', impact: 'Text, borders, backgrounds' },
+            { label: 'Fonts', value: '--font-sans (tailwind.css)', impact: 'All body text site-wide' },
           ].map(({ label, value, impact }) => (
             <div key={label} className="p-3 rounded-lg bg-violet-950/20 border border-violet-500/20">
               <div className="text-violet-300 font-semibold text-sm mb-1">{label}</div>
@@ -477,7 +471,7 @@ export default function Module2() {
 
       <Callout type="tip" title="SE Talking Points">
         <ul className="space-y-1 text-sm">
-          <li>• "A brand refresh takes hours, not weeks. Change one config file and the entire storefront updates."</li>
+          <li>• "A brand refresh takes hours, not weeks. Change the brand tokens and the entire storefront updates."</li>
           <li>• "Components are reusable — the same hero banner works on the homepage, category page, and campaign landing pages with different content."</li>
           <li>• "Every visual element can be inspected and changed without leaving the component file — no hunting through CSS files."</li>
           <li>• "The template ships with Storybook for component-driven development — designers and developers share a common vocabulary."</li>
@@ -489,9 +483,9 @@ export default function Module2() {
         <h2 className="text-xl font-bold text-slate-100 mb-6">Hands-On Exercises</h2>
         <div className="space-y-0">
           <StepCard stepKey="m2-theme" number={1} title="Update brand colors">
-            <p className="text-sm">In <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">tailwind.config.js</code>, add a custom primary color using your favorite brand's hex code. Save and watch the entire site update in real time.</p>
+            <p className="text-sm">Open <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">src/theme/tokens/brand.css</code> and update the CSS variables with your favorite brand's hex codes. Save and watch the entire site update in real time.</p>
             <Callout type="ai" title="Ask Claude Code">
-              "Look at my tailwind.config.js and update the color palette to match an upscale fashion brand — warm neutrals, gold accent, clean typography"
+              "Look at my brand token files in src/theme/tokens/ and update the color palette to match an upscale fashion brand — warm neutrals, gold accent, clean typography"
             </Callout>
           </StepCard>
           <StepCard stepKey="m2-hero" number={2} title="Modify the homepage hero">

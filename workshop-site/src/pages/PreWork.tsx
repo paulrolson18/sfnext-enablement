@@ -94,32 +94,6 @@ const devPrereqs = [
   },
 ]
 
-const setupCode = `# 1. Use GitHub template (creates your own repo)
-# Go to: github.com/SalesforceCommerceCloud/storefront-next-template
-# Click "Use this template" → "Create a new repository"
-
-# 2. Clone your new repo
-git clone https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
-cd YOUR_REPO_NAME
-
-# 3. Install dependencies
-pnpm install
-
-# 4. Configure environment
-cp .env.default .env
-# Edit .env with your B2C credentials (see below)
-
-# 5. Start the dev server
-pnpm dev
-# → Opens at http://localhost:5173`
-
-const envConfig = `# .env — B2C Commerce Credentials
-PUBLIC__app__commerce__api__clientId=YOUR_CLIENT_ID
-PUBLIC__app__commerce__api__organizationId=YOUR_ORG_ID
-PUBLIC__app__commerce__api__shortCode=YOUR_SHORT_CODE
-PUBLIC__app__commerce__api__siteId=YOUR_SITE_ID
-PUBLIC__app__commerce__api__instanceType=sandbox`
-
 const b2cToolingCode = `# Install B2C Developer Tooling CLI
 npm install -g @salesforce/b2c-cli
 
@@ -258,39 +232,10 @@ export default function PreWork() {
         </div>
       </section>
 
-      {/* Template Setup */}
-      <section>
-        <h2 className="text-xl font-bold text-slate-100 mb-3 flex items-center gap-2">
-          <span className="w-6 h-6 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center text-xs font-bold">3</span>
-          Set Up Your Storefront Next Project
-        </h2>
-        <p className="text-slate-400 text-sm mb-4">
-          Use the official GitHub template to create your own repository. This gives you a clean git history to push to and full ownership of the code.
-        </p>
-        <CodeBlock code={setupCode} language="bash" filename="Terminal" />
-      </section>
-
-      {/* Env Config */}
-      <section>
-        <h2 className="text-xl font-bold text-slate-100 mb-3 flex items-center gap-2">
-          <span className="w-6 h-6 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center text-xs font-bold">4</span>
-          Configure Your Environment
-        </h2>
-        <p className="text-slate-400 text-sm mb-4">
-          Your <InlineCode code=".env" color="sky" /> file connects the storefront to your B2C Commerce sandbox. You'll get the values from your sandbox's Account Manager.
-        </p>
-        <CodeBlock code={envConfig} language="bash" filename=".env" />
-        <div className="mt-4">
-          <Callout type="warning" title="Never commit .env">
-            The <code className="bg-slate-800 px-1 py-0.5 rounded font-mono text-xs">.env</code> file contains API credentials. It's in <code className="bg-slate-800 px-1 py-0.5 rounded font-mono text-xs">.gitignore</code> by default — keep it that way. Never push credentials to GitHub.
-          </Callout>
-        </div>
-      </section>
-
       {/* B2C Tooling */}
       <section>
         <h2 className="text-xl font-bold text-slate-100 mb-3 flex items-center gap-2">
-          <span className="w-6 h-6 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center text-xs font-bold">5</span>
+          <span className="w-6 h-6 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center text-xs font-bold">3</span>
           Install B2C Developer Tooling
         </h2>
         <p className="text-slate-400 text-sm mb-4">
@@ -307,7 +252,7 @@ export default function PreWork() {
       {/* VS Code Extensions */}
       <section>
         <h2 className="text-xl font-bold text-slate-100 mb-3 flex items-center gap-2">
-          <span className="w-6 h-6 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center text-xs font-bold">6</span>
+          <span className="w-6 h-6 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center text-xs font-bold">4</span>
           Install VS Code Extensions
         </h2>
         <p className="text-slate-400 text-sm mb-4">
@@ -340,11 +285,7 @@ node --version    # v24.x.x
 pnpm --version    # 9.x.x or higher
 git --version     # git version 2.x.x
 claude --version  # x.x.x
-b2c --version     # x.x.x
-
-# Your storefront should load
-cd YOUR_REPO_NAME && pnpm dev
-# → Visit http://localhost:5173 and see the storefront`}
+b2c --version     # x.x.x`}
         />
         <div className="mt-4">
           <Link

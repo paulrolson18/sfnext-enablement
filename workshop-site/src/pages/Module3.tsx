@@ -5,69 +5,85 @@ import CodeBlock from '../components/CodeBlock'
 import Callout from '../components/Callout'
 import StepCard from '../components/StepCard'
 
-const loaderExample = `// src/routes/product.$productId.tsx
+const loaderExample = `// src/routes/_app.product.$productId.tsx
 // loader() runs SERVER-SIDE before the page renders
 // It's like a Controller + pipeline node in SFRA
 
 import type { LoaderFunctionArgs } from 'react-router'
-import { getProduct } from '~/lib/scapi/products'
-import { getRecommendations } from '~/lib/scapi/einstein'
+import type { ShopperProducts } from '@salesforce/storefront-next-runtime/scapi'
+import { createApiClients } from '@/lib/api-clients.server'
 
-export async function loader({ params, request }: LoaderFunctionArgs) {
-  const { productId } = params
+export type ProductPageData = {
+  product: Promise<ShopperProducts.schemas['Product']>
+}
 
-  // Run API calls in parallel for performance
-  const [product, recommendations] = await Promise.all([
-    getProduct(productId!),
-    getRecommendations(productId!),
-  ])
+export function loader({ params, context }: LoaderFunctionArgs): ProductPageData {
+  const { productId = '' } = params
+  const clients = createApiClients(context)
 
-  // Return value is serialized as JSON to the client
-  return { product, recommendations }
+  // Returns a promise — React streams HTML as data resolves
+  const product = clients.shopperProducts.getProduct({
+    params: {
+      path: { id: productId },
+      query: { expand: ['images', 'prices', 'variations'] },
+    },
+  }).then(({ data }) => data)
+
+  return { product }
 }
 
 export default function ProductPage() {
   // useLoaderData() receives what loader() returned
-  const { product, recommendations } = useLoaderData<typeof loader>()
+  const { product } = useLoaderData<typeof loader>()
 
   return (
-    <>
-      <ProductDetail product={product} />
-      <RecommendedProducts items={recommendations} />
-    </>
+    <Suspense fallback={<ProductSkeleton />}>
+      <Await resolve={product}>
+        {(data) => <ProductDetail product={data} />}
+      </Await>
+    </Suspense>
   )
 }`
 
-const actionExample = `// src/routes/cart.tsx
-// Actions handle mutations: add to cart, update quantities, etc.
-// They always run server-side (secure)
+const actionExample = `// src/routes/action.cart-item-add.tsx
+// Action routes handle mutations — they have no UI, just server logic.
+// The template uses separate action.* route files for each mutation.
 
-export async function action({ request }: ActionFunctionArgs) {
+import type { ActionFunctionArgs } from 'react-router'
+import { getBasket, updateBasketResource } from '@/middlewares/basket.server'
+import { createApiClients } from '@/lib/api-clients.server'
+
+export async function action({ request, context }: ActionFunctionArgs) {
   const formData = await request.formData()
   const productId = formData.get('productId') as string
   const quantity = Number(formData.get('quantity'))
 
-  // Get the customer's basket token from the session
-  const basketId = await getBasketId(request)
+  // Basket middleware provides the current basket from session
+  const basketResource = await getBasket(context)
+  const basket = basketResource.current
 
   try {
-    await addItemToBasket(basketId, { productId, quantity })
-    // Redirect back — triggers loader refresh
-    return redirect('/cart')
+    const clients = createApiClients(context)
+    const { data: updatedBasket } = await clients.shopperBasketsV2.addItemToBasket({
+      params: { path: { basketId: basket.basketId } },
+      body: [{ productId, quantity }],
+    })
+
+    // Update the shared basket state so other components see the change
+    updateBasketResource(context, updatedBasket)
+    return { success: true, basket: updatedBasket }
   } catch (error) {
-    // Return error data — displayed in the component
-    return { error: 'Could not add item. Please try again.' }
+    return { success: false, error: 'Could not add item.' }
   }
 }
 
-// In your component, trigger the action with a form:
+// In your component, trigger the action with useFetcher:
 function AddToCartButton({ productId }: { productId: string }) {
-  const actionData = useActionData<typeof action>()
-  const navigation = useNavigation()
-  const isAdding = navigation.state === 'submitting'
+  const fetcher = useFetcher()
+  const isAdding = fetcher.state === 'submitting'
 
   return (
-    <Form method="post" action="/cart">
+    <fetcher.Form method="post" action="/action/cart-item-add">
       <input type="hidden" name="productId" value={productId} />
       <input type="hidden" name="quantity" value="1" />
       <button type="submit" disabled={isAdding}
@@ -75,66 +91,59 @@ function AddToCartButton({ productId }: { productId: string }) {
                    disabled:opacity-50 transition-opacity">
         {isAdding ? 'Adding...' : 'Add to Cart'}
       </button>
-      {actionData?.error && (
-        <p className="text-red-400 text-sm mt-2">{actionData.error}</p>
-      )}
-    </Form>
+    </fetcher.Form>
   )
 }`
 
-const scapiExample = `// src/lib/scapi/products.ts
-// Wrapping SCAPI calls in typed helper functions
+const scapiExample = `// src/lib/api/products.server.ts
+// Typed API wrappers using the Commerce SDK client
 
-import { CommerceApiConfig } from '~/config.server'
+import type { LoaderFunctionArgs } from 'react-router'
+import type { ShopperProducts } from '@salesforce/storefront-next-runtime/scapi'
+import { createApiClients } from '@/lib/api-clients.server'
 
-export interface Product {
-  id: string
-  name: string
-  price: number
-  salePrice?: number
-  images: Array<{ url: string; alt: string }>
-  description: string
-  variants: ProductVariant[]
-}
+// Types come directly from the SCAPI SDK — fully typed
+type Product = ShopperProducts.schemas['Product']
 
-export async function getProduct(
-  productId: string,
-  config?: Partial<CommerceApiConfig>
+/**
+ * Fetch a single product by ID.
+ * Uses the typed SDK client — no manual URL construction or auth.
+ */
+export async function fetchProductById(
+  context: LoaderFunctionArgs['context'],
+  id: string,
 ): Promise<Product> {
-  const { shortCode, organizationId, siteId } = config ?? getDefaultConfig()
+  const clients = createApiClients(context)
 
-  const response = await fetch(
-    \`https://\${shortCode}.api.commercecloud.salesforce.com/product/shopper-products/v1/organizations/\${organizationId}/products/\${productId}?siteId=\${siteId}&expand=images,prices,variations\`,
-    {
-      headers: {
-        Authorization: \`Bearer \${await getSHOASToken()}\`,
-        'Content-Type': 'application/json',
+  const { data } = await clients.shopperProducts.getProduct({
+    params: {
+      path: { id },
+      query: {
+        expand: ['images', 'prices', 'variations'],
+        allImages: true,
       },
-    }
-  )
+    },
+  })
 
-  if (!response.ok) {
-    throw new Response('Product not found', { status: 404 })
-  }
-
-  const data = await response.json()
-  return mapProductResponse(data)
+  return data
 }
 
-// Map SCAPI response shape to our clean interface
-function mapProductResponse(raw: ScapiProduct): Product {
-  return {
-    id: raw.id,
-    name: raw.name,
-    price: raw.price,
-    salePrice: raw.priceRanges?.[0]?.minPrice,
-    images: raw.imageGroups?.[0]?.images?.map(img => ({
-      url: img.disBaseLink,
-      alt: img.alt,
-    })) ?? [],
-    description: raw.longDescription,
-    variants: raw.variants ?? [],
-  }
+/**
+ * Fetch multiple products by IDs (e.g. for recently viewed).
+ */
+export async function fetchProductsByIds(
+  context: LoaderFunctionArgs['context'],
+  ids: string[],
+): Promise<Product[]> {
+  const clients = createApiClients(context)
+
+  const { data } = await clients.shopperProducts.getProducts({
+    params: {
+      query: { ids },
+    },
+  })
+
+  return data?.data ?? []
 }`
 
 const customHook = `// src/hooks/useProductInventory.ts
@@ -267,9 +276,9 @@ export default function Module3() {
         <CodeBlock code={loaderExample} language="typescript" filename="src/routes/product.$productId.tsx" />
         <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3">
           {[
-            { title: 'Runs server-side', detail: 'API keys, tokens, and secrets never reach the browser' },
-            { title: 'Parallel fetching', detail: 'Promise.all() fetches product + recommendations simultaneously' },
-            { title: 'Type-safe data', detail: 'useLoaderData<typeof loader>() gives full TypeScript types' },
+            { title: 'Runs server-side', detail: 'API keys, tokens, and secrets never reach the browser. The .server.ts suffix enforces this.' },
+            { title: 'Streaming with Suspense', detail: 'Return promises from the loader — React streams HTML as data resolves, with skeleton fallbacks.' },
+            { title: 'Type-safe SDK client', detail: 'createApiClients(context) returns fully typed SCAPI clients — autocomplete for every API parameter.' },
           ].map(({ title, detail }) => (
             <div key={title} className="p-3 rounded-lg bg-amber-950/20 border border-amber-500/20">
               <div className="text-amber-300 font-semibold text-sm mb-1">{title}</div>
@@ -289,9 +298,9 @@ export default function Module3() {
           <span className="text-slate-500 text-sm">8 min</span>
         </div>
         <p className="text-slate-400 text-sm mb-5 leading-relaxed">
-          Actions handle writes: add to cart, submit a form, update profile. They run server-side via HTTP POST, so API credentials stay secure. React Router handles the redirect-after-POST pattern automatically.
+          Actions handle writes: add to cart, submit a form, update profile. The template uses dedicated <code className="bg-slate-800 px-1.5 py-0.5 rounded text-amber-400 font-mono text-xs">action.*</code> route files — they have no UI, just server-side logic. Components trigger them with <code className="bg-slate-800 px-1.5 py-0.5 rounded text-amber-400 font-mono text-xs">useFetcher</code> to run the mutation without a full page navigation.
         </p>
-        <CodeBlock code={actionExample} language="typescript" filename="src/routes/cart.tsx" />
+        <CodeBlock code={actionExample} language="typescript" filename="src/routes/action.cart-item-add.tsx" />
         <div className="mt-4">
           <Callout type="tip" title="Progressive enhancement">
             Because actions use standard HTML form elements, they work even without JavaScript. React Router then enhances them with client-side navigation when JS is available.
@@ -309,24 +318,49 @@ export default function Module3() {
           <span className="text-slate-500 text-sm">Awareness</span>
         </div>
         <p className="text-slate-400 text-sm mb-4 leading-relaxed">
-          Checkout is the most revenue-critical page on any storefront. Storefront Next's checkout is built on the same loader/action pattern you just learned — each checkout step is a route with server-side data handling.
+          Checkout is the most revenue-critical page on any storefront. Storefront Next uses a <strong className="text-slate-200">single-page accordion checkout</strong> — all steps live in one route (<code className="bg-slate-800 px-1.5 py-0.5 rounded text-amber-400 font-mono text-xs">_checkout.checkout.tsx</code>) with a single action that dispatches based on intent. This keeps the shopper on one URL while progressively completing each step.
         </p>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+
+        {/* Checkout route structure */}
+        <div className="rounded-xl border border-amber-500/20 bg-amber-950/10 p-4 mb-4">
+          <h3 className="text-amber-300 font-semibold text-sm mb-3">Route Structure</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
+            {[
+              { file: '_app.cart.tsx', layout: 'Main', detail: 'Cart page — full storefront chrome (header, footer, nav). Loader fetches basket, item actions are handled by separate action.cart-* routes.' },
+              { file: '_checkout.checkout.tsx', layout: 'Checkout', detail: 'Single-page checkout — minimal chrome. All steps (contact, shipping, payment) render as an accordion on one page.' },
+              { file: '_app.order-confirmation.$orderNo.tsx', layout: 'Main', detail: 'Order confirmation — returns to full storefront layout with order details and next-steps messaging.' },
+            ].map(({ file, layout, detail }) => (
+              <div key={file} className="p-3 rounded-lg bg-slate-900/60 border border-slate-700/50">
+                <code className="text-amber-400 font-mono text-xs font-bold">{file}</code>
+                <div className="text-slate-500 text-xs mt-0.5">Layout: {layout}</div>
+                <div className="text-slate-400 text-xs mt-1">{detail}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Checkout steps (accordion) */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-3 mb-4">
           {[
-            { step: '1. Cart Review', route: 'cart.tsx', detail: 'Loader fetches basket, actions handle quantity updates and promo codes' },
-            { step: '2. Shipping', route: 'checkout.shipping.tsx', detail: 'Address form with action → validates address via SCAPI and saves to basket' },
-            { step: '3. Payment', route: 'checkout.payment.tsx', detail: 'Payment method selection, action calls Shopper Baskets payment API' },
-            { step: '4. Confirmation', route: 'checkout.confirm.tsx', detail: 'Action creates the order, loader redirects to order confirmation' },
-          ].map(({ step, route, detail }) => (
+            { step: '1. Contact Info', intent: 'CONTACT_INFO', detail: 'Email and phone — action validates and saves to basket via SCAPI' },
+            { step: '2. Shipping Address', intent: 'SHIPPING_ADDRESS', detail: 'Address form — action validates and saves shipping address to basket' },
+            { step: '3. Shipping Options', intent: 'SHIPPING_OPTIONS', detail: 'Shipping method selection — action updates basket with chosen method' },
+            { step: '4. Payment', intent: 'PAYMENT', detail: 'Credit card or saved payment — action adds payment instrument to basket' },
+          ].map(({ step, intent, detail }) => (
             <div key={step} className="p-3 rounded-lg bg-amber-950/20 border border-amber-500/20">
               <div className="text-amber-300 font-semibold text-xs mb-1">{step}</div>
-              <code className="text-amber-400/70 font-mono text-xs">{route}</code>
+              <code className="text-amber-400/70 font-mono text-xs">intent: {intent}</code>
               <div className="text-slate-400 text-xs mt-1">{detail}</div>
             </div>
           ))}
         </div>
+
+        <p className="text-slate-400 text-sm mb-4 leading-relaxed">
+          The final "Place Order" step is handled by a dedicated <code className="bg-slate-800 px-1.5 py-0.5 rounded text-amber-400 font-mono text-xs">action.place-order.ts</code> route — it creates the order via SCAPI, saves customer profile data for returning shoppers, and redirects to the order confirmation page.
+        </p>
+
         <Callout type="info" title="For customer conversations">
-          When a prospect asks about "1-click checkout" — the template supports accelerated checkout flows where returning customers with saved payment and shipping can skip directly to order confirmation. The entire checkout uses server-side actions, so payment tokens and customer data never reach the browser.
+          When a prospect asks about "1-click checkout" — the template supports accelerated checkout flows where returning customers with saved payment and shipping can complete an order with minimal steps. The entire checkout uses server-side actions, so payment tokens and customer data never reach the browser. The template also includes Buy Online Pick Up In-Store (BOPIS) as an extension.
         </Callout>
       </section>
 
@@ -340,15 +374,15 @@ export default function Module3() {
           <span className="text-slate-500 text-sm">8 min</span>
         </div>
         <p className="text-slate-400 text-sm mb-5 leading-relaxed">
-          Storefront Next communicates with B2C Commerce exclusively through SCAPI (Shopper Commerce APIs). The template wraps these calls in typed helper functions in <code className="bg-slate-800 px-1.5 py-0.5 rounded text-amber-400 font-mono text-xs">src/lib/scapi/</code>.
+          Storefront Next communicates with B2C Commerce exclusively through SCAPI (Shopper Commerce APIs). The template provides a typed SDK client via <code className="bg-slate-800 px-1.5 py-0.5 rounded text-amber-400 font-mono text-xs">createApiClients(context)</code> — no manual URL construction or auth token management. API wrappers live in <code className="bg-slate-800 px-1.5 py-0.5 rounded text-amber-400 font-mono text-xs">src/lib/api/</code> with a <code className="bg-slate-800 px-1.5 py-0.5 rounded text-amber-400 font-mono text-xs">.server.ts</code> suffix to ensure they only run server-side.
         </p>
-        <CodeBlock code={scapiExample} language="typescript" filename="src/lib/scapi/products.ts" />
+        <CodeBlock code={scapiExample} language="typescript" filename="src/lib/api/products.server.ts" />
         <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3">
           {[
-            { api: 'Shopper Products', path: 'lib/scapi/products.ts', detail: 'Product detail, variations, images, and pricing' },
-            { api: 'Shopper Baskets', path: 'lib/scapi/baskets.ts', detail: 'Cart management, line items, coupons, shipping' },
-            { api: 'Shopper Search', path: 'lib/scapi/search.ts', detail: 'Keyword search, faceted filtering, sorting, suggestions' },
-            { api: 'Shopper Customers', path: 'lib/scapi/customers.ts', detail: 'Account management, addresses, wishlists, orders' },
+            { api: 'Shopper Products', path: 'lib/api/products.server.ts', detail: 'Product detail, variations, images, and pricing' },
+            { api: 'Shopper Baskets', path: 'lib/api/basket.server.ts', detail: 'Cart management, line items, coupons, shipping' },
+            { api: 'Shopper Search', path: 'lib/api/search.server.ts', detail: 'Keyword search, faceted filtering, sorting, suggestions' },
+            { api: 'Shopper Customers', path: 'lib/api/customer.server.ts', detail: 'Account management, addresses, wishlists, orders' },
           ].map(({ api, path, detail }) => (
             <div key={api} className="p-3 rounded-lg bg-slate-900/60 border border-slate-700/50">
               <div className="text-slate-200 text-xs font-semibold mb-1">{api}</div>
@@ -503,7 +537,7 @@ export default function Module3() {
         <h2 className="text-xl font-bold text-slate-100 mb-6">Hands-On Exercises</h2>
         <div className="space-y-0">
           <StepCard stepKey="m3-loader" number={1} title="Add parallel data fetching to the PDP">
-            <p className="text-sm">Open your product route (<code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">src/routes/product.$productId.tsx</code>). Update the loader to fetch both the product AND product recommendations in parallel using <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">Promise.all()</code>.</p>
+            <p className="text-sm">Open your product route (<code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">src/routes/_app.product.$productId.tsx</code>). Update the loader to fetch both the product AND product recommendations in parallel — return both as promises that Suspense will resolve.</p>
             <Callout type="ai" title="Ask Claude Code">
               "In my product route loader, add a parallel fetch for Einstein recommendations using the product ID. Show me how to wire the data into the component."
             </Callout>
@@ -511,10 +545,10 @@ export default function Module3() {
           <StepCard stepKey="m3-action" number={2} title="Add an Add to Wishlist action">
             <p className="text-sm">Create an action in your product route that saves a product to the customer's wishlist. The action should read <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">productId</code> from formData and call a SCAPI customer lists endpoint.</p>
           </StepCard>
-          <StepCard stepKey="m3-scapi" number={3} title="Extend a SCAPI helper">
-            <p className="text-sm">In <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">src/lib/scapi/products.ts</code>, add a new function <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">getProductsByCategory(categoryId)</code> that fetches a list of products for a category. Define a clean return type.</p>
+          <StepCard stepKey="m3-scapi" number={3} title="Extend an API helper">
+            <p className="text-sm">In <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">src/lib/api/products.server.ts</code>, add a new function that fetches products for a category using <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">createApiClients(context)</code>. Define a clean return type.</p>
             <Callout type="ai" title="Ask Claude Code">
-              "Add a getProductsByCategory function to src/lib/scapi/products.ts. It should call the SCAPI product search endpoint filtered by category. Include TypeScript types for the response."
+              "Add a getProductsByCategory function to src/lib/api/products.server.ts. It should use createApiClients to call the SCAPI product search endpoint filtered by category. Include TypeScript types for the response."
             </Callout>
           </StepCard>
           <StepCard stepKey="m3-custom-hook" number={4} title="Build a useRecentlyViewed hook">

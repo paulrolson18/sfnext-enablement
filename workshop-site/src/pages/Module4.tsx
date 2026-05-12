@@ -261,17 +261,17 @@ export default function Module4() {
             category="Brand Theming"
             categoryColor="text-violet-300"
             title="Update color palette to match a luxury brand"
-            description="Be specific about the aesthetic — mention reference brands or describe the visual direction. Claude Code will update tailwind.config.js and suggest typography."
+            description="Be specific about the aesthetic — mention reference brands or describe the visual direction. Claude Code will update the brand token CSS files and suggest typography."
             prompt={`I'm building a Storefront Next storefront for an upscale women's fashion brand similar to Reformation or Aritzia.
 
-Update my tailwind.config.js to reflect this aesthetic:
+Update my brand tokens in src/theme/tokens/brand.css to reflect this aesthetic:
 - Neutral palette: warm off-white backgrounds (#faf9f7), deep charcoal text (#1a1a1a)
 - Accent: dusty rose (#c9a9a6) for CTAs and highlights
-- Typography: font-display for headings (serif feel), keep sans for body
+- Typography: update --font-sans in src/theme/tailwind.css for headings (serif feel), keep sans for body
 - Card corners: slightly rounded (8px), not pill-shaped
 - Remove any bright/saturated colors
 
-After updating the config, show me what the ProductTile would look like with the new tokens applied.`}
+After updating the tokens, show me what the ProductTile would look like with the new tokens applied.`}
             followUp={`The colors look right. Now update the button component to use the rose accent with a thin border style (outlined) rather than filled. Buttons should be very minimal.`}
           />
 
@@ -351,7 +351,7 @@ Context:
 - Use the SCAPI Einstein Recommendations endpoint: /einstein/recommenders/{recommenderName}/products
 
 Add:
-1. A getRecommendations(productId, recommenderName) function in src/lib/scapi/recommendations.ts
+1. A getRecommendations(productId, recommenderName) function in src/lib/api/recommendations.server.ts
 2. Update the loader to fetch recommendations in parallel
 3. Add a RecommendedProducts component that shows 4 product tiles in a horizontal scroll on mobile, grid on desktop
 4. Wire it into the page below the product detail section`}
@@ -436,8 +436,8 @@ Create:
               {[
                 '"In src/components/product-tile/index.tsx, add a hover image swap and slide-up Quick Add button using group-hover Tailwind classes"',
                 '"Add an Add to Wishlist action to product.$productId.tsx using the SCAPI customer lists endpoint"',
-                '"The product images return 404 — check how imageUrl is mapped in lib/scapi/products.ts"',
-                '"Update tailwind.config.js: change all primary-500 references to this hex: #1a1a2e"',
+                '"The product images return 404 — check how imageUrl is mapped in lib/api/products.server.ts"',
+                '"Update src/theme/tokens/brand.css: change --brand-primary to this hex: #1a1a2e"',
               ].map(p => (
                 <div key={p} className="flex items-start gap-2">
                   <span className="text-emerald-500 mt-0.5 flex-shrink-0">✓</span>
@@ -469,7 +469,7 @@ Create:
             </Callout>
           </StepCard>
           <StepCard stepKey="m4-prompt1" number={2} title="Brand your storefront in one prompt">
-            <p className="text-sm">Open Claude Code in your project directory. Use the brand theming prompt above (adapted for your own brand direction) to update <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">tailwind.config.js</code> and see your entire storefront change.</p>
+            <p className="text-sm">Open Claude Code in your project directory. Use the brand theming prompt above (adapted for your own brand direction) to update <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">src/theme/tokens/brand.css</code> and see your entire storefront change.</p>
             <Callout type="ai" title="Watch what Claude Code does">
               Notice how Claude Code reads your actual file first, then makes targeted edits. It's not replacing your entire config — it's inserting the right tokens in the right places.
             </Callout>
