@@ -14,111 +14,104 @@ const beforeHero = `<!-- Old SFRA approach (ISML) -->
   </div>
 </div>`
 
-const afterHero = `// src/components/HeroBanner.tsx
-interface HeroBannerProps {
-  title: string
-  subtitle: string
-  ctaText: string
-  ctaHref: string
-  imageSrc: string
-  theme?: 'light' | 'dark'
-}
+const afterHero = `// src/components/hero/index.tsx (simplified for workshop)
+// The template ships a full-featured Hero with Page Designer decorators.
+// Below is the core rendering logic — the real file also includes
+// @Component and @AttributeDefinition metadata for Business Manager.
 
-export function HeroBanner({
-  title, subtitle, ctaText, ctaHref, imageSrc, theme = 'dark'
-}: HeroBannerProps) {
+export default function Hero({
+  title, titleColor, subtitle, subtitleColor,
+  ctaText, ctaLink, imageUrl, overlayPosition, overlayAlignment, height,
+}: HeroProps) {
   return (
-    <div className="relative overflow-hidden rounded-2xl min-h-[500px] flex items-end">
-      {/* Background image with overlay */}
+    <div className={cn('relative w-full overflow-hidden', heightClass)}>
+      {/* Background image with focal-point-aware positioning */}
       <img
-        src={imageSrc}
-        alt=""
+        src={imageUrl.url}
+        alt={imageAlt || ''}
+        fetchPriority="high"
         className="absolute inset-0 w-full h-full object-cover"
+        style={{ objectPosition: \\\`\\\${focalX} \\\${focalY}\\\` }}
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
 
-      {/* Content */}
-      <div className="relative z-10 p-8 md:p-12">
-        <h1 className={
-          \`text-4xl md:text-5xl font-bold mb-3 leading-tight \${
-            theme === 'dark' ? 'text-white' : 'text-slate-900'
-          }\`
-        }>
-          {title}
-        </h1>
-        <p className="text-slate-200 text-lg mb-6 max-w-md">{subtitle}</p>
-        <a
-          href={ctaHref}
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-full
-                     bg-white text-slate-900 font-semibold hover:bg-slate-100
-                     transition-colors shadow-lg"
-        >
-          {ctaText} →
-        </a>
+      {/* Content overlay — position + alignment driven by Page Designer */}
+      <div className={cn('absolute inset-0 z-10 flex', overlayRowClass)}>
+        <div className="container mx-auto w-full section-container">
+          <div className={cn(contentBlockClass, textAlignClass)}>
+            <h1
+              className={cn(TITLE_TYPOGRAPHY_CLASS[titleTypo], 'mb-3')}
+              style={titleColor ? { color: titleColor } : undefined}
+            >
+              {title}
+            </h1>
+            {subtitle && <p className={cn(subtitleClass)}>{subtitle}</p>}
+            {showCta && (
+              <Button asChild variant={buttonVariant}>
+                <Link to={ctaHref}>{ctaText}</Link>
+              </Button>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   )
 }`
 
-const pageDesignerHero = `// src/components/HeroBanner.tsx — Enhanced for Page Designer
-interface HeroBannerProps {
-  title: string
-  subtitle: string
-  ctaText: string
-  ctaHref: string
-  imageSrc: string
-  theme?: 'light' | 'dark'
-  // ↓ New props for Page Designer control
-  titleColor?: string        // e.g. '#c9a84c', 'white', 'var(--brand-primary)'
-  titleAlignment?: 'left' | 'center' | 'right'
-}
+const pageDesignerHero = `// src/components/hero/index.tsx — Page Designer decorators (actual template code)
+// These TypeScript decorators are what make the hero configurable in Business Manager.
+// The build process reads them and generates JSON metadata for Page Designer.
 
-export function HeroBanner({
-  title, subtitle, ctaText, ctaHref, imageSrc, theme = 'dark',
-  titleColor,
-  titleAlignment = 'left',
-}: HeroBannerProps) {
-  // Map alignment to Tailwind classes
-  const alignmentClasses = {
-    left: 'text-left items-start',
-    center: 'text-center items-center',
-    right: 'text-right items-end',
-  }
+@Component('hero', {
+  name: 'Hero Banner',
+  description: 'Prominent banner with image, title, subtitle, and call-to-action.',
+  group: 'Content',
+})
+@RegionDefinition([])
+export class HeroMetadata {
+  @AttributeDefinition()
+  title?: string
 
-  return (
-    <div className="relative overflow-hidden rounded-2xl min-h-[500px] flex items-end">
-      <img src={imageSrc} alt="" className="absolute inset-0 w-full h-full object-cover" />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+  @AttributeDefinition({
+    id: 'titleTypography', name: 'Title Typography',
+    type: 'enum',
+    values: ['Default', 'Heading 1', 'Heading 2', 'Heading 3', 'Paragraph'],
+    defaultValue: 'Default',
+  })
+  titleTypography?: string
 
-      <div className={\`relative z-10 p-8 md:p-12 flex flex-col w-full \${alignmentClasses[titleAlignment]}\`}>
-        <h1
-          className="text-4xl md:text-5xl font-bold mb-3 leading-tight"
-          style={titleColor ? { color: titleColor } : undefined}
-        >
-          {title}
-        </h1>
-        <p className={\`text-slate-200 text-lg mb-6 \${titleAlignment === 'center' ? 'max-w-lg mx-auto' : 'max-w-md'}\`}>
-          {subtitle}
-        </p>
-        <a href={ctaHref}
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-slate-900 font-semibold hover:bg-slate-100 transition-colors shadow-lg">
-          {ctaText} →
-        </a>
-      </div>
-    </div>
-  )
-}
+  @AttributeDefinition({
+    id: 'titleColor', name: 'Title Color',
+    description: 'Hex color for the title (e.g. #FFFFFF)',
+    type: 'string', required: false,
+  })
+  titleColor?: string
 
-// Page Designer metadata — this tells BM what the merchandiser can configure
-// The MCP tool sfnext_add_page_designer_decorator generates this automatically
-@PageType({ id: 'hero-banner', label: 'Hero Banner' })
-@RegionDefinition({
-  attributes: [
-    { id: 'titleColor', type: 'color', label: 'Title Color', default: '#ffffff' },
-    { id: 'titleAlignment', type: 'enum', label: 'Title Alignment',
-      values: ['left', 'center', 'right'], default: 'left' },
-  ]
-})`
+  @AttributeDefinition({ type: 'image' })
+  imageUrl?: string
+
+  @AttributeDefinition({
+    id: 'overlayPosition', name: 'Overlay Position',
+    type: 'enum',
+    values: ['Top Left', 'Top Center', 'Middle Center', 'Bottom Left', 'Bottom Center'],
+    defaultValue: 'Middle Center',
+  })
+  overlayPosition?: string
+
+  @AttributeDefinition({
+    id: 'overlayAlignment', name: 'Overlay Alignment',
+    type: 'enum', values: ['left', 'center', 'right'],
+    defaultValue: 'center',
+  })
+  overlayAlignment?: string
+
+  @AttributeDefinition({
+    id: 'height', name: 'Height', type: 'enum',
+    values: ['sm', 'md', 'lg', 'xl', 'full'], defaultValue: 'full',
+  })
+  height?: string
+
+  // ... subtitle, CTA, button style, and style override attributes
+}`
 
 const themeTokens = `/* src/theme/tokens/brand.css — the file you edit to rebrand the storefront */
 /* These CSS variables control every brand color across the site. */
@@ -390,12 +383,12 @@ export default function Module2() {
           </div>
           <div>
             <p className="text-sky-400 text-xs font-medium mb-2 uppercase tracking-wider">Storefront Next (after)</p>
-            <CodeBlock code={afterHero} language="typescript" filename="src/components/HeroBanner.tsx" />
+            <CodeBlock code={afterHero} language="typescript" filename="src/components/hero/index.tsx" />
           </div>
         </div>
 
         <Callout type="tip" title="Key difference">
-          In React, the hero banner is a reusable component with typed props. The same <code>HeroBanner</code> component can be used on the homepage, category pages, and landing pages — each with different images and copy. No copy-paste of templates needed.
+          In React, the hero banner is a reusable component with typed props. The same <code>Hero</code> component can be used on the homepage, category pages, and landing pages — each with different images and copy. No copy-paste of templates needed.
         </Callout>
       </section>
 
@@ -508,7 +501,7 @@ export default function Module2() {
           <p className="text-slate-400 text-sm mb-4 leading-relaxed">
             In practice, this means adding props to your components that a merchandiser can control — like title color, text alignment, or layout variants. The component code stays clean; the metadata decorators tell Business Manager what's configurable.
           </p>
-          <CodeBlock code={pageDesignerHero} language="typescript" filename="src/components/HeroBanner.tsx — Page Designer Enhanced" />
+          <CodeBlock code={pageDesignerHero} language="typescript" filename="src/components/hero/index.tsx — Page Designer Decorators" />
           <div className="mt-4">
             <Callout type="info" title="For customer conversations">
               If a merchandiser asks "can I change the page without a developer?" — the answer is yes. Page Designer lets them configure pages, arrange components, and manage content regions through Business Manager, while the storefront renders those components as React. The hero banner above is a concrete example — a merchandiser can change the title color and alignment without touching code.
@@ -539,20 +532,22 @@ export default function Module2() {
           <StepCard stepKey="m2-hero" number={2} title="Modify the homepage hero">
             <p className="text-sm">Find the hero banner in your homepage route (<code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">src/routes/_index.tsx</code>). Update the gradient overlay color and CTA button style to match your new brand colors.</p>
           </StepCard>
-          <StepCard stepKey="m2-page-designer-hero" number={3} title="Enhance HeroBanner for Page Designer">
+          <StepCard stepKey="m2-page-designer-hero" number={3} title="Explore the Hero's Page Designer decorators">
             <p className="text-sm">
-              Open <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">src/components/HeroBanner.tsx</code>.
-              Add two new props to <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">HeroBannerProps</code>:{' '}
-              <code className="bg-slate-800 px-1.5 py-0.5 rounded text-violet-400 font-mono text-xs">titleColor</code> (an optional string for any CSS color) and{' '}
-              <code className="bg-slate-800 px-1.5 py-0.5 rounded text-violet-400 font-mono text-xs">titleAlignment</code> (left, center, or right).
-              Update the component to apply these props — use an inline <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">style</code> for the color
-              and map the alignment to Tailwind classes. Test by passing different values from the homepage route.
+              Open <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">src/components/hero/index.tsx</code>.
+              The template's Hero component already ships with full Page Designer support — decorators like{' '}
+              <code className="bg-slate-800 px-1.5 py-0.5 rounded text-violet-400 font-mono text-xs">@AttributeDefinition</code> expose{' '}
+              <code className="bg-slate-800 px-1.5 py-0.5 rounded text-violet-400 font-mono text-xs">titleColor</code>,{' '}
+              <code className="bg-slate-800 px-1.5 py-0.5 rounded text-violet-400 font-mono text-xs">overlayPosition</code>,{' '}
+              <code className="bg-slate-800 px-1.5 py-0.5 rounded text-violet-400 font-mono text-xs">overlayAlignment</code>, and more to Business Manager.
+              Read through the metadata class to see how each prop maps to a BM field, then add a new configurable attribute — for example, a{' '}
+              <code className="bg-slate-800 px-1.5 py-0.5 rounded text-violet-400 font-mono text-xs">showOverlayGradient</code> boolean that toggles a dark gradient behind the text overlay.
             </p>
             <Callout type="ai" title="Ask Claude Code">
-              "In my HeroBanner component, add a titleColor prop (optional string) and a titleAlignment prop ('left' | 'center' | 'right'). Apply the color as an inline style on the h1 and map alignment to Tailwind text-left/center/right classes. Update the content wrapper to align child elements accordingly."
+              "In the Hero component at src/components/hero/index.tsx, add a new Page Designer attribute called showOverlayGradient (boolean, default true). When enabled, render a gradient overlay behind the text content. Add the @AttributeDefinition decorator so merchandisers can toggle it in Business Manager."
             </Callout>
             <Callout type="tip" title="Why this matters for Page Designer">
-              These are exactly the kind of props a merchandiser controls through Business Manager. When you add the Page Designer decorators later, each prop becomes a configurable field in the BM editing interface — no code changes needed for content updates.
+              Every <code className="bg-slate-800 px-1 py-0.5 rounded font-mono text-xs">@AttributeDefinition</code> decorator becomes a configurable field in the Business Manager editing interface — merchandisers can change the hero without a developer. This is the pattern for making any component Page Designer-compatible.
             </Callout>
           </StepCard>
           <StepCard stepKey="m2-product-tile" number={4} title="Add Quick Add to product tiles">
