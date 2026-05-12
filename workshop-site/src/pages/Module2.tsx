@@ -120,32 +120,61 @@ export function HeroBanner({
   ]
 })`
 
-const themeTokens = `/* src/theme/tokens/brand.css — Brand Customization */
-/* Tailwind v4 uses CSS variables instead of a JS config file. */
-/* Change these values to match your brand — every component updates instantly. */
+const themeTokens = `/* src/theme/tokens/brand.css — the file you edit to rebrand the storefront */
+/* These CSS variables control every brand color across the site. */
+/* Change a value here → save → every button, link, and accent updates instantly. */
 
 :root {
-    /* brand primary (e.g. CTA buttons, links) */
+    /* brand primary (e.g. Write a Review button) */
     --brand-primary: #000000;
     --brand-primary-hover: #333333;
 
-    /* Brand Colors — replace with your palette */
+    /* Market Street Brand Colors */
     --brand-black: #000000;
     --brand-black-off: #121212;
     --brand-black-charcoal: #242424;
     --brand-white: #ffffff;
     --brand-white-bone: #fafaf9;
+    --brand-white-ivory: #fcfcfc;
     --brand-gray-50: #fafafa;
     --brand-gray-100: #f5f5f5;
     --brand-gray-200: #ededed;
+    --brand-gray-300: #e5e5e5;
+    --brand-gray-400: #d4d4d4;
     --brand-gray-500: #9e9e9e;
+    --brand-gray-600: #757575;
+    --brand-gray-700: #616161;
     --brand-gray-800: #424242;
+    --brand-gray-900: #212121;
 }
 
 .dark {
-    /* Dark mode overrides */
+    /* Dark mode — brand primary inverts for contrast */
     --brand-primary: #fafafa;
     --brand-primary-hover: #d9d9d9;
+    /* Gray scale carries over from :root */
+}`
+
+const themeBridge = `/* src/theme/tailwind.css — bridges CSS vars into Tailwind utility classes */
+/* This is how bg-brand-black or text-brand-primary becomes available in JSX. */
+
+@theme inline {
+    --font-sans: 'Sen', -apple-system, 'system-ui', 'Helvetica Neue', Arial, sans-serif;
+
+    /* Core Tailwind colors — mapped from tokens/core.css variables */
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-muted: var(--muted);
+    --color-border: var(--border);
+    /* ... 50+ more color mappings ... */
+
+    /* Brand colors — mapped from tokens/brand.css variables */
+    --color-brand-black: var(--brand-black);
+    --color-brand-white: var(--brand-white);
+    --color-brand-gray-500: var(--brand-gray-500);
+    /* These enable: className="bg-brand-black text-brand-white" */
 }`
 
 const productTileBefore = `// Default product tile (simplified)
@@ -304,9 +333,28 @@ export default function Module2() {
           <span className="text-slate-500 text-sm">10 min</span>
         </div>
         <p className="text-slate-400 text-sm mb-5 leading-relaxed">
-          The fastest way to make a storefront look like a specific brand is to update the design tokens in <code className="bg-slate-800 px-1.5 py-0.5 rounded text-violet-400 font-mono text-xs">src/theme/tokens/brand.css</code>. Tailwind v4 uses CSS variables instead of a JS config — every color, font, and spacing value across the entire site updates instantly when you change a token.
+          The storefront's visual identity lives in <code className="bg-slate-800 px-1.5 py-0.5 rounded text-violet-400 font-mono text-xs">src/theme/</code>. It's a 3-layer system: <strong className="text-slate-200">brand tokens</strong> define your palette, <strong className="text-slate-200">core tokens</strong> define the UI semantics (primary, background, border), and the <strong className="text-slate-200">Tailwind bridge</strong> maps those CSS variables into utility classes you use in JSX. To rebrand the storefront, you edit <code className="bg-slate-800 px-1.5 py-0.5 rounded text-violet-400 font-mono text-xs">tokens/brand.css</code> — everything else reads from it.
         </p>
+
+        {/* Architecture diagram */}
+        <div className="mb-5 p-4 rounded-xl bg-slate-900/40 border border-violet-500/15">
+          <p className="text-violet-300 font-semibold text-sm mb-3">How the theme layers connect</p>
+          <div className="flex items-center gap-3 text-xs flex-wrap">
+            <div className="px-3 py-1.5 rounded-lg bg-violet-500/15 border border-violet-500/25 text-violet-300 font-mono">tokens/brand.css</div>
+            <span className="text-slate-600">→</span>
+            <div className="px-3 py-1.5 rounded-lg bg-sky-500/15 border border-sky-500/25 text-sky-300 font-mono">tokens/core.css</div>
+            <span className="text-slate-600">→</span>
+            <div className="px-3 py-1.5 rounded-lg bg-emerald-500/15 border border-emerald-500/25 text-emerald-300 font-mono">tailwind.css (@theme)</div>
+            <span className="text-slate-600">→</span>
+            <div className="px-3 py-1.5 rounded-lg bg-amber-500/15 border border-amber-500/25 text-amber-300">className="bg-primary"</div>
+          </div>
+          <p className="text-slate-500 text-xs mt-2">brand.css sets the hex values → core.css maps them to semantic names (--primary, --background) → tailwind.css registers them as Tailwind utilities</p>
+        </div>
+
         <CodeBlock code={themeTokens} language="css" filename="src/theme/tokens/brand.css" />
+        <div className="mt-4">
+          <CodeBlock code={themeBridge} language="css" filename="src/theme/tailwind.css" />
+        </div>
         <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3">
           {[
             { label: 'Brand Primary', value: '--brand-primary', impact: 'CTA buttons, links, highlights' },
