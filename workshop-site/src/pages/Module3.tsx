@@ -559,9 +559,12 @@ export default function Module3() {
           </StepCard>
           <StepCard stepKey="m3-deploy" number={6} title="Deploy and verify your changes" isLast>
             <p className="text-sm">
-              Build and deploy your storefront using{' '}
-              <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">pnpm sfnext push</code>.
-              Open the live URL and verify your brand changes from Module 2 are visible.
+              Build and deploy your storefront. Run{' '}
+              <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">pnpm build</code>{' '}
+              first, then{' '}
+              <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">pnpm push</code>{' '}
+              to upload to Managed Runtime.
+              Open the live URL and verify your changes are visible.
               If something looks wrong, use{' '}
               <code className="bg-slate-800 px-1.5 py-0.5 rounded text-sky-400 font-mono text-xs">b2c mrt tail-logs</code>{' '}
               to diagnose.

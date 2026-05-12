@@ -566,8 +566,12 @@ export default function Module2() {
             </p>
             <div className="mt-3 space-y-2">
               <div className="p-3 rounded-lg bg-slate-900/60 border border-slate-700/50">
-                <code className="text-emerald-400 font-mono text-xs">pnpm sfnext push</code>
-                <span className="text-slate-500 text-xs ml-2">— deploys to your Managed Runtime environment</span>
+                <code className="text-emerald-400 font-mono text-xs">pnpm build</code>
+                <span className="text-slate-500 text-xs ml-2">— builds the production bundle (required before push)</span>
+              </div>
+              <div className="p-3 rounded-lg bg-slate-900/60 border border-slate-700/50">
+                <code className="text-emerald-400 font-mono text-xs">pnpm push</code>
+                <span className="text-slate-500 text-xs ml-2">— uploads the bundle to Managed Runtime</span>
               </div>
               <div className="p-3 rounded-lg bg-slate-900/60 border border-slate-700/50">
                 <code className="text-emerald-400 font-mono text-xs">b2c mrt tail-logs</code>
