@@ -173,6 +173,17 @@ export default function Setup() {
             <p className="text-sm mt-2">
               Copy the GitHub repo URL from Business Manager (from step 12) and paste it in place of the placeholder. Wait for Claude Code to acknowledge before continuing.
             </p>
+
+            <div className="mt-4 p-4 rounded-xl bg-amber-950/15 border border-amber-500/20">
+              <p className="text-amber-300 font-semibold text-sm mb-2">Alternate option</p>
+              <p className="text-sm text-slate-400 mb-2">
+                If you don't have a repo from Business Manager, you can create your own from the official template. Paste this to Claude Code:
+              </p>
+              <CodeBlock
+                language="text"
+                code={`I would like to create my own github repo based on this https://github.com/SalesforceCommerceCloud/storefront-next-template`}
+              />
+            </div>
           </StepCard>
 
           <StepCard stepKey="setup-claude-env" number={14} title="Set up your environment file" isLast>
