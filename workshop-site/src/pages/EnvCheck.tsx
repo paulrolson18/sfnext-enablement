@@ -1,7 +1,6 @@
-import { CheckCircle2, Circle } from 'lucide-react'
+import { CheckCircle2 } from 'lucide-react'
 import { useProgress } from '../context/ProgressContext'
 import SectionHeader from '../components/SectionHeader'
-import CodeBlock from '../components/CodeBlock'
 import InlineCode from '../components/InlineCode'
 import Callout from '../components/Callout'
 import { Link } from 'react-router-dom'
@@ -42,13 +41,6 @@ const checks = [
     command: 'claude --version',
     expected: 'claude x.x.x',
     failHelp: 'Run: npm install -g @anthropic-ai/claude-code, then run: claude to authenticate',
-  },
-  {
-    key: 'env-clone',
-    title: 'Storefront Next project cloned & running',
-    command: 'cd YOUR_REPO && pnpm dev',
-    expected: 'Storefront loads at http://localhost:5173',
-    failHelp: 'Check your .env file — make sure all B2C credentials are filled in correctly',
   },
 ]
 
@@ -160,55 +152,6 @@ export default function EnvCheck() {
           )
         })}
       </div>
-
-      {/* Bonus: Quick sanity test */}
-      <section>
-        <h2 className="text-xl font-bold text-slate-100 mb-3">Sanity Check — Browse Your Storefront</h2>
-        <p className="text-slate-400 text-sm mb-4">
-          With your dev server running, open your browser and confirm these pages load with data from your sandbox:
-        </p>
-        <div className="space-y-2">
-          {[
-            { path: 'http://localhost:5173', label: 'Homepage loads with hero banner' },
-            { path: 'http://localhost:5173/category/womens', label: 'Category page shows product grid' },
-            { path: 'http://localhost:5173/search?q=shirt', label: 'Search results appear' },
-          ].map(({ path, label }) => (
-            <div key={path} className="flex items-center gap-3 p-3 rounded-lg bg-slate-900/60 border border-slate-700/50">
-              <Circle size={14} className="text-slate-600 flex-shrink-0" />
-              <code className="text-sky-400 font-mono text-xs">{path}</code>
-              <span className="text-slate-400 text-xs">→ {label}</span>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Quick fix commands */}
-      <section>
-        <h2 className="text-xl font-bold text-slate-100 mb-3">Common Fixes</h2>
-        <div className="space-y-4">
-          <div>
-            <p className="text-slate-400 text-sm mb-2">Storefront loads but no products (401/403 from API):</p>
-            <CodeBlock
-              language="bash"
-              code={`# Check your .env values are correct (no extra spaces or quotes)
-cat .env | grep PUBLIC__app
-
-# Make sure your B2C sandbox is active
-b2c sandbox list`}
-            />
-          </div>
-          <div>
-            <p className="text-slate-400 text-sm mb-2">pnpm dev fails with build error:</p>
-            <CodeBlock
-              language="bash"
-              code={`# Clear cache and reinstall
-rm -rf node_modules .pnpm-store
-pnpm install
-pnpm dev`}
-            />
-          </div>
-        </div>
-      </section>
 
       {allPass && (
         <div className="rounded-2xl bg-gradient-to-r from-emerald-950/40 to-sky-950/40 border border-emerald-700/40 p-6 text-center">
