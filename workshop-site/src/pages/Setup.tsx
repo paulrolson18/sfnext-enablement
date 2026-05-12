@@ -246,12 +246,10 @@ export default function Setup() {
             <p className="text-sm">
               Run the following from your storefront project directory:
             </p>
-            <div className="mt-2">
-              <CodeBlock
-                language="bash"
-                code={`pnpm install
-pnpm build`}
-              />
+            <div className="mt-2 flex flex-col gap-2">
+              <InlineCode code="pnpm install" />
+              <InlineCode code="pnpm build" />
+              <InlineCode code="pnpm push" />
             </div>
           </StepCard>
 
@@ -307,12 +305,9 @@ pnpm build`}
             <p className="text-sm">
               From your storefront-next repo, run:
             </p>
-            <div className="mt-2">
-              <CodeBlock
-                language="bash"
-                code={`pnpm sfnext generate-cartridge -d .
-pnpm sfnext deploy-cartridge`}
-              />
+            <div className="mt-2 flex flex-col gap-2">
+              <InlineCode code="pnpm sfnext generate-cartridge -d ." />
+              <InlineCode code="pnpm sfnext deploy-cartridge" />
             </div>
             <p className="text-sm mt-2">
               This generates the Page Designer cartridge and deploys it to your sandbox.
