@@ -94,20 +94,6 @@ const devPrereqs = [
   },
 ]
 
-const b2cToolingCode = `# Install B2C Developer Tooling CLI
-npm install -g @salesforce/b2c-cli
-
-# Or with Homebrew (Mac)
-brew install SalesforceCommerceCloud/tools/b2c-cli
-
-# Verify
-b2c --help
-
-# Add Claude Code skills (do this after Claude Code is installed)
-claude plugin marketplace add SalesforceCommerceCloud/b2c-developer-tooling
-claude plugin install b2c-cli
-claude plugin install b2c
-claude plugin install storefront-next`
 
 const vsCodeExtensions = [
   { name: 'Tailwind CSS IntelliSense', id: 'bradlc.vscode-tailwindcss' },
@@ -241,7 +227,29 @@ export default function PreWork() {
         <p className="text-slate-400 text-sm mb-4">
           The B2C CLI and Claude Code skills are what supercharge your workflow. The skills teach Claude Code how to deploy, manage sandboxes, and work with SCAPI — no documentation lookup needed.
         </p>
-        <CodeBlock code={b2cToolingCode} language="bash" filename="Terminal" />
+        <p className="text-slate-400 text-sm mb-4">
+          Copy your preferred CLI install command. You might need to scroll up in the frame to see options for npm, npx, or Homebrew. Run this command in your terminal. 
+        </p>
+        <div className="relative rounded-xl border border-slate-700 overflow-hidden" style={{ height: '100px' }}>
+          <iframe
+            src="https://salesforcecommercecloud.github.io/b2c-developer-tooling/guide/#quick-cli-install"
+            className="border-0"
+            style={{ width: 'calc(100% + 272px)', height: 'calc(100% + 100px)', marginLeft: '-272px', marginTop: '-100px' }}
+            title="B2C Developer Tooling Quick Install"
+          />
+        </div>
+        <p className="text-slate-400 text-sm mt-6 mb-4">
+          Install the B2C Developer Toolkit VS Code Extension.
+          Download the extension and then follow directions to install.
+        </p>
+        <div className="relative rounded-xl border border-slate-700 overflow-hidden" style={{ height: '400px' }}>
+          <iframe
+            src="https://salesforcecommercecloud.github.io/b2c-developer-tooling/vscode-extension/installation.html#get-the-latest-build"
+            className="border-0"
+            style={{ width: 'calc(100% + 272px)', height: 'calc(100% + 100px)', marginLeft: '-272px', marginTop: '-100px' }}
+            title="B2C Developer Toolkit VS Code Extension Install"
+          />
+        </div>
         <div className="mt-4">
           <Callout type="ai" title="Claude Code Skills">
             Once installed, Claude Code gains deep B2C Commerce knowledge: cartridge deployment, sandbox management, SCAPI operations, and Storefront Next-specific patterns including routing, data fetching, auth, i18n, and MRT deployment. You can ask it things like "deploy my code to my ODS" or "show me how to add a custom SCAPI endpoint."
@@ -258,19 +266,12 @@ export default function PreWork() {
         <p className="text-slate-400 text-sm mb-4">
           These extensions make the Storefront Next development experience significantly better — especially Tailwind IntelliSense which gives you autocomplete for every CSS utility.
         </p>
-        <p className="text-slate-500 text-xs mb-3">Install via the Extensions panel in VS Code, or run each command below:</p>
-        <div className="space-y-2">
-          {vsCodeExtensions.map(({ name, id }) => (
-            <div key={id} className="flex items-center gap-3 p-3 rounded-lg bg-slate-900/60 border border-slate-700/50">
-              <Code2 size={14} className="text-slate-500 flex-shrink-0" />
-              <span className="text-slate-300 text-xs font-medium flex-shrink-0">{name}</span>
-              <span className="text-slate-600 text-xs hidden md:inline">—</span>
-              <div className="flex-1 min-w-0">
-                <InlineCode code={`code --install-extension ${id}`} />
-              </div>
-            </div>
-          ))}
-        </div>
+        <p className="text-slate-500 text-xs mb-3">Install via the Extensions panel in VS Code, or run this command:</p>
+        <CodeBlock
+          language="bash"
+          filename="Terminal"
+          code={vsCodeExtensions.map(({ id }) => `code --install-extension ${id}`).join('\n')}
+        />
       </section>
 
       {/* Readiness check */}
